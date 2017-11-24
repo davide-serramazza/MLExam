@@ -19,8 +19,14 @@ class Layer:
         if prevSize != 0:  # if is not an input layer
             for i in range(size):
                 self.w.append([])
-                for j in range(prevSize):
+                for j in range(prevSize+1):
                     self.w[i].append(random.uniform(-1.0, 1.0))
+                    
+    def getResults (self):
+        res = []
+        for i in range ( len (self.neurons)):
+            res.append(self.neurons[i].getResult())
+        return res
 
 
     def serialize(self):
