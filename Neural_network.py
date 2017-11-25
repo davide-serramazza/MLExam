@@ -3,27 +3,25 @@ from Layer import *
 
 
 class Network:
-    def __init__(self, architecture, i, t):
+    def __init__(self, architecture, neurons, i, t):
+        if len(architecture) != len(neurons):
+            raise Exception("Architecture miss match")
         # input layer
         self.layers = []
         self.input = i
         self.target = t
         self.output = []
-        inputNeuron = InputNeuron()
-        l = Layer(architecture[0], 0, inputNeuron)
-        self.layers.append(l)
-        # hidden layers
+
+        # input layer
+        inputNeuron = neurons[0]()
+        layer = Layer(architecture[0], 0, inputNeuron)
+        self.layers.append(layer)
+        # hidden and output layers
         for i in range(1, len(architecture)):
-            neuron = SigmoidNeuron(len_weights=len(self.layers[i-1].neurons))
+            len_weights = len(self.layers[i-1].neurons)
+            neuron = neurons[i](len_weights=len_weights)
             layer = Layer(architecture[i], architecture[i - 1], neuron)
             self.layers.append(layer)
-        # output layers
-        '''
-        outputNeuron = OutputNeuron(len_weights=len(self.layers[-1].neurons))
-        size = len(architecture) - 1
-        layer = Layer(architecture[size], architecture[size - 1], outputNeuron)
-        self.layers.append(layer)
-        '''
         
     def Forward(self):
         
@@ -60,7 +58,7 @@ class Network:
                 # DF = partial(Error)/partial(input to neuron)
                 Df = self.output[i] - self.target[i]
                 #Dneuron = partial (output's neuron)/partial (current neuron' snet)/ 
-                Dneuron = self.layers[outputLayer].neurons[i].activation_function_derivate()
+                Dneuron = self.layers[outputLayer].neurons[i].activation_function_derivative()
                 if j == 0:
                     delta.append(Df*Dneuron)
                     tmp = Df*Dneuron
@@ -79,7 +77,7 @@ class Network:
                         Dnet = self.layers[outputLayer].neurons[s].weights[j]
                         sum += tmp*Dnet
                     # Dout = partial(current neuron's out)/partial (current neuron's net)
-                    Dout = self.layers[i].neurons[j].activation_function_derivate()
+                    Dout = self.layers[i].neurons[j].activation_function_derivative()
                     # Dnet = partial (currents neuron's net)/partial(current analyzerd weight's)
                     Dnet = self.layers[i-1].neurons[k].output
                     # update hiddens neuron's weigths
