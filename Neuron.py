@@ -1,5 +1,6 @@
 import numpy as np
 
+
 #superclass abstract Neuron
 class Neuron(object):
     def __init__(self):

@@ -3,25 +3,24 @@ from Layer import *
 
 
 class Network:
-    def __init__(self, architecture, i, t):
+    def __init__(self, architecture, neurons, i, t):
+        if len(architecture) != len(neurons):
+            raise Exception("Architecture miss match")
         # input layer
         self.layers = []
         self.input = i
         self.target = t
         self.output = []
-        inputNeuron = InputNeuron()
-        l = Layer(architecture[0], 0, inputNeuron)
-        self.layers.append(l)
-        # hidden layers
-        for i in range(1, len(architecture) - 1):
-            neuron = SigmoidNeuron(len_weights=len(self.layers[i-1].neurons))
+        # input layer
+        inputNeuron = neurons[0]()
+        layer = Layer(architecture[0], 0, inputNeuron)
+        self.layers.append(layer)
+        # hidden and output layers
+        for i in range(1, len(architecture)):
+            len_weights = len(self.layers[i-1].neurons)
+            neuron = neurons[i](len_weights=len_weights)
             layer = Layer(architecture[i], architecture[i - 1], neuron)
             self.layers.append(layer)
-        # output layers
-        outputNeuron = OutputNeuron(len_weights=len(self.layers[-1].neurons))
-        size = len(architecture) - 1
-        layer = Layer(architecture[size], architecture[size - 1], outputNeuron)
-        self.layers.append(layer)
         
     def Forward(self):
         
