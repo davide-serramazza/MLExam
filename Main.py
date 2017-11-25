@@ -37,11 +37,16 @@ def dummy_test():
     print "new weights:"
     for layer in network.layers:
         print [neuron.weights for neuron in layer.neurons if not ( isinstance(neuron, InputNeuron) or isinstance(neuron, BiasNeuron))]
-        print ""
-        
+        print ""        
     network.Forward()
     print "output's forward", network.output
-
-
+    network.BackProp(0.5)
+    print "wiegths after a backProp step:"
+    for l in network.layers:
+        for n in l.neurons:
+            if isinstance(n,SigmoidNeuron):
+                print n.weights
+    
+    
 if __name__ == '__main__':
     main()
