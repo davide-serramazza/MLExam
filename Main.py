@@ -20,26 +20,26 @@ def dummy_test():
     print "activ foo's derivative for bias neuron:", network.layers[1].neurons[2].activation_function_derivate()
     print "activ foo for output neuron:" , network.layers[2].neurons[0].activation_function(2.0), "with argument", 2.0
     print "weights:"
-    for i in range(len (network.layers)):
-        print network.layers[i].w
+    for layer in network.layers:
+        print [neuron.weights for neuron in layer.neurons if
+               not (isinstance(neuron, InputNeuron) or isinstance(neuron, BiasNeuron))]
         print ""
         
     # test forward
     
     # dop aver assegnato a random i pesi, inizializzo a valori noti per vedere se esempio funziona
-    network.layers[1].w[0] = [0.15,0.2,0.35]
-    network.layers[1].w[1] = [0.25,0.3,0.35]
-    network.layers[2].w[0] = [0.4,0.45,0.6]
-    network.layers[2].w[1] = [0.5,0.55,0.6]
+    network.layers[1].neurons[0].weights = [0.15,0.2,0.35]
+    network.layers[1].neurons[1].weights = [0.25,0.3,0.35]
+    network.layers[2].neurons[0].weights = [0.4,0.45,0.6]
+    network.layers[2].neurons[1].weights = [0.5,0.55,0.6]
 
     print "new weights:"
-    for i in range(len (network.layers)):
-        print network.layers[i].w
+    for layer in network.layers:
+        print [neuron.weights for neuron in layer.neurons if not ( isinstance(neuron, InputNeuron) or isinstance(neuron, BiasNeuron))]
         print ""
         
     network.Forward()
     print "output's forward", network.output
-    
 
 
 if __name__ == '__main__':

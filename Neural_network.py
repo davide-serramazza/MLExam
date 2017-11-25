@@ -3,25 +3,25 @@ from Layer import *
 
 
 class Network:
-    def __init__(self, architecture,i,t):
+    def __init__(self, architecture, i, t):
         # input layer
         self.layers = []
         self.input = i
         self.target = t
         self.output = []
-        tmp = InputNeuron()
-        l = Layer(architecture[0], 0, tmp)
+        inputNeuron = InputNeuron()
+        l = Layer(architecture[0], 0, inputNeuron)
         self.layers.append(l)
         # hidden layers
         for i in range(1, len(architecture) - 1):
-            tmp = SigmoidNeuron()
-            l = Layer(architecture[i], architecture[i - 1], tmp)
-            self.layers.append(l)
+            neuron = SigmoidNeuron(len_weights=len(self.layers[i-1].neurons))
+            layer = Layer(architecture[i], architecture[i - 1], neuron)
+            self.layers.append(layer)
         # output layers
-        tmp = OutputNeuron()
+        outputNeuron = OutputNeuron(len_weights=len(self.layers[-1].neurons))
         size = len(architecture) - 1
-        l = Layer(architecture[size], architecture[size - 1], tmp)
-        self.layers.append(l)
+        layer = Layer(architecture[size], architecture[size - 1], outputNeuron)
+        self.layers.append(layer)
         
     def Forward(self):
         
@@ -32,32 +32,37 @@ class Network:
         
         #propagate result
         for i in range (1,len(self.layers)):
-            for j in range (len (self.layers[i].neurons) -1 ): # -1 per escludere bias
+            for j in range (len (self.layers[i].neurons) -1 ):  # exclude bias neuron
                 neuron = self.layers[i].neurons[j]
-                netW = self.layers[i].w
-                net = self.layers[i-1].getResults()
-                arg = np.dot (netW[j] , net)
-                self.layers[i].neurons[j].activation_function(arg)
+                weights = neuron.weights
+                input_x = self.layers[i-1].getOutput()
+                scores = np.dot (weights , input_x)
+                neuron.activation_function(scores)
         # setting output
-        for i in range (len (self.layers[-1].neurons) -1 ):
-            self.output.append (self.layers[-1].neurons[i].getResult())       
+        last_layer = self.layers[-1]
+        for i in range (len (last_layer.neurons) -1 ):
+            self.output.append (last_layer.neurons[i].getOutput())
         
     
     def BackProp(self):
         #output layer
         tmp = len (self.layers) - 1 
         for i in range (len (self.layers[tmp].neurons)):
-            # reference ti current analyzed neuron
+            # reference to current analyzed neuron
             neuron = self.layers[tmp].neurons[i]
-            oi = self.layers[tmp-1].nuerons
+            oi = self.layers[tmp-1].neurons
         return
 
     def train(self):
         # fit the data
+        # for each iteration/epoch
+        #   self.forward()
+        #   self.backprop()
         pass
 
-    def predict(self):
+    def predict(self, data):
         # predict target variable
+        # scores = forward(data)
         pass
 
     def serialize(self):

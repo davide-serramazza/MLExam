@@ -11,15 +11,17 @@ class Neuron(object):
     def activation_function_derivate(self):
         pass
 
-    def getResult(self):
+    def getOutput(self):
         return self.output
 
     def serialize(self):
         # prints weights to a file
         pass
 
+
 # subclasses
 class InputNeuron(Neuron):
+
     def activation_function(self, x):
         self.output = x
         return self.output
@@ -29,6 +31,9 @@ class InputNeuron(Neuron):
 
 
 class SigmoidNeuron(Neuron):
+    def __init__(self, len_weights):
+        self.weights = np.random.uniform(low=-1, high=1, size=len_weights)
+
     def activation_function(self, x):
         self.output = 1 / (1 + np.exp(-x))
         return self.output
@@ -49,6 +54,9 @@ class BiasNeuron(Neuron):
 
 
 class OutputNeuron(Neuron):
+    def __init__(self, len_weights):
+        self.weights = np.random.uniform(low=-1, high=1, size=len_weights)
+
     def activation_function(self, x):
         self.output = x
         return self.output
