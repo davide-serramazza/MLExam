@@ -58,7 +58,7 @@ class Network:
                 # DF = partial(Error)/partial(input to neuron)
                 Df = self.output[i] - self.target[i]
                 #Dneuron = partial (output's neuron)/partial (current neuron' snet)/ 
-                Dneuron = self.layers[outputLayer].neurons[i].output
+                Dneuron = self.layers[outputLayer].neurons[i].activation_function_derivative()
                 if j == 0:
                     delta.append(Df*Dneuron)
                     tmp = Df*Dneuron
