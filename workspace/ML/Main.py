@@ -20,32 +20,39 @@ def dummy_test():
     print "activ foo's derivative for bias neuron:", network.layers[1].neurons[2].activation_function_derivate()
     print "activ foo for output neuron:" , network.layers[2].neurons[0].activation_function(2.0), "with argument", 2.0
     print "weights:"
-    for layer in network.layers:
-        print [neuron.weights for neuron in layer.neurons if
-               not (isinstance(neuron, InputNeuron) or isinstance(neuron, BiasNeuron))]
+    for i in range(len (network.layers)):
+        print network.layers[i].w
         print ""
         
     # test forward
     
     # dop aver assegnato a random i pesi, inizializzo a valori noti per vedere se esempio funziona
-    network.layers[1].neurons[0].weights = [0.15,0.2,0.35]
-    network.layers[1].neurons[1].weights = [0.25,0.3,0.35]
-    network.layers[2].neurons[0].weights = [0.4,0.45,0.6]
-    network.layers[2].neurons[1].weights = [0.5,0.55,0.6]
+    network.layers[1].w[0] = [0.15,0.2,0.35]
+    network.layers[1].w[1] = [0.25,0.3,0.35]
+    
 
     print "new weights:"
-    for layer in network.layers:
-        print [neuron.weights for neuron in layer.neurons if not ( isinstance(neuron, InputNeuron) or isinstance(neuron, BiasNeuron))]
-        print ""        
+    for i in range(len (network.layers)):
+        print network.layers[i].w
+        print ""
+    
+    
+    s = SigmoidNeuron()
+    l = Layer(2,2,s)
+    l.w[0] = [0.4,0.45,0.6]
+    l.w[1] = [0.5,0.55,0.6]
+    network.layers[2] = l
     network.Forward()
+    
     print "output's forward", network.output
+    
     network.BackProp(0.5)
-    print "wiegths after a backProp step:"
-    for l in network.layers:
-        for n in l.neurons:
-            if isinstance(n,SigmoidNeuron):
-                print n.weights
     
+    print ("\n\n\n\\n")
+    for i in range (len (network.layers)):
+            print "layer" , i , ":" , network.layers[i].w
+            print ""
     
+
 if __name__ == '__main__':
     main()
