@@ -9,7 +9,12 @@ def main():
 def dummy_test():
     arch = [2,2,2]
     neuronsType = [InputNeuron, SigmoidNeuron, OutputNeuron]
-    network = Network(arch, neuronsType, [0.05,0.1], [0.01,0.99])
+    # actually only one example
+    traningSet = []
+    traningSet.append ([0.05,0.1])
+    target = []
+    target.append([0.01,0.99])
+    network = Network(arch, neuronsType,traningSet,target)
     print "layer's number", len(network.layers)
     for i in range(len(network.layers)):
         print "layer", i , "is size:", len (network.layers[i].neurons)
@@ -32,12 +37,13 @@ def dummy_test():
         print ""        
     network.forward()
     print "output's forward", network.output
-    network.BackProp(0.5)
+    network.BackProp(0.5,0)
     print "weights after a backProp step:"
     for l in network.layers:
         for n in l.neurons:
             if isinstance(n, SigmoidNeuron):
                 print n.weights
+                
     
     
 if __name__ == '__main__':
