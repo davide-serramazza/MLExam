@@ -1,11 +1,11 @@
-import numpy as np
 from Layer import *
+
+
 
 
 class Network:
     def __init__(self, architecture, neurons, i, t):
-        if len(architecture) != len(neurons):
-            raise Exception("Architecture miss match")
+        check_topology(architecture, neurons)
         # input layer
         self.layers = []
         self.input = i
@@ -22,8 +22,8 @@ class Network:
             neuron = neurons[i](len_weights=len_weights)
             layer = Layer(architecture[i], architecture[i - 1], neuron)
             self.layers.append(layer)
-        
-    def Forward(self):
+
+    def forward(self):
         
         for i in range (len (self.layers[0].neurons)-1):
             # set first layer to input
@@ -41,8 +41,7 @@ class Network:
         last_layer = self.layers[-1]
         for i in range (len (last_layer.neurons) -1 ):
             self.output.append (last_layer.neurons[i].getOutput())
-        
-    
+
     def BackProp(self,eta):
         #using ,as much as possible, the nomenclature used in backPropaation lecture
         delta = []       # vectorn in wich i save the output neurons' delta (used after)
@@ -86,9 +85,6 @@ class Network:
         for i in range (len(deltaW)):
             for j in range(len(deltaW[i])):
                 self.layers[outputLayer].neurons[i].weights[j] -=eta*deltaW[i][j]
-       
-        
-                
 
     def train(self):
         # fit the data
@@ -106,3 +102,15 @@ class Network:
         # dump neural network weights to file
         # calls serialize on each layer
         pass
+
+
+def check_topology(architecture, neurons):
+    if len(architecture) != len(neurons):
+        raise Exception("Architecture miss match")
+    if not neurons[0].__name__ is InputNeuron.__name__:
+        raise Exception("Input neurons have incorrect type")
+    if not neurons[-1].__name__ is OutputNeuron.__name__:
+        raise Exception("Output neurons have incorrect type")
+    for i in range(1, len(neurons) - 1):
+        if neurons[i].__name__ is InputNeuron.__name__ or neurons[i].__name__ is OutputNeuron.__name__:
+            raise Exception("Hidden neurons have incorrect type")
