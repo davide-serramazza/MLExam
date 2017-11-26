@@ -10,7 +10,7 @@ class Network:
         self.layers = []
         self.input = i
         self.target = t
-        self.output = []
+        self.output = [0] * architecture[-1]
 
         # input layer
         inputNeuron = neurons[0]()
@@ -24,12 +24,12 @@ class Network:
             self.layers.append(layer)
 
     def forward(self):
-        
+
         for i in range (len (self.layers[0].neurons)-1):
             # set first layer to input
             neuron = self.layers[0].neurons[i]
             neuron.activation_function( self.input[i] )
-        #propagate result
+        # propagate result
         for i in range (1,len(self.layers)):
             for j in range (len (self.layers[i].neurons) -1 ):  # exclude bias neuron
                 neuron = self.layers[i].neurons[j]
@@ -40,19 +40,54 @@ class Network:
         # setting output
         last_layer = self.layers[-1]
         for i in range (len (last_layer.neurons) -1 ):
-            self.output.append (last_layer.neurons[i].getOutput())
+            self.output[i] = last_layer.neurons[i].getOutput()
+
+    def back_propagation(self, target, eta=0.1, momentum=0.9):
+        # 1. get the output vector from the forward step
+        output_net = np.array(self.output)
+
+        # propagate the errors backward through the network:
+
+        # 2. for each network output unit compute its error term delta
+        output_layer = self.layers[-1]
+        derivatives = np.array([neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]])
+        diff = np.array(target) - output_net
+        delta = np.multiply(derivatives, diff)
+
+        # 3. for each hidden unit compute its error term delta
+        delta_vectors = [delta]
+        last_hidden_layer_index = len(self.layers) - 2
+        for i in range(last_hidden_layer_index, 0, -1):
+            for j in range(len(self.layers[i].neurons)):
+                # set of neurons in the next layer (no bias) whose inputs contain the output of current neuron
+                downstream = self.layers[i + 1].neurons[:-1]
+                weights = [neuron.weights[j] for neuron in downstream]
+                gradient_from_next_layer = np.dot(weights, delta)
+                derivatives = np.array([neuron.activation_function_derivative() for neuron in self.layers[i].neurons[:-1]])
+                delta = np.multiply(derivatives, gradient_from_next_layer)
+                delta_vectors.append(delta)
+
+        # 4. update network weights
+        for i in range(1, len(self.layers)):
+            for j in range(len(self.layers[i].neurons) - 1):
+                delta_w = eta * delta_vectors[-i] * self.layers[i].neurons[j].output
+                self.layers[i].neurons[j].weights[:-1] += delta_w
+
+
 
     def BackProp(self,eta):
-        #using ,as much as possible, the nomenclature used in backPropaation lecture
-        delta = []       # vectorn in wich i save the output neurons' delta (used after)
+        # using ,as much as possible, the nomenclature used in back propagation lecture
+        delta = []       # vectorn in which i save the output neurons' delta (used after)
         outputLayer = len (self.layers) - 1         #output layer
-        deltaW  = []        #vector in wich save what i'll subtract to last layer (intialized = current last layer)
+        deltaW = []  # vector in which save what i'll subtract to last layer (initialized = current last layer)
+
         for i in self.layers[outputLayer].neurons:
-            if not isinstance(i,BiasNeuron):
+            if not isinstance(i, BiasNeuron):
                 deltaW.append(copy.deepcopy(i.weights))
+
         for i in range (len (self.layers[outputLayer].neurons) -1):         #-1 due to exclude bias
             for j in range (len (self.layers[outputLayer].neurons[i].weights)):
-                # oi = partial(currrent's neuron net)/partial current weight
+                # oi = partial(current's neuron net)/partial current weight
                 oi = self.layers[outputLayer-1].neurons[j].output
                 # DF = partial(Error)/partial(input to neuron)
                 Df = self.output[i] - self.target[i]
@@ -109,8 +144,8 @@ def check_topology(architecture, neurons):
         raise Exception("Architecture miss match")
     if not neurons[0].__name__ is InputNeuron.__name__:
         raise Exception("Input neurons have incorrect type")
-    if not neurons[-1].__name__ is OutputNeuron.__name__:
-        raise Exception("Output neurons have incorrect type")
+    #if not neurons[-1].__name__ is OutputNeuron.__name__:
+    #    raise Exception("Output neurons have incorrect type")
     for i in range(1, len(neurons) - 1):
         if neurons[i].__name__ is InputNeuron.__name__ or neurons[i].__name__ is OutputNeuron.__name__:
             raise Exception("Hidden neurons have incorrect type")
