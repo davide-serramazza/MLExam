@@ -25,26 +25,18 @@ def dummy_test():
         print [neuron.weights for neuron in layer.neurons if
                not (isinstance(neuron, InputNeuron) or isinstance(neuron, BiasNeuron))]
         print ""
-        
-    # test forward
-    
-    # dop aver assegnato a random i pesi, inizializzo a valori noti per vedere se esempio funziona
-    network.layers[1].neurons[0].weights = [0.15,0.2,0.35]
-    network.layers[1].neurons[1].weights = [0.25,0.3,0.35]
-    network.layers[2].neurons[0].weights = [0.4,0.45,0.6]
-    network.layers[2].neurons[1].weights = [0.5,0.55,0.6]
 
     print "new weights:"
     for layer in network.layers:
         print [neuron.weights for neuron in layer.neurons if not ( isinstance(neuron, InputNeuron) or isinstance(neuron, BiasNeuron))]
         print ""        
-    network.Forward()
+    network.forward()
     print "output's forward", network.output
     network.BackProp(0.5)
-    print "wiegths after a backProp step:"
+    print "weights after a backProp step:"
     for l in network.layers:
         for n in l.neurons:
-            if isinstance(n,SigmoidNeuron):
+            if isinstance(n, SigmoidNeuron):
                 print n.weights
     
     
