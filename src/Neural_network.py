@@ -52,25 +52,26 @@ class Network:
         output_layer = self.layers[-1]
         derivatives = np.array([neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]])
         diff = np.array(target) - output_net
-        delta = np.multiply(derivatives, diff)
+        delta_output = np.multiply(derivatives, diff)
 
         # 3. for each hidden unit compute its error term delta
-        delta_vectors = [delta]
+        delta_vectors = [delta_output]
         last_hidden_layer_index = len(self.layers) - 2
-        for i in range(last_hidden_layer_index, 0, -1):
-            for j in range(len(self.layers[i].neurons)):
+        for i in range(last_hidden_layer_index, -1, -1):
+            delta_layer = [0] * (len(self.layers[i].neurons) - 1)
+            for j in range(len(self.layers[i].neurons) - 1):
                 # set of neurons in the next layer (no bias) whose inputs contain the output of current neuron
                 downstream = self.layers[i + 1].neurons[:-1]
                 weights = [neuron.weights[j] for neuron in downstream]
-                gradient_from_next_layer = np.dot(weights, delta)
-                derivatives = np.array([neuron.activation_function_derivative() for neuron in self.layers[i].neurons[:-1]])
-                delta = np.multiply(derivatives, gradient_from_next_layer)
-                delta_vectors.append(delta)
+                gradient_from_next_layer = np.dot(weights, delta_vectors[last_hidden_layer_index - i])
+                derivative = self.layers[i].neurons[j].activation_function_derivative()
+                delta_layer[j] = derivative * gradient_from_next_layer
+            delta_vectors.append(delta_layer)
 
         # 4. update network weights
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
-                delta_w = eta * delta_vectors[-i] * self.layers[i].neurons[j].output
+                delta_w = eta * np.multiply(delta_vectors[-i], self.layers[i-1].neurons[j].output)
                 self.layers[i].neurons[j].weights[:-1] += delta_w
 
 
