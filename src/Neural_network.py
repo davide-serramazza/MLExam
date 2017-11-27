@@ -50,30 +50,41 @@ class Network:
 
         # 2. for each network output unit compute its error term delta
         output_layer = self.layers[-1]
-        derivatives = np.array([neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]])
+        af_derivatives = np.array([neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]])
         diff = np.array(target) - output_net
-        delta_output = np.multiply(derivatives, diff)
+        delta_output = np.multiply(af_derivatives, diff)
 
         # 3. for each hidden unit compute its error term delta
         delta_vectors = [delta_output]
-        last_hidden_layer_index = len(self.layers) - 2
-        for i in range(last_hidden_layer_index, -1, -1):
-            delta_layer = [0] * (len(self.layers[i].neurons) - 1)
-            for j in range(len(self.layers[i].neurons) - 1):
-                # set of neurons in the next layer (no bias) whose inputs contain the output of current neuron
-                downstream = self.layers[i + 1].neurons[:-1]
-                weights = [neuron.weights[j] for neuron in downstream]
-                gradient_from_next_layer = np.dot(weights, delta_vectors[last_hidden_layer_index - i])
-                derivative = self.layers[i].neurons[j].activation_function_derivative()
-                delta_layer[j] = derivative * gradient_from_next_layer
-            delta_vectors.append(delta_layer)
+        hidden_layer_index = 1
+        delta_layer = []
+        for h in range(len(self.layers[hidden_layer_index].neurons)):
+            downstream = self.layers[hidden_layer_index + 1].neurons[:-1]
+            weights = [neuron.weights[h] for neuron in downstream]
+            gradient_flow = np.dot(weights, delta_output)
+            d_net = self.layers[hidden_layer_index].neurons[h].activation_function_derivative()
+            delta_h = gradient_flow * d_net
+            delta_layer.append(delta_h)
+        delta_vectors.append(delta_layer)
+
+            # last_hidden_layer_index = len(self.layers) - 2
+            # for i in range(last_hidden_layer_index, -1, -1):
+            #     delta_layer = [0] * (len(self.layers[i].neurons) - 1)
+            #     for j in range(len(self.layers[i].neurons) - 1):
+            #       set of neurons in the next layer (no bias) whose inputs contain the output of current neuron
+            # downstream = self.layers[i + 1].neurons[:-1]
+            # weights = [neuron.weights[j] for neuron in downstream]
+            # gradient_from_next_layer = np.dot(weights, delta_vectors[last_hidden_layer_index - i])
+            # derivative = self.layers[i].neurons[j].activation_function_derivative()
+            # delta_layer[j] = derivative * gradient_from_next_layer
+            # delta_vectors.append(delta_layer)
 
         # 4. update network weights
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
-                delta_w = eta * np.multiply(delta_vectors[-i], self.layers[i-1].neurons[j].output)
-                self.layers[i].neurons[j].weights[:-1] += delta_w
-
+                for w in range(len(self.layers[i].neurons[j].weights)):
+                    delta_w = eta * self.layers[i-1].neurons[j].output * delta_vectors[-i][j]
+                    self.layers[i].neurons[j].weights[w] += delta_w
 
 
     def BackProp(self,eta):
