@@ -9,7 +9,7 @@ def main():
 def dummy_test():
     arch = [2,2,2]
     neuronsType = [InputNeuron, SigmoidNeuron, SigmoidNeuron]
-    network = Network(arch, neuronsType, [0.05,0.1], [0.01,0.99])
+    network = Network(arch, neuronsType, [0.01,0.99])
     print "layer's number", len(network.layers)
     for i in range(len(network.layers)):
         print "layer", i , "is size:", len (network.layers[i].neurons)
@@ -33,8 +33,10 @@ def dummy_test():
     print "new weights:"
     for layer in network.layers:
         print [neuron.weights for neuron in layer.neurons if not ( isinstance(neuron, InputNeuron) or isinstance(neuron, BiasNeuron))]
-        print ""        
-    network.forward()
+        print ""
+
+    data = [0.05, 0.1]
+    network.forward(data=[0.05, 0.1])
     print "output's forward", network.output
     network.BackProp(0.5)
     print "weights after a davide backProp step:"
@@ -43,12 +45,12 @@ def dummy_test():
             if isinstance(n, SigmoidNeuron):
                 print n.weights
 
-    network = Network(arch, neuronsType, [0.05, 0.1], [0.01, 0.99])
+    network = Network(arch, neuronsType, [0.01, 0.99])
     network.layers[1].neurons[0].weights = [0.15, 0.2, 0.35]
     network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
     network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
     network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
-    network.forward()
+    network.forward(data=data)
 
     l = network.back_propagation(target=network.target, eta=0.5)
     print "weights after a carlo backProp step:"

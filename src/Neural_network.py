@@ -4,11 +4,10 @@ from Layer import *
 
 
 class Network:
-    def __init__(self, architecture, neurons, i, t):
+    def __init__(self, architecture, neurons, t):
         check_topology(architecture, neurons)
         # input layer
         self.layers = []
-        self.input = i
         self.target = t
         self.output = [0] * architecture[-1]
 
@@ -23,25 +22,27 @@ class Network:
             layer = Layer(architecture[i], architecture[i - 1], neuron)
             self.layers.append(layer)
 
-    def forward(self):
-        self.feed_input_neurons()
-
-        # propagate result
-        for i in range (1,len(self.layers)):
-            for j in range (len (self.layers[i].neurons) -1 ):  # exclude bias neuron
-                neuron = self.layers[i].neurons[j]
-                weights = neuron.weights
-                input_x = self.layers[i-1].getOutput()
-                scores = np.dot (weights , input_x)
-                neuron.activation_function(scores)
+    def forward(self, data):
+        self.feed_input_neurons(data)
+        self.propagate_input()
         # setting output
         last_layer = self.layers[-1]
-        for i in range (len (last_layer.neurons) -1 ):
+        for i in range(len(last_layer.neurons) - 1):
             self.output[i] = last_layer.neurons[i].getOutput()
 
-    def feed_input_neurons(self):
+    def propagate_input(self):
+        # propagate result
+        for i in range(1, len(self.layers)):
+            layer = self.layers[i]
+            for neuron in layer.neurons[:-1]:  # exclude bias
+                weights = neuron.weights
+                input_x = self.layers[i - 1].getOutput()
+                scores = np.dot(weights, input_x)
+                neuron.activation_function(scores)
+
+    def feed_input_neurons(self, data):
         input_layer = self.layers[0]
-        for input_neuron, x in zip(input_layer.neurons[:-1], self.input):  # exclude bias
+        for input_neuron, x in zip(input_layer.neurons[:-1], data):  # exclude bias
             input_neuron.activation_function(x)
 
     def back_propagation(self, target, eta=0.1, momentum=0.9):
