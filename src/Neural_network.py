@@ -10,7 +10,7 @@ class Network:
         self.layers = []
         self.input = i
         self.target = t
-        self.output = []
+        self.output = [0] * architecture[-1]
 
         # input layer
         inputNeuron = neurons[0]()
@@ -24,51 +24,94 @@ class Network:
             self.layers.append(layer)
 
     def forward(self):
-        for p in self.input:
-            for i in range (len (self.layers[0].neurons)-1):
-                # set first layer to input
-                neuron = self.layers[0].neurons[i]
-                neuron.activation_function( p[i] )
-            #propagate result
-            for i in range (1,len(self.layers)):
-                for j in range (len (self.layers[i].neurons) -1 ):  # exclude bias neuron
-                    neuron = self.layers[i].neurons[j]
-                    weights = neuron.weights
-                    input_x = self.layers[i-1].getOutput()
-                    scores = np.dot (weights , input_x)
-                    neuron.activation_function(scores)
-            # setting output
-            last_layer = self.layers[-1]
-            for i in range (len (last_layer.neurons) -1 ):
-                self.output.append (last_layer.neurons[i].getOutput())
 
-    def BackProp(self,eta,p):
-        #using ,as much as possible, the nomenclature used in backPropaation lecture
-        delta = []       # vectorn in wich i save the output neurons' delta (used after)
+        for i in range (len (self.layers[0].neurons)-1):
+            # set first layer to input
+            neuron = self.layers[0].neurons[i]
+            neuron.activation_function( self.input[i] )
+        # propagate result
+        for i in range (1,len(self.layers)):
+            for j in range (len (self.layers[i].neurons) -1 ):  # exclude bias neuron
+                neuron = self.layers[i].neurons[j]
+                weights = neuron.weights
+                input_x = self.layers[i-1].getOutput()
+                scores = np.dot (weights , input_x)
+                neuron.activation_function(scores)
+        # setting output
+        last_layer = self.layers[-1]
+        for i in range (len (last_layer.neurons) -1 ):
+            self.output[i] = last_layer.neurons[i].getOutput()
+
+    def back_propagation(self, target, eta=0.1, momentum=0.9):
+        # 1. get the output vector from the forward step
+        output_net = np.array(self.output)
+
+        # propagate the errors backward through the network:
+
+        # 2. for each network output unit compute its error term delta
+        output_layer = self.layers[-1]
+        af_derivatives = np.array([neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]])
+        diff = np.array(target) - output_net
+        delta_output = np.multiply(af_derivatives, diff)
+
+        # 3. for each hidden unit compute its error term delta
+        delta_vectors = [delta_output]
+        for hidden_layer_index in range(len(self.layers) - 2, 0, -1):
+            delta_layer = []
+            for h in range(len(self.layers[hidden_layer_index].neurons)):
+                downstream = self.layers[hidden_layer_index + 1].neurons[:-1]
+                weights = [neuron.weights[h] for neuron in downstream]
+                gradient_flow = np.dot(weights, delta_output)
+                d_net = self.layers[hidden_layer_index].neurons[h].activation_function_derivative()
+                delta_h = gradient_flow * d_net
+                delta_layer.append(delta_h)
+            delta_vectors.append(delta_layer)
+        
+        #array 3d che contiene i cambiamenti da apportare ai pesi, in particolare delta_w[i][j][k] contiene
+        # i cambiamenti da apportare nel layer i+1 (no modifiche ad input layer), neurone j, peso k
+        delta_w = []
+        # 4. update network weights
+        for i in range(1, len(self.layers)):
+            tmpL = []
+            for j in range(len(self.layers[i].neurons) - 1):
+                tmpN = []
+                for w in range(len(self.layers[i].neurons[j].weights)):
+                    # qui errore precedente, ad ogni passo il neuronre di cui si prendere l'output
+                    # e diverso, tuo codice aveta ...neurons[j] , adesso ...neuron[w].
+                    tmpN.append( eta * self.layers[i-1].neurons[w].output * delta_vectors[-i][j] )
+                tmpL.append( tmpN )
+            delta_w.append(tmpL)
+            
+        return delta_w
+
+
+    def BackProp(self,eta):
+        # using ,as much as possible, the nomenclature used in back propagation lecture
+        delta = []       # vectorn in which i save the output neurons' delta (used after)
         outputLayer = len (self.layers) - 1         #output layer
-        deltaW  = []        #matrix in wich save quantity to be subtracted from weights
-        for i in self.layers:
-            deltaW.append([])
-        #output layer
+        deltaW = []  # vector in which save what i'll subtract to last layer (initialized = current last layer)
+
+        for i in self.layers[outputLayer].neurons:
+            if not isinstance(i, BiasNeuron):
+                deltaW.append(copy.deepcopy(i.weights))
+
         for i in range (len (self.layers[outputLayer].neurons) -1):         #-1 due to exclude bias
-            deltaW[outputLayer].append([])
             for j in range (len (self.layers[outputLayer].neurons[i].weights)):
-                # oi = partial(currrent's neuron net)/partial current weight
+                # oi = partial(current's neuron net)/partial current weight
                 oi = self.layers[outputLayer-1].neurons[j].output
                 # DF = partial(Error)/partial(input to neuron)
-                Df = self.output[i] - self.target[p][i]
+                Df = self.output[i] - self.target[i]
                 #Dneuron = partial (output's neuron)/partial (current neuron' snet)/ 
                 Dneuron = self.layers[outputLayer].neurons[i].activation_function_derivative()
-                if j == 0:      #same delta calculate multiple time but i need only one
+                if j == 0:
                     delta.append(Df*Dneuron)
                     tmp = Df*Dneuron
                 else:
                     tmp = Df* Dneuron
-                deltaW[outputLayer][i].append(eta*oi*tmp)
+                deltaW[i][j] = oi*tmp
         #hidden layers
         for i in range ( outputLayer -1 ,0,-1) :
             for j in range (len(self.layers[i].neurons) -1) : # .1 due to exclude bias
-                deltaW[i].append([])
                 for k in range (len(self.layers[i].neurons[j].weights)):
                     sum = 0.0   #sum up to k=output layer's number
                     for s in range ( len (self.layers[outputLayer].neurons ) - 1):
@@ -82,8 +125,11 @@ class Network:
                     # Dnet = partial (currents neuron's net)/partial(current analyzerd weight's)
                     Dnet = self.layers[i-1].neurons[k].output
                     # update hiddens neuron's weigths
-                    deltaW[i][j].append(eta*sum*Dout*Dnet)
-        return deltaW
+                    self.layers[i].neurons[j].weights[k] -= eta*sum*Dout*Dnet
+        # update output neuron's weigths
+        for i in range (len(deltaW)):
+            for j in range(len(deltaW[i])):
+                self.layers[outputLayer].neurons[i].weights[j] -=eta*deltaW[i][j]
 
     def train(self):
         # fit the data
@@ -108,8 +154,8 @@ def check_topology(architecture, neurons):
         raise Exception("Architecture miss match")
     if not neurons[0].__name__ is InputNeuron.__name__:
         raise Exception("Input neurons have incorrect type")
-    if not neurons[-1].__name__ is OutputNeuron.__name__:
-        raise Exception("Output neurons have incorrect type")
+    #if not neurons[-1].__name__ is OutputNeuron.__name__:
+    #    raise Exception("Output neurons have incorrect type")
     for i in range(1, len(neurons) - 1):
         if neurons[i].__name__ is InputNeuron.__name__ or neurons[i].__name__ is OutputNeuron.__name__:
             raise Exception("Hidden neurons have incorrect type")
