@@ -49,12 +49,15 @@ def dummy_test():
     network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
     network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
     network.forward()
-    network.back_propagation(target=network.target, eta=0.5)
+
+    l = network.back_propagation(target=network.target, eta=0.5)
     print "weights after a carlo backProp step:"
-    for l in network.layers:
-        for n in l.neurons:
-            if isinstance(n, SigmoidNeuron):
-                print n.weights
+    # qui applico i cambiamenti indicati dalla backPropagation, adesso i risultati sono identici
+    for i in range (1, len (network.layers)) :
+        for j in range (len (network.layers[i].neurons)-1):
+               for k in range (len (network.layers[i].neurons[j].weights)):
+                   network.layers[i].neurons[j].weights[k] += l[i-1][j][k]
+               print network.layers[i].neurons[j].weights
 
     # last layer  0.3589 0.4086 -
     #             0.5113 0.5613 -
@@ -63,4 +66,4 @@ def dummy_test():
 
     
 if __name__ == '__main__':
-    main()
+     main()

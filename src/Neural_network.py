@@ -1,4 +1,4 @@
-from src.Layer import *
+from Layer import *
 
 
 
@@ -67,12 +67,22 @@ class Network:
                 delta_layer.append(delta_h)
             delta_vectors.append(delta_layer)
 
+        #array 3d che contiene i cambiamenti da apportare ai pesi, in particolare delta_w[i][j][k] contiene
+        # i cambiamenti da apportare nel layer i+1 (no modifiche ad input layer), neurone j, peso k
+        delta_w = []
         # 4. update network weights
         for i in range(1, len(self.layers)):
+            tmpL = []
             for j in range(len(self.layers[i].neurons) - 1):
+                tmpN = []
                 for w in range(len(self.layers[i].neurons[j].weights)):
-                    delta_w = eta * self.layers[i-1].neurons[j].output * delta_vectors[-i][j]
-                    self.layers[i].neurons[j].weights[w] += delta_w
+                    # qui errore precedente, ad ogni passo il neuronre di cui si prendere l'output
+                    # e diverso, tuo codice aveta ...neurons[j] , adesso ...neuron[w].
+                    tmpN.append( eta * self.layers[i-1].neurons[w].output * delta_vectors[-i][j] )
+                tmpL.append( tmpN )
+            delta_w.append(tmpL)
+            
+        return delta_w
 
 
     def BackProp(self,eta):
