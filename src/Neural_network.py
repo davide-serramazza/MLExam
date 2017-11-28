@@ -24,11 +24,8 @@ class Network:
             self.layers.append(layer)
 
     def forward(self):
+        self.feed_input_neurons()
 
-        for i in range (len (self.layers[0].neurons)-1):
-            # set first layer to input
-            neuron = self.layers[0].neurons[i]
-            neuron.activation_function( self.input[i] )
         # propagate result
         for i in range (1,len(self.layers)):
             for j in range (len (self.layers[i].neurons) -1 ):  # exclude bias neuron
@@ -41,6 +38,11 @@ class Network:
         last_layer = self.layers[-1]
         for i in range (len (last_layer.neurons) -1 ):
             self.output[i] = last_layer.neurons[i].getOutput()
+
+    def feed_input_neurons(self):
+        input_layer = self.layers[0]
+        for input_neuron, x in zip(input_layer.neurons[:-1], self.input):  # exclude bias
+            input_neuron.activation_function(x)
 
     def back_propagation(self, target, eta=0.1, momentum=0.9):
         # 1. get the output vector from the forward step
