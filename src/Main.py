@@ -21,37 +21,20 @@ def dummy_test():
     print "activ foo's derivative for bias neuron:", network.layers[1].neurons[2].activation_function_derivative()
     print "activ foo for output neuron:" , network.layers[2].neurons[0].activation_function(2.0), "with argument", 2.0
     print "weights:"
-    for layer in network.layers:
-        print [neuron.weights for neuron in layer.neurons if
-               not (isinstance(neuron, InputNeuron) or isinstance(neuron, BiasNeuron))]
-        print ""
-
-    network.layers[1].neurons[0].weights = [0.15, 0.2, 0.35]
-    network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
-    network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
-    network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
-    print "new weights:"
-    for layer in network.layers:
-        print [neuron.weights for neuron in layer.neurons if not ( isinstance(neuron, InputNeuron) or isinstance(neuron, BiasNeuron))]
-        print ""
-
-    data = [0.05, 0.1]
-    target = [0.01, 0.99]
-    network.forward(data=data)
-    print "output's forward", network.output
-    network.BackProp(target, 0.5)
-    print "weights after a davide backProp step:"
     network.dump_weights()
 
     network.layers[1].neurons[0].weights = [0.15, 0.2, 0.35]
     network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
     network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
     network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
-    network.forward(data=data)
+    print "new weights: "
+    network.dump_weights()
 
+    data = [0.05, 0.1]
+    target = [0.01, 0.99]
+    network.forward(data=data)
     delta_w = network.back_propagation(target=target, eta=0.5)
-    print "weights after a carlo backProp step:"
-    # qui applico i cambiamenti indicati dalla backPropagation, adesso i risultati sono identici
+    print "weights after a back propagation step:"
     network.update_weights(delta_w=delta_w)
     network.dump_weights()
 
