@@ -6,7 +6,6 @@ from Layer import *
 class Network:
     def __init__(self, architecture, neurons, t):
         check_topology(architecture, neurons)
-        # input layer
         self.layers = []
         self.target = t
         self.output = [0] * architecture[-1]
@@ -25,9 +24,12 @@ class Network:
     def forward(self, data):
         self.feed_input_neurons(data)
         self.propagate_input()
+        self.set_output()
+
+    def set_output(self):
         # setting output
         last_layer = self.layers[-1]
-        for i in range(len(last_layer.neurons) - 1):
+        for i in range(len(last_layer.neurons) - 1):  # exclude bias
             self.output[i] = last_layer.neurons[i].getOutput()
 
     def propagate_input(self):
