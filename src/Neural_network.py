@@ -1,8 +1,6 @@
 from Layer import *
 
 
-
-
 class Network:
     def __init__(self, architecture, neurons, t):
         check_topology(architecture, neurons)
@@ -54,12 +52,33 @@ class Network:
         # propagate the errors backward through the network:
 
         # 2. for each network output unit compute its error term delta
-        output_layer = self.layers[-1]
-        af_derivatives = np.array([neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]])
-        diff = np.array(target) - output_net
-        delta_output = np.multiply(af_derivatives, diff)
+        delta_output = self.compute_delta_output_units(output_net, target)
 
         # 3. for each hidden unit compute its error term delta
+        delta_vectors = self.compute_delta_hidden_units(delta_output)
+
+        # 4. update network weights
+        # array 3d che contiene i cambiamenti da apportare ai pesi, in particolare delta_w[i][j][k] contiene
+        # i cambiamenti da apportare nel layer i+1 (no modifiche ad input layer), neurone j, peso k
+        delta_w = self.compute_weight_update(delta_vectors, eta)
+            
+        return delta_w
+
+    def compute_weight_update(self, delta_vectors, eta):
+        delta_w = []
+        for i in range(1, len(self.layers)):
+            tmpL = []
+            for j in range(len(self.layers[i].neurons) - 1):
+                tmpN = []
+                for w in range(len(self.layers[i].neurons[j].weights)):
+                    # qui errore precedente, ad ogni passo il neuronre di cui si prendere l'output
+                    # e diverso, tuo codice aveta ...neurons[j] , adesso ...neuron[w].
+                    tmpN.append(eta * self.layers[i - 1].neurons[w].output * delta_vectors[-i][j])
+                tmpL.append(tmpN)
+            delta_w.append(tmpL)
+        return delta_w
+
+    def compute_delta_hidden_units(self, delta_output):
         delta_vectors = [delta_output]
         for hidden_layer_index in range(len(self.layers) - 2, 0, -1):
             delta_layer = []
@@ -72,23 +91,14 @@ class Network:
                 delta_layer.append(delta_h)
             delta_vectors.append(delta_layer)
 
-        #array 3d che contiene i cambiamenti da apportare ai pesi, in particolare delta_w[i][j][k] contiene
-        # i cambiamenti da apportare nel layer i+1 (no modifiche ad input layer), neurone j, peso k
-        delta_w = []
-        # 4. update network weights
-        for i in range(1, len(self.layers)):
-            tmpL = []
-            for j in range(len(self.layers[i].neurons) - 1):
-                tmpN = []
-                for w in range(len(self.layers[i].neurons[j].weights)):
-                    # qui errore precedente, ad ogni passo il neuronre di cui si prendere l'output
-                    # e diverso, tuo codice aveta ...neurons[j] , adesso ...neuron[w].
-                    tmpN.append( eta * self.layers[i-1].neurons[w].output * delta_vectors[-i][j] )
-                tmpL.append( tmpN )
-            delta_w.append(tmpL)
-            
-        return delta_w
+        return delta_vectors
 
+    def compute_delta_output_units(self, output_net, target):
+        output_layer = self.layers[-1]
+        af_derivatives = np.array([neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]])
+        diff = np.array(target) - output_net
+        delta_output = np.multiply(af_derivatives, diff)
+        return delta_output
 
     def BackProp(self,eta):
         # using ,as much as possible, the nomenclature used in back propagation lecture
