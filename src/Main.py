@@ -36,14 +36,11 @@ def dummy_test():
         print ""
 
     data = [0.05, 0.1]
-    network.forward(data=[0.05, 0.1])
+    network.forward(data=data)
     print "output's forward", network.output
     network.BackProp(0.5)
     print "weights after a davide backProp step:"
-    for l in network.layers:
-        for n in l.neurons:
-            if isinstance(n, SigmoidNeuron):
-                print n.weights
+    network.dump_weights()
 
     network = Network(arch, neuronsType, [0.01, 0.99])
     network.layers[1].neurons[0].weights = [0.15, 0.2, 0.35]

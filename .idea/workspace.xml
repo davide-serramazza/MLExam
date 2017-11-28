@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bdeb779a-acc9-4f5a-8fd6-c01cf14eded8" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Neural_network.py" afterPath="$PROJECT_DIR$/src/Neural_network.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.py" afterPath="$PROJECT_DIR$/src/Main.py" />
     </list>
     <ignored path="MLExam.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -21,10 +21,10 @@
       <file leaf-file-name="Main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1080">
-              <caret line="60" column="0" lean-forward="true" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+            <state relative-caret-position="-47">
+              <caret line="39" column="29" lean-forward="false" selection-start-line="39" selection-start-column="29" selection-end-line="39" selection-end-column="29" />
               <folding>
-                <marker date="1511896434240" expanded="true" signature="110:130" ph="..." />
+                <marker date="1511897515487" expanded="true" signature="110:130" ph="..." />
               </folding>
             </state>
           </provider>
@@ -55,8 +55,8 @@
       <file leaf-file-name="Neural_network.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="406">
-              <caret line="62" column="8" lean-forward="false" selection-start-line="62" selection-start-column="8" selection-end-line="62" selection-end-column="8" />
+            <state relative-caret-position="1188">
+              <caret line="156" column="34" lean-forward="true" selection-start-line="156" selection-start-column="34" selection-end-line="156" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -100,10 +100,10 @@
         <option value="$PROJECT_DIR$/Neural_network.py" />
         <option value="$PROJECT_DIR$/src/__init__.py" />
         <option value="$PROJECT_DIR$/test/NeuralNetwokTest.py" />
-        <option value="$PROJECT_DIR$/src/Main.py" />
         <option value="$PROJECT_DIR$/src/Layer.py" />
         <option value="$PROJECT_DIR$/src/Neuron.py" />
         <option value="$PROJECT_DIR$/src/Neural_network.py" />
+        <option value="$PROJECT_DIR$/src/Main.py" />
       </list>
     </option>
   </component>
@@ -366,7 +366,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27327326" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21921922" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -458,7 +458,7 @@
         <state relative-caret-position="720">
           <caret line="40" column="34" lean-forward="false" selection-start-line="40" selection-start-column="34" selection-end-line="40" selection-end-column="34" />
           <folding>
-            <marker date="1511896434240" expanded="true" signature="110:130" ph="..." />
+            <marker date="1511897515487" expanded="true" signature="110:130" ph="..." />
           </folding>
         </state>
       </provider>
@@ -486,7 +486,7 @@
         <state relative-caret-position="702">
           <caret line="39" column="34" lean-forward="false" selection-start-line="39" selection-start-column="34" selection-end-line="39" selection-end-column="34" />
           <folding>
-            <marker date="1511896434240" expanded="true" signature="110:130" ph="..." />
+            <marker date="1511897515487" expanded="true" signature="110:130" ph="..." />
           </folding>
         </state>
       </provider>
@@ -540,7 +540,7 @@
         <state relative-caret-position="990">
           <caret line="55" column="31" lean-forward="false" selection-start-line="55" selection-start-column="31" selection-end-line="55" selection-end-column="31" />
           <folding>
-            <marker date="1511896434240" expanded="true" signature="110:130" ph="..." />
+            <marker date="1511897515487" expanded="true" signature="110:130" ph="..." />
           </folding>
         </state>
       </provider>
@@ -594,7 +594,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1511896434240" expanded="true" signature="110:130" ph="..." />
+            <marker date="1511897515487" expanded="true" signature="110:130" ph="..." />
           </folding>
         </state>
       </provider>
@@ -648,7 +648,7 @@
         <state relative-caret-position="720">
           <caret line="40" column="4" lean-forward="false" selection-start-line="40" selection-start-column="4" selection-end-line="40" selection-end-column="4" />
           <folding>
-            <marker date="1511896434240" expanded="true" signature="110:130" ph="..." />
+            <marker date="1511897515487" expanded="true" signature="110:130" ph="..." />
           </folding>
         </state>
       </provider>
@@ -694,7 +694,7 @@
         <state relative-caret-position="756">
           <caret line="42" column="18" lean-forward="false" selection-start-line="42" selection-start-column="18" selection-end-line="42" selection-end-column="18" />
           <folding>
-            <marker date="1511896434240" expanded="true" signature="110:130" ph="..." />
+            <marker date="1511897515487" expanded="true" signature="110:130" ph="..." />
           </folding>
         </state>
       </provider>
@@ -730,7 +730,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1511896434240" expanded="true" signature="110:130" ph="..." />
+            <marker date="1511897515487" expanded="true" signature="110:130" ph="..." />
           </folding>
         </state>
       </provider>
@@ -740,7 +740,7 @@
         <state relative-caret-position="405">
           <caret line="27" column="18" lean-forward="false" selection-start-line="27" selection-start-column="18" selection-end-line="27" selection-end-column="18" />
           <folding>
-            <marker date="1511896434240" expanded="true" signature="110:130" ph="..." />
+            <marker date="1511897515487" expanded="true" signature="110:130" ph="..." />
           </folding>
         </state>
       </provider>
@@ -776,7 +776,7 @@
         <state relative-caret-position="180">
           <caret line="12" column="30" lean-forward="false" selection-start-line="12" selection-start-column="30" selection-end-line="12" selection-end-column="30" />
           <folding>
-            <marker date="1511896434240" expanded="true" signature="110:130" ph="..." />
+            <marker date="1511897515487" expanded="true" signature="110:130" ph="..." />
           </folding>
         </state>
       </provider>
@@ -852,18 +852,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="60" column="0" lean-forward="true" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+        <state relative-caret-position="-47">
+          <caret line="39" column="29" lean-forward="false" selection-start-line="39" selection-start-column="29" selection-end-line="39" selection-end-column="29" />
           <folding>
-            <marker date="1511896434240" expanded="true" signature="110:130" ph="..." />
+            <marker date="1511897515487" expanded="true" signature="110:130" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="406">
-          <caret line="62" column="8" lean-forward="false" selection-start-line="62" selection-start-column="8" selection-end-line="62" selection-end-column="8" />
+        <state relative-caret-position="1188">
+          <caret line="156" column="34" lean-forward="true" selection-start-line="156" selection-start-column="34" selection-end-line="156" selection-end-column="34" />
           <folding />
         </state>
       </provider>
