@@ -36,7 +36,7 @@ def dummy_test():
         print ""
 
     data = [0.05, 0.1]
-    target = [0.01,0.99]
+    target = [0.01, 0.99]
     network.forward(data=data)
     print "output's forward", network.output
     network.BackProp(target, 0.5)
