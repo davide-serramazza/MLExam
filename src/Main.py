@@ -43,7 +43,6 @@ def dummy_test():
     print "weights after a davide backProp step:"
     network.dump_weights()
 
-    network = Network(arch, neuronsType)
     network.layers[1].neurons[0].weights = [0.15, 0.2, 0.35]
     network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
     network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
@@ -54,6 +53,14 @@ def dummy_test():
     print "weights after a carlo backProp step:"
     # qui applico i cambiamenti indicati dalla backPropagation, adesso i risultati sono identici
     network.update_weights(delta_w=delta_w)
+    network.dump_weights()
+
+    print "weights after one epoch of training:"
+    network.layers[1].neurons[0].weights = [0.15, 0.2, 0.35]
+    network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
+    network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
+    network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
+    network.train(data=data, targets=target, learning_rate=0.5, epochs=1)
     network.dump_weights()
 
 

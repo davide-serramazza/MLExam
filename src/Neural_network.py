@@ -151,12 +151,12 @@ class Network:
                 for k in range(len(self.layers[i].neurons[j].weights)):
                     self.layers[i].neurons[j].weights[k] += delta_w[i - 1][j][k]
 
-    def train(self):
+    def train(self, data, targets, epochs, learning_rate):  #, batch_size): TODO add batch size
         # fit the data
-        # for each iteration/epoch
-        #   self.forward()
-        #   self.backprop()
-        pass
+        for epoch in range(epochs):
+            self.forward(data)
+            delta_w = self.back_propagation(targets, learning_rate)
+            self.update_weights(delta_w)
 
     def predict(self, data):
         # predict target variable
@@ -169,8 +169,6 @@ class Network:
         # calls serialize on each layer
         for layer in self.layers[1:]:  # exclude input layer
             layer.dump_weights()
-
-
 
 
 def check_topology(architecture, neurons):
