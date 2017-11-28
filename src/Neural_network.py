@@ -136,6 +136,12 @@ class Network:
             for j in range(len(deltaW[i])):
                 self.layers[outputLayer].neurons[i].weights[j] -=eta*deltaW[i][j]
 
+    def update_weights(self, delta_w):
+        for i in range(1, len(self.layers)):
+            for j in range(len(self.layers[i].neurons) - 1):
+                for k in range(len(self.layers[i].neurons[j].weights)):
+                    self.layers[i].neurons[j].weights[k] += delta_w[i - 1][j][k]
+
     def train(self):
         # fit the data
         # for each iteration/epoch
@@ -148,10 +154,14 @@ class Network:
         # scores = forward(data)
         pass
 
-    def serialize(self):
+    # TODO add output_file as a parameter
+    def dump_weights(self):
         # dump neural network weights to file
         # calls serialize on each layer
-        pass
+        for layer in self.layers[1:]:  # exclude input layer
+            layer.dump_weights()
+
+
 
 
 def check_topology(architecture, neurons):

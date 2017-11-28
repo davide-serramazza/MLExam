@@ -52,14 +52,12 @@ def dummy_test():
     network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
     network.forward(data=data)
 
-    l = network.back_propagation(target=network.target, eta=0.5)
+    delta_w = network.back_propagation(target=network.target, eta=0.5)
     print "weights after a carlo backProp step:"
     # qui applico i cambiamenti indicati dalla backPropagation, adesso i risultati sono identici
-    for i in range (1, len (network.layers)) :
-        for j in range (len (network.layers[i].neurons)-1):
-               for k in range (len (network.layers[i].neurons[j].weights)):
-                   network.layers[i].neurons[j].weights[k] += l[i-1][j][k]
-               print network.layers[i].neurons[j].weights
+    network.update_weights(delta_w=delta_w)
+    network.dump_weights()
+
 
     # last layer  0.3589 0.4086 -
     #             0.5113 0.5613 -
