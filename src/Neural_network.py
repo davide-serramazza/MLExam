@@ -2,10 +2,9 @@ from Layer import *
 
 
 class Network:
-    def __init__(self, architecture, neurons, t):
+    def __init__(self, architecture, neurons):
         check_topology(architecture, neurons)
         self.layers = []
-        self.target = t
         self.output = [0] * architecture[-1]
 
         # input layer
@@ -100,7 +99,7 @@ class Network:
         delta_output = np.multiply(af_derivatives, diff)
         return delta_output
 
-    def BackProp(self,eta):
+    def BackProp(self, target, eta):
         # using ,as much as possible, the nomenclature used in back propagation lecture
         delta = []       # vectorn in which i save the output neurons' delta (used after)
         outputLayer = len (self.layers) - 1         #output layer
@@ -115,7 +114,7 @@ class Network:
                 # oi = partial(current's neuron net)/partial current weight
                 oi = self.layers[outputLayer-1].neurons[j].output
                 # DF = partial(Error)/partial(input to neuron)
-                Df = self.output[i] - self.target[i]
+                Df = self.output[i] - target[i]
                 #Dneuron = partial (output's neuron)/partial (current neuron' snet)/ 
                 Dneuron = self.layers[outputLayer].neurons[i].activation_function_derivative()
                 if j == 0:
