@@ -41,8 +41,8 @@ class TestNeuralNetwork(unittest.TestCase):
         network = Network(arch, neuronsType)
         self.set_weights(network)
 
-        data = [0.05, 0.1]
-        target = [0.01, 0.99]
+        data = [[0.05, 0.1]]
+        target = [[0.01, 0.99]]
         network.train(data=data, targets=target, epochs=1, learning_rate=0.5)
 
         layers = network.layers

@@ -110,10 +110,16 @@ class Network:
 
     def train(self, data, targets, epochs, learning_rate):  #, batch_size): TODO add batch size
         # fit the data
+        losses = []
         for epoch in range(epochs):
-            self.forward(data)
-            delta_w, loss_value = self.back_propagation(targets, learning_rate)
-            self.update_weights(delta_w)
+            loss_batch = 0
+            for pattern, target in zip(data, targets):
+                self.forward(pattern)
+                delta_w, loss_p = self.back_propagation(target, learning_rate)
+                loss_batch += loss_p
+                self.update_weights(delta_w)
+            losses.append(loss_batch)
+        return losses
 
     def predict(self, data):
         # predict target variable
