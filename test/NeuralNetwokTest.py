@@ -28,11 +28,12 @@ class TestNeuralNetwork(unittest.TestCase):
         data = [0.05, 0.1]
         target = [0.01, 0.99]
         network.forward(data)
-        delta_w = network.back_propagation(target=target, eta=0.5)
+        delta_w, loss_value = network.back_propagation(target=target, eta=0.5)
         network.update_weights(delta_w)
 
         layers = network.layers
         self.assert_weights(layers)
+        self.assertEqual(loss_value.round(9), 0.298371109)  # oracle up to 9 digits
 
     def test_train(self):
         arch = [2, 2, 2]

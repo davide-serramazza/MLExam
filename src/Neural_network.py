@@ -60,8 +60,11 @@ class Network:
         # array 3d che contiene i cambiamenti da apportare ai pesi, in particolare delta_w[i][j][k] contiene
         # i cambiamenti da apportare nel layer i+1 (no modifiche ad input layer), neurone j, peso k
         delta_w = self.compute_weight_update(delta_vectors, eta)
+
+        # 5 report loss
+        loss_value = loss.value(target, output_net)
             
-        return delta_w
+        return delta_w, loss_value
 
     def compute_weight_update(self, delta_vectors, eta):
         delta_w = []
@@ -95,7 +98,7 @@ class Network:
     def compute_delta_output_units(self, output_net, target, loss):
         output_layer = self.layers[-1]
         af_derivatives = np.array([neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]])
-        diff = loss.derivative(np.array(target), output_net)  # np.array(target) - output_net
+        diff = loss.derivative(np.array(target), output_net)
         delta_output = np.multiply(af_derivatives, diff)
         return delta_output
 
@@ -109,7 +112,7 @@ class Network:
         # fit the data
         for epoch in range(epochs):
             self.forward(data)
-            delta_w = self.back_propagation(targets, learning_rate)
+            delta_w, loss_value = self.back_propagation(targets, learning_rate)
             self.update_weights(delta_w)
 
     def predict(self, data):
