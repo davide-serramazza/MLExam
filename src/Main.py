@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 from Neural_network import *
-    
+
     
 def main():
     dummy_test()
@@ -51,6 +51,7 @@ def dummy_test():
     #             0.5113 0.5613 -
     # first layer 0.1497 0.1995 -
     #             0.2497 0.2995 -
+
 
     
 if __name__ == '__main__':

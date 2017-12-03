@@ -1,5 +1,5 @@
 from Layer import *
-
+from loss_functions import *
 
 class Network:
     def __init__(self, architecture, neurons):
@@ -44,14 +44,14 @@ class Network:
         for input_neuron, x in zip(input_layer.neurons[:-1], data):  # exclude bias
             input_neuron.activation_function(x)
 
-    def back_propagation(self, target, eta=0.1, momentum=0.9):
+    def back_propagation(self, target, eta=0.1, momentum=0.9, loss=SquaredError()):
         # 1. get the output vector from the forward step
         output_net = np.array(self.output)
 
         # propagate the errors backward through the network:
 
         # 2. for each network output unit compute its error term delta
-        delta_output = self.compute_delta_output_units(output_net, target)
+        delta_output = self.compute_delta_output_units(output_net, target, loss)
 
         # 3. for each hidden unit compute its error term delta
         delta_vectors = self.compute_delta_hidden_units(delta_output)
@@ -92,10 +92,10 @@ class Network:
 
         return delta_vectors
 
-    def compute_delta_output_units(self, output_net, target):
+    def compute_delta_output_units(self, output_net, target, loss):
         output_layer = self.layers[-1]
         af_derivatives = np.array([neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]])
-        diff = np.array(target) - output_net
+        diff = loss.derivative(np.array(target), output_net)  # np.array(target) - output_net
         delta_output = np.multiply(af_derivatives, diff)
         return delta_output
 
