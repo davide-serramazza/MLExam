@@ -15,9 +15,10 @@ class Neuron(object):
     def getOutput(self):
         return self.output
 
-    def serialize(self):
+    # TODO add output file as a parameter
+    def dump_weights(self):
         # prints weights to a file
-        pass
+        print self.weights
 
 
 # subclasses

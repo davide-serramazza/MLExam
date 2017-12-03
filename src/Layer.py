@@ -22,8 +22,9 @@ class Layer:
             res.append(self.neurons[i].getOutput())
         return res
 
-
-    def serialize(self):
+    # TODO add output_file as a parameter
+    def dump_weights(self):
         # print weights to a file
         # call serialize on each neuron
-        pass
+        for neuron in self.neurons[:-1]:  # exclude bias
+            neuron.dump_weights()
