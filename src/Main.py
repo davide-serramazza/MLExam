@@ -9,7 +9,7 @@ def main():
 def dummy_test():
     arch = [2,2,2]
     neuronsType = [InputNeuron, SigmoidNeuron, SigmoidNeuron]
-    network = Network(arch, neuronsType, [0.05,0.1], [0.01,0.99])
+    network = Network(arch, neuronsType)
     print "layer's number", len(network.layers)
     for i in range(len(network.layers)):
         print "layer", i , "is size:", len (network.layers[i].neurons)
@@ -21,43 +21,32 @@ def dummy_test():
     print "activ foo's derivative for bias neuron:", network.layers[1].neurons[2].activation_function_derivative()
     print "activ foo for output neuron:" , network.layers[2].neurons[0].activation_function(2.0), "with argument", 2.0
     print "weights:"
-    for layer in network.layers:
-        print [neuron.weights for neuron in layer.neurons if
-               not (isinstance(neuron, InputNeuron) or isinstance(neuron, BiasNeuron))]
-        print ""
+    network.dump_weights()
 
     network.layers[1].neurons[0].weights = [0.15, 0.2, 0.35]
     network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
     network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
     network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
-    print "new weights:"
-    for layer in network.layers:
-        print [neuron.weights for neuron in layer.neurons if not ( isinstance(neuron, InputNeuron) or isinstance(neuron, BiasNeuron))]
-        print ""        
-    network.forward()
-    print "output's forward", network.output
-    network.BackProp(0.5)
-    print "weights after a davide backProp step:"
-    for l in network.layers:
-        for n in l.neurons:
-            if isinstance(n, SigmoidNeuron):
-                print n.weights
+    print "new weights: "
+    network.dump_weights()
 
-    network = Network(arch, neuronsType, [0.05, 0.1], [0.01, 0.99])
+    data = [0.05, 0.1]
+    target = [0.01, 0.99]
+    network.forward(data=data)
+    delta_w = network.back_propagation(target=target, eta=0.5)
+    print "weights after a back propagation step:"
+    network.update_weights(delta_w=delta_w)
+    network.dump_weights()
+
+    print "weights after one epoch of training:"
     network.layers[1].neurons[0].weights = [0.15, 0.2, 0.35]
     network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
     network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
     network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
-    network.forward()
-    l = network.back_propagation(target=network.target, eta=0.5)
-    print "weights after a carlo backProp step:"
-    # qui applico i cambiamenti indicati dalla backPropagation, adesso i risultati sono identici
-    for i in range (1, len (network.layers)) :
-        for j in range (len (network.layers[i].neurons)-1):
-               for k in range (len (network.layers[i].neurons[j].weights)):
-                   network.layers[i].neurons[j].weights[k] += l[i-1][j][k]
-               print network.layers[i].neurons[j].weights
-        
+    network.train(data=data, targets=target, learning_rate=0.5, epochs=1)
+    network.dump_weights()
+
+
     # last layer  0.3589 0.4086 -
     #             0.5113 0.5613 -
     # first layer 0.1497 0.1995 -
