@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 from Neural_network import *
-    
+
     
 def main():
     dummy_test()
@@ -30,10 +30,10 @@ def dummy_test():
     print "new weights: "
     network.dump_weights()
 
-    data = [0.05, 0.1]
-    target = [0.01, 0.99]
-    network.forward(data=data)
-    delta_w = network.back_propagation(target=target, eta=0.5)
+    data = [[0.05, 0.1]]
+    target = [[0.01, 0.99]]
+    network.forward(pattern=data[0])
+    delta_w, _ = network.back_propagation(target=target[0], eta=0.5)
     print "weights after a back propagation step:"
     network.update_weights(delta_w=delta_w)
     network.dump_weights()
@@ -51,6 +51,7 @@ def dummy_test():
     #             0.5113 0.5613 -
     # first layer 0.1497 0.1995 -
     #             0.2497 0.2995 -
+
 
     
 if __name__ == '__main__':

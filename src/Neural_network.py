@@ -1,5 +1,5 @@
 from Layer import *
-
+from loss_functions import *
 
 class Network:
     def __init__(self, architecture, neurons):
@@ -18,8 +18,8 @@ class Network:
             layer = Layer(architecture[i], architecture[i - 1], neuron)
             self.layers.append(layer)
 
-    def forward(self, data):
-        self.feed_input_neurons(data)
+    def forward(self, pattern):
+        self.feed_input_neurons(pattern)
         self.propagate_input()
         self.set_output()
 
@@ -44,14 +44,14 @@ class Network:
         for input_neuron, x in zip(input_layer.neurons[:-1], data):  # exclude bias
             input_neuron.activation_function(x)
 
-    def back_propagation(self, target, eta=0.1, momentum=0.9):
+    def back_propagation(self, target, eta=0.1, momentum=0.9, loss=SquaredError()):
         # 1. get the output vector from the forward step
         output_net = np.array(self.output)
 
         # propagate the errors backward through the network:
 
         # 2. for each network output unit compute its error term delta
-        delta_output = self.compute_delta_output_units(output_net, target)
+        delta_output = self.compute_delta_output_units(output_net, target, loss)
 
         # 3. for each hidden unit compute its error term delta
         delta_vectors = self.compute_delta_hidden_units(delta_output)
@@ -60,8 +60,11 @@ class Network:
         # array 3d che contiene i cambiamenti da apportare ai pesi, in particolare delta_w[i][j][k] contiene
         # i cambiamenti da apportare nel layer i+1 (no modifiche ad input layer), neurone j, peso k
         delta_w = self.compute_weight_update(delta_vectors, eta)
+
+        # 5 report loss
+        loss_value = loss.value(target, output_net)
             
-        return delta_w
+        return delta_w, loss_value
 
     def compute_weight_update(self, delta_vectors, eta):
         delta_w = []
@@ -92,10 +95,10 @@ class Network:
 
         return delta_vectors
 
-    def compute_delta_output_units(self, output_net, target):
+    def compute_delta_output_units(self, output_net, target, loss):
         output_layer = self.layers[-1]
         af_derivatives = np.array([neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]])
-        diff = np.array(target) - output_net
+        diff = loss.derivative(np.array(target), output_net)
         delta_output = np.multiply(af_derivatives, diff)
         return delta_output
 
@@ -107,10 +110,16 @@ class Network:
 
     def train(self, data, targets, epochs, learning_rate):  #, batch_size): TODO add batch size
         # fit the data
+        losses = []
         for epoch in range(epochs):
-            self.forward(data)
-            delta_w = self.back_propagation(targets, learning_rate)
-            self.update_weights(delta_w)
+            loss_batch = 0
+            for pattern, target in zip(data, targets):
+                self.forward(pattern)
+                delta_w, loss_p = self.back_propagation(target, learning_rate)
+                loss_batch += loss_p
+                self.update_weights(delta_w)
+            losses.append(loss_batch)
+        return losses
 
     def predict(self, data):
         # predict target variable
