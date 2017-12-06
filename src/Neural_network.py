@@ -121,6 +121,13 @@ class Network:
             losses.append(loss_batch)
         return losses
 
+    def sumVector (self,a,b):
+        for i in range (0,len(a)):
+            for j in range(0,len(a[i])):
+                for k in range(0,len(a[i][j])):
+                    a[i][j][k] += b[i][j][k]
+
+
     def predict(self, data):
         # predict target variable
         # scores = forward(data)

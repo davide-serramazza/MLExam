@@ -13,6 +13,7 @@ class Layer:
         # add hidden neurons
         for i in range(size):
             self.neurons.append(copy.deepcopy(neuron))
+            neuron.weights_init(prevSize+1)
         # add bias neuron
         self.neurons.append(BiasNeuron())
 

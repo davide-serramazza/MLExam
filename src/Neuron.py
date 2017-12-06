@@ -6,6 +6,9 @@ class Neuron(object):
     def __init__(self):
         self.output = 0.0
 
+    def weights_init(self,len_weights):
+        self.weights = np.random.uniform(low=-1, high=1, size=len_weights)
+
     def activation_function(self, x):
         pass
 
