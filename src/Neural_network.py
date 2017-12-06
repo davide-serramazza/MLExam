@@ -108,14 +108,14 @@ class Network:
                 for k in range(len(self.layers[i].neurons[j].weights)):
                     self.layers[i].neurons[j].weights[k] += delta_w[i - 1][j][k]
 
-    def train(self, data, targets, epochs, learning_rate):  #, batch_size): TODO add batch size
+    def train(self, data, targets, epochs, learning_rate,l):  #, batch_size): TODO add batch size
         # fit the data
         losses = []
         for epoch in range(epochs):
             loss_batch = 0
             for pattern, target in zip(data, targets):
                 self.forward(pattern)
-                delta_w, loss_p = self.back_propagation(target, learning_rate)
+                delta_w, loss_p = self.back_propagation(target, learning_rate,loss=l)
                 loss_batch += loss_p
                 self.update_weights(delta_w)
             losses.append(loss_batch)
