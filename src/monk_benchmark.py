@@ -20,7 +20,7 @@ def main():
     network = Network(architecture=[6, 2, 1], neurons=[InputNeuron, SigmoidNeuron, SigmoidNeuron])
     patterns = train_data[['f1', 'f2', 'f3', 'f4', 'f5', 'f6']].values
     labels = train_data["monk-1"].values
-    losses = network.train(data=patterns, targets=labels, epochs=50, learning_rate=0.01,l=MisClassified())
+    losses = network.train(data=patterns, targets=labels, epochs=100, learning_rate=0.05,l=MisClassified(),batch_size=124)
 
     # 4. visualize how loss changes over time
     #    plots changes a lot for different runs

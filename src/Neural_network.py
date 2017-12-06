@@ -44,7 +44,7 @@ class Network:
         for input_neuron, x in zip(input_layer.neurons[:-1], data):  # exclude bias
             input_neuron.activation_function(x)
 
-    def back_propagation(self, target, eta=0.1, momentum=0.9, loss=SquaredError()):
+    def back_propagation(self, target, eta=0.1, momentum=0.9, loss=MisClassified()):
         # 1. get the output vector from the forward step
         output_net = np.array(self.output)
 
@@ -108,7 +108,7 @@ class Network:
                 for k in range(len(self.layers[i].neurons[j].weights)):
                     self.layers[i].neurons[j].weights[k] += delta_w[i - 1][j][k]
 
-    def train(self, data, targets, epochs, learning_rate,l):  #, batch_size): TODO add batch size
+    def oldtrain(self, data, targets, epochs, learning_rate,l):  #, batch_size): TODO add batch size
         # fit the data
         losses = []
         for epoch in range(epochs):
@@ -126,6 +126,34 @@ class Network:
             for j in range(0,len(a[i])):
                 for k in range(0,len(a[i][j])):
                     a[i][j][k] += b[i][j][k]
+
+
+    def train(self, data, targets, epochs, learning_rate,l,batch_size):
+        # fit the data
+        losses = []
+        delta_wTot = []
+        for epoch in range(epochs):
+            loss_batch = 0
+            delta_wTot = []
+            #take only batch_size examples
+            for i in range(0,len(data),batch_size):
+                delta_wTot = []
+                pattern = data[i:i+batch_size]
+                target = targets[i:i+batch_size]
+                #now really train
+                for p,t in zip (pattern,target):
+                    self.forward(p)
+                    delta_w, loss_p = self.back_propagation(t, learning_rate,loss=l)
+                    loss_batch += loss_p
+                    if delta_wTot == []:
+                        delta_wTot=delta_w
+                    else:
+                        self.sumVector(delta_wTot,delta_w)
+                    #update weights
+                self.update_weights(delta_wTot)
+                #append the total loss in single epoch
+            losses.append(loss_batch)
+        return losses
 
 
     def predict(self, data):

@@ -43,7 +43,7 @@ def dummy_test():
     network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
     network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
     network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
-    network.train(data=data, targets=target, learning_rate=0.5, epochs=1)
+    network.train(data=data, targets=target, learning_rate=0.5, epochs=1,l=SquaredError(),batch_size=1)
     network.dump_weights()
 
 
