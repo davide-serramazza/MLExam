@@ -1,19 +1,21 @@
 #!/usr/bin/env python2
 
 from Neural_network import *
+import matplotlib.pyplot as plt
 
-    
+
 def main():
     dummy_test()
 
 def dummy_test():
+
     arch = [2,2,2]
     neuronsType = [InputNeuron, SigmoidNeuron, SigmoidNeuron]
     network = Network(arch, neuronsType)
     print "layer's number", len(network.layers)
     for i in range(len(network.layers)):
         print "layer", i , "is size:", len (network.layers[i].neurons)
-        
+
     print "activ foo for input neuron:" , network.layers[0].neurons[0].activation_function(1.5) , "with argument", 1.5
     print "activ foo for hidden neuron:",  network.layers[1].neurons[0].activation_function(2.0) , "with argument", 2.0
     print "activ foo's derivative for hidden neuron:" , network.layers[1].neurons[0].activation_function_derivative()
@@ -47,12 +49,14 @@ def dummy_test():
     network.dump_weights()
 
 
+
+
     # last layer  0.3589 0.4086 -
     #             0.5113 0.5613 -
     # first layer 0.1497 0.1995 -
     #             0.2497 0.2995 -
 
 
-    
+
 if __name__ == '__main__':
-     main()
+    main()

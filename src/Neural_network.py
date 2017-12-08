@@ -75,6 +75,8 @@ class Network:
                 for w in range(len(self.layers[i].neurons[j].weights)):
                     # qui errore precedente, ad ogni passo il neuronre di cui si prendere l'output
                     # e diverso, tuo codice aveta ...neurons[j] , adesso ...neuron[w].
+                    a = self.layers[i - 1].neurons[w].output
+                    b = delta_vectors[-i][j]
                     tmpN.append(eta * self.layers[i - 1].neurons[w].output * delta_vectors[-i][j])
                 tmpL.append(tmpN)
             delta_w.append(tmpL)
