@@ -145,7 +145,7 @@ class Network:
                 #now really train
                 for p,t in zip (pattern,target):
                     self.forward(p)
-                    delta_w, loss_p = self.back_propagation(t, learning_rate,loss=l)
+                    delta_w, loss_p = self.back_propagation(t, learning_rate/batch_size,loss=l)
                     loss_batch += loss_p
                     if delta_wTot == []:
                         delta_wTot=delta_w
