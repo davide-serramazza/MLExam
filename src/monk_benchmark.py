@@ -18,7 +18,8 @@ def main():
 
     # 4. visualize how loss changes over time
     #    plots changes a lot for different runs
-    plt.plot(range(len(losses)), losses)
+    error = [i/len(patterns) for i in losses]
+    plt.plot(range(len(error)), error)
     plt.xlabel("epochs")
     plt.ylabel("misClassification")
     plt.show()
