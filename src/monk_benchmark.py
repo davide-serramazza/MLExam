@@ -14,15 +14,17 @@ def main():
     network = Network(architecture=[6, 2, 1], neurons=[InputNeuron, SigmoidNeuron, SigmoidNeuron])
     patterns = train_data[['f1', 'f2', 'f3', 'f4', 'f5', 'f6']].values
     labels = train_data["label"].values
-    losses = network.train(data=patterns, targets=labels, epochs=1000, learning_rate=0.3,l=MisClassified(),batch_size=len(patterns))
+    losses = network.train(data=patterns, targets=labels, epochs=1000, learning_rate=0.1,l=MisClassified(),
+                           batch_size=1,momentum=0.0)
 
     # 4. visualize how loss changes over time
     #    plots changes a lot for different runs
-    error = [i/len(patterns) for i in losses]
+    error = [i/len(patterns)*2 for i in losses]
     plt.plot(range(len(error)), error)
     plt.xlabel("epochs")
     plt.ylabel("misClassification")
     plt.show()
+
 
 if __name__ == "__main__":
     main()

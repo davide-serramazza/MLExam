@@ -104,11 +104,11 @@ class Network:
         delta_output = np.multiply(af_derivatives, diff)
         return delta_output
 
-    def update_weights(self, delta_w):
+    def update_weights(self, delta_w,prev,momentum):
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
                 for k in range(len(self.layers[i].neurons[j].weights)):
-                    self.layers[i].neurons[j].weights[k] += delta_w[i - 1][j][k]
+                    self.layers[i].neurons[j].weights[k] += delta_w[i - 1][j][k] + (prev[i - 1][j][k]*momentum)
 
     def oldtrain(self, data, targets, epochs, learning_rate,l):  #, batch_size): TODO add batch size
         # fit the data
@@ -130,29 +130,34 @@ class Network:
                     a[i][j][k] += b[i][j][k]
 
 
-    def train(self, data, targets, epochs, learning_rate,l,batch_size):
+    def train(self, data, targets, epochs, learning_rate,l,batch_size,momentum):
         # fit the data
+        random.shuffle(data)
         losses = []
-        delta_wTot = []
+        prevg = [] # prev g is previous gradien  (for momentum)
         for epoch in range(epochs):
             loss_batch = 0
-            delta_wTot = []
-            #take only batch_size examples
             for i in range(0,len(data),batch_size):
-                delta_wTot = []
+                #take only batch_size examples
                 pattern = data[i:i+batch_size]
                 target = targets[i:i+batch_size]
+                deltaw_Tot = []     #deltaw_tot = sum of delata_W (delta of a single iteration)
                 #now really train
                 for p,t in zip (pattern,target):
                     self.forward(p)
                     delta_w, loss_p = self.back_propagation(t, learning_rate/batch_size,loss=l)
                     loss_batch += loss_p
-                    if delta_wTot == []:
-                        delta_wTot=delta_w
+                    if deltaw_Tot == []:
+                        deltaw_Tot=delta_w
                     else:
-                        self.sumVector(delta_wTot,delta_w)
-                    #update weights
-                self.update_weights(delta_wTot)
+                        self.sumVector(deltaw_Tot,delta_w)      #non riesco ad usare np.sum...sorry!
+                #update weights
+                if (prevg == []):
+                    prevg = copy.deepcopy(deltaw_Tot)
+                    self.update_weights(deltaw_Tot,prevg,0)
+                else:
+                    self.update_weights(deltaw_Tot,prevg,momentum)
+                    prevg = copy.deepcopy(deltaw_Tot)
                 #append the total loss in single epoch
             losses.append(loss_batch)
         return losses
