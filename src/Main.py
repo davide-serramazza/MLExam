@@ -8,7 +8,6 @@ def main():
     dummy_test()
 
 def dummy_test():
-
     arch = [2,2,2]
     neuronsType = [InputNeuron, SigmoidNeuron, SigmoidNeuron]
     network = Network(arch, neuronsType)
@@ -48,6 +47,19 @@ def dummy_test():
     network.train(data=data, targets=target, learning_rate=0.5, epochs=1,l=SquaredError(),batch_size=1)
     network.dump_weights()
 
+    arch = [2,2,1]
+    neuronsType = [InputNeuron, SigmoidNeuron,SigmoidNeuron]
+    network = Network(arch, neuronsType)
+    datal = [[0,1],[0,0],[1,0],[1,1]]
+    target = [0,1,0,1]
+    losses = network.train(data=datal, targets=target, epochs=1000, learning_rate=0.5,l=MisClassified(),
+                       batch_size=1,momentum=0.0)
+    # 4. visualize how loss changes over time
+    #    plots changes a lot for different runs
+    plt.plot(range(len(losses)), losses)
+    plt.xlabel("epochs")
+    plt.ylabel("misClassification")
+    plt.show()
 
 
 

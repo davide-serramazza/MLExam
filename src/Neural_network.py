@@ -130,9 +130,8 @@ class Network:
                     a[i][j][k] += b[i][j][k]
 
 
-    def train(self, data, targets, epochs, learning_rate,l,batch_size,momentum):
+    def train(self,data,targets, epochs, learning_rate,l,batch_size,momentum):
         # fit the data
-        random.shuffle(data)
         losses = []
         prevg = [] # prev g is previous gradien  (for momentum)
         for epoch in range(epochs):
@@ -158,10 +157,15 @@ class Network:
                 else:
                     self.update_weights(deltaw_Tot,prevg,momentum)
                     prevg = copy.deepcopy(deltaw_Tot)
-                #append the total loss in single epoch
+                    #append the total loss in single epoch
             losses.append(loss_batch)
-        return losses
 
+
+            if (epoch%100==0):
+                print epoch,":",loss_batch
+
+
+        return losses
 
     def predict(self, data):
         # predict target variable
