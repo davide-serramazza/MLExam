@@ -159,12 +159,6 @@ class Network:
                     prevg = copy.deepcopy(deltaw_Tot)
                     #append the total loss in single epoch
             losses.append(loss_batch)
-
-
-            if (epoch%100==0):
-                print epoch,":",loss_batch
-
-
         return losses
 
     def predict(self, data):
