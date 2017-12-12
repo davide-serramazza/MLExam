@@ -52,7 +52,7 @@ def dummy_test():
     network = Network(arch, neuronsType)
     datal = [[0,1],[0,0],[1,0],[1,1]]
     target = [0,1,0,1]
-    losses = network.train(data=datal, targets=target, epochs=100, learning_rate=0.5,l=MisClassified(),
+    losses = network.train(data=datal, targets=target, epochs=1000, learning_rate=0.5,l=MisClassified(),
                        batch_size=1,momentum=0.0)
     print len(losses)
     # 4. visualize how loss changes over time

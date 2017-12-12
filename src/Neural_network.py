@@ -18,6 +18,7 @@ class Network:
             layer = Layer(architecture[i], architecture[i - 1], neuron)
             self.layers.append(layer)
 
+
     def forward(self, pattern):
         self.feed_input_neurons(pattern)
         self.propagate_input()
