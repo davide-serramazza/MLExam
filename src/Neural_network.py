@@ -45,7 +45,8 @@ class Network:
         for input_neuron, x in zip(input_layer.neurons[:-1], data):  # exclude bias
             input_neuron.activation_function(x)
 
-    def back_propagation(self, target, eta=0.1, momentum=0.9, loss=MisClassified()):
+    def back_propagation(self, target, eta=0.1, momentum=0.9):
+        loss = SquaredError()
         # 1. get the output vector from the forward step
         output_net = np.array(self.output)
 
@@ -64,8 +65,9 @@ class Network:
 
         # 5 report loss
         loss_value = loss.value(target, output_net)
+        misClassification = loss.misClassification(target,output_net)
             
-        return delta_w, loss_value
+        return delta_w, loss_value,misClassification
 
     def compute_weight_update(self, delta_vectors, eta):
         delta_w = []
@@ -131,22 +133,30 @@ class Network:
                     a[i][j][k] += b[i][j][k]
 
 
-    def train(self,data,targets, epochs, learning_rate,l,batch_size,momentum):
+    def train(self,data,targets, epochs, learning_rate,batch_size,momentum):
         # fit the data
+        # lists for specify missclassification and Squared erro
         losses = []
-        prevg = [] # prev g is previous gradien  (for momentum)
+        misClassification = []
+        # prev g is previous gradien  (for momentum)
+        prevg = []
         for epoch in range(epochs):
+            # current epoch vale of missclassification and Squared error
             loss_batch = 0
+            misC_batch = 0
             for i in range(0,len(data),batch_size):
                 #take only batch_size examples
                 pattern = data[i:i+batch_size]
                 target = targets[i:i+batch_size]
-                deltaw_Tot = []     #deltaw_tot = sum of delata_W (delta of a single iteration)
+                #deltaw_tot = sum of delata_W (delta of a single iteration)
+                deltaw_Tot = []
                 #now really train
                 for p,t in zip (pattern,target):
                     self.forward(p)
-                    delta_w, loss_p = self.back_propagation(t, learning_rate/batch_size,loss=l)
+                    delta_w, loss_p,miss_p = self.back_propagation(t, learning_rate/batch_size)
                     loss_batch += loss_p
+                    misC_batch +=miss_p
+                    # momenutm stuff
                     if deltaw_Tot == []:
                         deltaw_Tot=delta_w
                     else:
@@ -158,9 +168,10 @@ class Network:
                 else:
                     self.update_weights(deltaw_Tot,prevg,momentum)
                     prevg = copy.deepcopy(deltaw_Tot)
-                    #append the total loss in single epoch
+            #append the total loss and missClassification in single epoch
             losses.append(loss_batch)
-        return losses
+            misClassification.append(misC_batch)
+        return losses,misClassification
 
     def predict(self, data):
         # predict target variable
