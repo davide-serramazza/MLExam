@@ -46,8 +46,12 @@ class Network:
             input_neuron.activation_function(x)
 
     def back_propagation(self, target, eta=0.1, momentum=0.9):
-        loss = SquaredError()
-        # 1. get the output vector from the forward step
+        loss = SquaredError("s") #todo init to a generic object
+        if isinstance(self.layers[-1].neurons[0],SigmoidNeuron):
+            loss = SquaredError("s")
+        if isinstance(self.layers[-1].neurons[0],TanHNeuron):
+            loss = SquaredError("t")
+    # 1. get the output vector from the forward step
         output_net = np.array(self.output)
 
         # propagate the errors backward through the network:

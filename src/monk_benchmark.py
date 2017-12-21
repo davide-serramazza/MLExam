@@ -13,6 +13,15 @@ def decode(data,encode):
                 ris.append(0)
     return ris
 
+def transform_output(l):
+    res = []
+    for i in l:
+        if i==0:
+            res.append(-1)
+        else:
+            res.append(1)
+    return res
+
 def main():
     # 1. load dataset
     columns = ['label', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'id']
@@ -21,7 +30,7 @@ def main():
     print train_data.head()
 
     # 2. train neural network. set low learning rate because actual implementation is online
-    network = Network(architecture=[17, 10, 1], neurons=[InputNeuron, TanHNeuron, SigmoidNeuron])
+    network = Network(architecture=[17, 10, 1], neurons=[InputNeuron, TanHNeuron,TanHNeuron])
     tmp = train_data[['f1', 'f2', 'f3', 'f4', 'f5', 'f6']].values
 
     #3. trasform encoding
@@ -29,12 +38,14 @@ def main():
     patterns = []
     for i in range(len(tmp)):
         patterns.append(decode(tmp[i],encoding))
-    labels = train_data["label"].values
-    losses,misClass = network.train(data=patterns, targets=labels, epochs=100, learning_rate=0.02,
+    tmps = train_data["label"].values
+    labels = transform_output(tmps)
+    losses,misClass = network.train(data=patterns, targets=labels, epochs=50, learning_rate=0.01,
                            batch_size=1,momentum=0.1)
 
     # 4. visualize how loss changes over time
     #    plots changes a lot for different runs
+    #todo specify graph/window dimension
     plt.subplot(1, 2, 1)
     plt.plot(range(len(misClass)), misClass)
     plt.xlabel("epochs")
@@ -46,8 +57,6 @@ def main():
     plt.xlabel("epochs")
     plt.ylabel("squaredError")
     plt.show()
-
-
 
 if __name__ == "__main__":
     main()
