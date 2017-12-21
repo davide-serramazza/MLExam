@@ -8,7 +8,7 @@ class Network:
         self.output = [0] * architecture[-1]
 
         # input layer
-        inputNeuron = neurons[0]()
+        inputNeuron = neurons[0](0)
         layer = Layer(architecture[0], 0, inputNeuron)
         self.layers.append(layer)
         # hidden and output layers

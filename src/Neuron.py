@@ -3,8 +3,9 @@ import numpy as np
 
 #superclass abstract Neuron
 class Neuron(object):
-    def __init__(self):
+    def __init__(self,len_weights):
         self.output = 0.0
+        self.weights = np.random.uniform(low=-0.7, high=0.7, size=len_weights)
 
     def weights_init(self,len_weights):
         self.weights = np.random.uniform(low=-0.7, high=0.7, size=len_weights)
@@ -36,8 +37,6 @@ class InputNeuron(Neuron):
 
 
 class SigmoidNeuron(Neuron):
-    def __init__(self, len_weights):
-        self.weights = np.random.uniform(low=-1, high=1, size=len_weights)
 
     def activation_function(self, x):
         self.output = 1 / (1 + np.exp(-x))
@@ -48,8 +47,6 @@ class SigmoidNeuron(Neuron):
 
 
 class ReLuNeuron(Neuron):
-    def __init__(self, len_weights):
-        self.weights = np.random.uniform(low=-1, high=1, size=len_weights)
 
     def activation_function(self, x):
         self.output = np.max(0, x)
@@ -60,8 +57,6 @@ class ReLuNeuron(Neuron):
 
 
 class TanHNeuron(Neuron):
-    def __init__(self, len_weights):
-        self.weights = np.random.uniform(low=-1, high=1, size=len_weights)
 
     def activation_function(self, x):
         sigmoid = lambda y: (1 / (1 + np.exp(-y)))
@@ -83,8 +78,6 @@ class BiasNeuron(Neuron):
 
 
 class OutputNeuron(Neuron):
-    def __init__(self, len_weights):
-        self.weights = np.random.uniform(low=-1, high=1, size=len_weights)
 
     def activation_function(self, x):
         self.output = x
