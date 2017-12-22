@@ -34,9 +34,9 @@ def dummy_test():
     data = [[0.05, 0.1]]
     target = [[0.01, 0.99]]
     network.forward(pattern=data[0])
-    delta_w, _ = network.back_propagation(target=target[0], eta=0.5)
+    delta_w, _,_ = network.back_propagation(target=target[0], eta=0.5)
     print "weights after a back propagation step:"
-    network.update_weights(delta_w=delta_w,prev=delta_w,momentum=0.0)
+    network.update_weights(delta_w=delta_w)
     network.dump_weights()
 
     print "weights after one epoch of training:"
@@ -44,7 +44,7 @@ def dummy_test():
     network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
     network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
     network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
-    network.train(data=data, targets=target, learning_rate=0.5, epochs=1,l=SquaredError(),batch_size=1,momentum=0.0)
+    network.train(data=data, targets=target, learning_rate=0.5, epochs=1,batch_size=1,momentum=0.0)
     network.dump_weights()
 
     arch = [2,2,1]
@@ -52,9 +52,8 @@ def dummy_test():
     network = Network(arch, neuronsType)
     datal = [[0,1],[0,0],[1,0],[1,1]]
     target = [0,1,0,1]
-    losses = network.train(data=datal, targets=target, epochs=1000, learning_rate=0.5,l=MisClassified(),
-                       batch_size=1,momentum=0.0)
-    print len(losses)
+    losses = network.train(data=datal, targets=target, epochs=1, learning_rate=0.5,
+                       batch_size=2,momentum=0.0)
     # 4. visualize how loss changes over time
     #    plots changes a lot for different runs
     plt.plot(range(len(losses)), losses)
