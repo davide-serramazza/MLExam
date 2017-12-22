@@ -47,30 +47,33 @@ class Network:
 
     def back_propagation(self, target, eta=0.1, momentum=0.9):
         loss = SquaredError("s") #todo init to a generic object
+        # understand if is needed only squared error or misclassification to i.e task = Classification or regression
         if isinstance(self.layers[-1].neurons[0],SigmoidNeuron):
             loss = SquaredError("s")
         if isinstance(self.layers[-1].neurons[0],TanHNeuron):
             loss = SquaredError("t")
-    # 1. get the output vector from the forward step
+        # 1. get the output vector from the forward step
         output_net = np.array(self.output)
-
         # propagate the errors backward through the network:
-
         # 2. for each network output unit compute its error term delta
         delta_output = self.compute_delta_output_units(output_net, target, loss)
-
         # 3. for each hidden unit compute its error term delta
-        delta_vectors = self.compute_delta_hidden_units(delta_output)
-
+        #intialize a vector to contain delta founded for each layer(in reverse order)
+        delta_vectors = []
+        delta_vectors.append(delta_output)
+        #delta next:layer = temp variable containing next layer's delta
+        delta_next_layer = delta_output
+        # compute delta vector for each layer and append it to result
+        for hidden_layer_index in range(len(self.layers) - 2, 0, -1):
+            delta_next_layer = self.compute_delta_hidden_units(delta_next_layer,hidden_layer_index)
+            delta_vectors.append(delta_next_layer)
         # 4. update network weights
         # array 3d che contiene i cambiamenti da apportare ai pesi, in particolare delta_w[i][j][k] contiene
         # i cambiamenti da apportare nel layer i+1 (no modifiche ad input layer), neurone j, peso k
         delta_w = self.compute_weight_update(delta_vectors, eta)
-
         # 5 report loss
         loss_value = loss.value(target, output_net)
         misClassification = loss.misClassification(target,output_net)
-            
         return delta_w, loss_value,misClassification
 
     def compute_weight_update(self, delta_vectors, eta):
@@ -78,31 +81,30 @@ class Network:
         for i in range(1, len(self.layers)):
             tmpL = []
             for j in range(len(self.layers[i].neurons) - 1):
-                tmpN = []
+                tmpN = np.array([])
                 for w in range(len(self.layers[i].neurons[j].weights)):
                     # qui errore precedente, ad ogni passo il neuronre di cui si prendere l'output
                     # e diverso, tuo codice aveta ...neurons[j] , adesso ...neuron[w].
                     a = self.layers[i - 1].neurons[w].output
                     b = delta_vectors[-i][j]
-                    tmpN.append(eta * self.layers[i - 1].neurons[w].output * delta_vectors[-i][j])
+                    tmp = np.array(eta * self.layers[i - 1].neurons[w].output * delta_vectors[-i][j])
+                    tmpN = np.append(tmpN,tmp)
                 tmpL.append(tmpN)
+            tmpL = np.asarray(tmpL)
             delta_w.append(tmpL)
+        delta_w = np.asarray(delta_w)
         return delta_w
 
-    def compute_delta_hidden_units(self, delta_output):
-        delta_vectors = [delta_output]
-        for hidden_layer_index in range(len(self.layers) - 2, 0, -1):
-            delta_layer = []
-            for h in range(len(self.layers[hidden_layer_index].neurons)):
-                downstream = self.layers[hidden_layer_index + 1].neurons[:-1]
-                weights = [neuron.weights[h] for neuron in downstream]
-                gradient_flow = np.dot(weights, delta_output)
-                d_net = self.layers[hidden_layer_index].neurons[h].activation_function_derivative()
-                delta_h = gradient_flow * d_net
-                delta_layer.append(delta_h)
-            delta_vectors.append(delta_layer)
-
-        return delta_vectors
+    def compute_delta_hidden_units(self, delta_next_layer,i):
+        delta_layer = []
+        for h in range(len(self.layers[i].neurons)-1):
+            downstream = self.layers[i+ 1].neurons[:-1]
+            weights = [neuron.weights[h] for neuron in downstream]
+            gradient_flow = np.dot(weights, delta_next_layer)
+            d_net = self.layers[i].neurons[h].activation_function_derivative()
+            delta_h = gradient_flow * d_net
+            delta_layer.append(delta_h)
+        return delta_layer
 
     def compute_delta_output_units(self, output_net, target, loss):
         output_layer = self.layers[-1]
@@ -111,11 +113,11 @@ class Network:
         delta_output = np.multiply(af_derivatives, diff)
         return delta_output
 
-    def update_weights(self, delta_w,prev,momentum):
+    def update_weights(self, delta_w):
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
                 for k in range(len(self.layers[i].neurons[j].weights)):
-                    self.layers[i].neurons[j].weights[k] += delta_w[i - 1][j][k] + (prev[i - 1][j][k]*momentum)
+                    self.layers[i].neurons[j].weights[k] += delta_w[i - 1][j][k]
 
     def oldtrain(self, data, targets, epochs, learning_rate,l):  #, batch_size): TODO add batch size
         # fit the data
@@ -129,13 +131,6 @@ class Network:
                 self.update_weights(delta_w)
             losses.append(loss_batch)
         return losses
-
-    def sumVector (self,a,b):
-        for i in range (0,len(a)):
-            for j in range(0,len(a[i])):
-                for k in range(0,len(a[i][j])):
-                    a[i][j][k] += b[i][j][k]
-
 
     def train(self,data,targets, epochs, learning_rate,batch_size,momentum):
         # fit the data
@@ -164,14 +159,15 @@ class Network:
                     if deltaw_Tot == []:
                         deltaw_Tot=delta_w
                     else:
-                        self.sumVector(deltaw_Tot,delta_w)      #non riesco ad usare np.sum...sorry!
-                #update weights
+                        deltaw_Tot += delta_w      #non riesco ad usare np.sum...sorry
+            #update weights
                 if (prevg == []):
                     prevg = copy.deepcopy(deltaw_Tot)
-                    self.update_weights(deltaw_Tot,prevg,0)
                 else:
-                    self.update_weights(deltaw_Tot,prevg,momentum)
-                    prevg = copy.deepcopy(deltaw_Tot)
+                    tmp = copy.deepcopy(deltaw_Tot)
+                    deltaw_Tot += (prevg*momentum)
+                    prevg = tmp
+                    self.update_weights(deltaw_Tot)
             #append the total loss and missClassification in single epoch
             losses.append(loss_batch)
             misClassification.append(misC_batch)
