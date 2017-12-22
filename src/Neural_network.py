@@ -8,7 +8,7 @@ class Network:
         self.output = [0] * architecture[-1]
 
         # input layer
-        inputNeuron = neurons[0](0)
+        inputNeuron = neurons[0](0)     #0 because i have to specify weight's vector lenght
         layer = Layer(architecture[0], 0, inputNeuron)
         self.layers.append(layer)
         # hidden and output layers
@@ -47,7 +47,7 @@ class Network:
 
     def back_propagation(self, target, eta=0.1, momentum=0.9):
         loss = SquaredError("s") #todo init to a generic object
-        # understand if is needed only squared error or misclassification to i.e task = Classification or regression
+        # understand if is needed only squared error or misclassification too i.e task = Classification or regression?
         if isinstance(self.layers[-1].neurons[0],SigmoidNeuron):
             loss = SquaredError("s")
         if isinstance(self.layers[-1].neurons[0],TanHNeuron):
@@ -61,7 +61,7 @@ class Network:
         #intialize a vector to contain delta founded for each layer(in reverse order)
         delta_vectors = []
         delta_vectors.append(delta_output)
-        #delta next:layer = temp variable containing next layer's delta
+        #delta next_layer = temp variable containing next layer's delta
         delta_next_layer = delta_output
         # compute delta vector for each layer and append it to result
         for hidden_layer_index in range(len(self.layers) - 2, 0, -1):
@@ -71,7 +71,7 @@ class Network:
         # array 3d che contiene i cambiamenti da apportare ai pesi, in particolare delta_w[i][j][k] contiene
         # i cambiamenti da apportare nel layer i+1 (no modifiche ad input layer), neurone j, peso k
         delta_w = self.compute_weight_update(delta_vectors, eta)
-        # 5 report loss
+        # 5 report loss and missclassification count
         loss_value = loss.value(target, output_net)
         misClassification = loss.misClassification(target,output_net)
         return delta_w, loss_value,misClassification
@@ -85,8 +85,6 @@ class Network:
                 for w in range(len(self.layers[i].neurons[j].weights)):
                     # qui errore precedente, ad ogni passo il neuronre di cui si prendere l'output
                     # e diverso, tuo codice aveta ...neurons[j] , adesso ...neuron[w].
-                    a = self.layers[i - 1].neurons[w].output
-                    b = delta_vectors[-i][j]
                     tmp = np.array(eta * self.layers[i - 1].neurons[w].output * delta_vectors[-i][j])
                     tmpN = np.append(tmpN,tmp)
                 tmpL.append(tmpN)
@@ -96,10 +94,13 @@ class Network:
         return delta_w
 
     def compute_delta_hidden_units(self, delta_next_layer,i):
+        #delta_layer vector
         delta_layer = []
         for h in range(len(self.layers[i].neurons)-1):
+            #downstream = list of neurons in current layer
             downstream = self.layers[i+ 1].neurons[:-1]
             weights = [neuron.weights[h] for neuron in downstream]
+            # gradient flow= downstream*weights
             gradient_flow = np.dot(weights, delta_next_layer)
             d_net = self.layers[i].neurons[h].activation_function_derivative()
             delta_h = gradient_flow * d_net

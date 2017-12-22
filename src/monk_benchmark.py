@@ -2,7 +2,7 @@ import pandas as pd
 from Neural_network import *
 import matplotlib.pyplot as plt
 
-
+# decode inout from 1-to-k enconding
 def decode(data,encode):
     ris = []
     for i in range (len(data)):
@@ -13,6 +13,7 @@ def decode(data,encode):
                 ris.append(0)
     return ris
 
+#transform output from 0 to -1 for Tanh
 def transform_output(l):
     res = []
     for i in l:
