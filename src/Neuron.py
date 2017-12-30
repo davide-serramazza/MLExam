@@ -19,10 +19,9 @@ class Neuron(object):
     def getOutput(self):
         return self.output
 
-    # TODO add output file as a parameter
-    def dump_weights(self):
+    def dump_weights(self, file_output):
         # prints weights to a file
-        print self.weights
+        print >> file_output, self.weights
 
 
 # subclasses

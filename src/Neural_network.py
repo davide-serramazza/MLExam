@@ -1,11 +1,13 @@
 from Layer import *
 from loss_functions import *
+import sys
 
 class Network:
     def __init__(self, architecture, neurons):
         check_topology(architecture, neurons)
         self.layers = []
         self.output = [0] * architecture[-1]
+        self.architecture = architecture  # for quick access when writing weights to file
 
         # input layer
         inputNeuron = neurons[0](0)     #0 because i have to specify weight's vector lenght
@@ -180,12 +182,26 @@ class Network:
         # scores = forward(data)
         pass
 
-    # TODO add output_file as a parameter
-    def dump_weights(self):
-        # dump neural network weights to file
-        # calls serialize on each layer
+    def dump_weights(self, file_output=None):
+        # dump neural network weights to file, calls dump_weights() on each layer
+        file_output = sys.stdout if file_output is None else file_output
+        # the first line is the architecture
+        print >> file_output, self.architecture
         for layer in self.layers[1:]:  # exclude input layer
-            layer.dump_weights()
+            layer.dump_weights(file_output)
+
+    def load_weights(self, file_input):
+        architecture = file_input.readline()
+        if cmp(architecture, self.architecture) == 0:
+            raise Exception("The network architectures do not match: "
+                            "expected " + str(self.architecture) +
+                            "\ngiven " + str(architecture))
+        """ TODO maybe also check the type of neurons? (e.g. if the network that was trained
+            had Sigmoids, should we raise an error if the network we want to load has TanH. I think so.
+        """
+        for layer in self.layers[1:]:  # skip input layer
+            for neuron in layer.neurons:
+                neuron.weights = file_input.readline().strip()
 
 
 def check_topology(architecture, neurons):

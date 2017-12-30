@@ -44,7 +44,14 @@ def dummy_test():
     network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
     network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
     network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
-    network.train(data=data, targets=target, learning_rate=0.5, epochs=1,batch_size=1,momentum=0.0)
+    network.train(data=data, targets=target, learning_rate=0.5, epochs=1, batch_size=len(data), momentum=0.0)
+    network.dump_weights()
+
+    # dump weights on file
+    with open("weights.csv", "w") as file_weights:
+        network.dump_weights(file_weights)
+    with open("weights.csv", "r") as input_file:
+        network.load_weights(input_file)
     network.dump_weights()
 
     arch = [2,2,1]
@@ -60,7 +67,6 @@ def dummy_test():
     plt.xlabel("epochs")
     plt.ylabel("misClassification")
     plt.show()
-
 
 
     # last layer  0.3589 0.4086 -
