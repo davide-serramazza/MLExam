@@ -199,9 +199,11 @@ class Network:
         """ TODO maybe also check the type of neurons? (e.g. if the network that was trained
             had Sigmoids, should we raise an error if the network we want to load has TanH. I think so.
         """
+
         for layer in self.layers[1:]:  # skip input layer
             for neuron in layer.neurons:
-                neuron.weights = file_input.readline().strip()
+                line = file_input.readline().strip()
+                neuron.weights = list(line.strip(','))
 
 
 def check_topology(architecture, neurons):

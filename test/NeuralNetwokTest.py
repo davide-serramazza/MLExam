@@ -77,6 +77,34 @@ class TestNeuralNetwork(unittest.TestCase):
         with self.assertRaises(Exception):
             Network([2, 2, 2], neuronsType)
 
+    def test_read_write_weights(self):
+        arch = [2, 2, 2]
+        neuronsType = [InputNeuron, SigmoidNeuron, SigmoidNeuron]
+        network = Network(arch, neuronsType)
+
+        weights_1_0 = [0.15, 0.2, 0.35]
+        weights_1_1 = [0.25, 0.3, 0.35]
+        weights_2_0 = [0.4, 0.45, 0.6]
+        weights_2_1 = [0.5, 0.55, 0.6]
+
+        # set weights
+        network.layers[1].neurons[0].weights = weights_1_0
+        network.layers[1].neurons[1].weights = weights_1_1
+        network.layers[2].neurons[0].weights = weights_2_0
+        network.layers[2].neurons[1].weights = weights_2_1
+
+        # dump and re-read weights
+        with open("test_weights.csv", "w") as out_file:
+            network.dump_weights(out_file)
+        with open("test_weights.csv", "r") as in_file:
+            network.load_weights(in_file)
+
+        # check that the weights are the same
+        self.assertEqual(network.layers[1].neurons[0].weights, weights_1_0)
+        self.assertEqual(network.layers[1].neurons[1].weights, weights_1_1)
+        self.assertEqual(network.layers[2].neurons[0].weights, weights_2_0)
+        self.assertEqual(network.layers[2].neurons[1].weights, weights_2_1)
+
 
 if __name__ == '__main__':
     unittest.main()
