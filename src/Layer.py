@@ -18,7 +18,7 @@ class Layer:
         # add bias neuron
         self.neurons.append(BiasNeuron())
 
-    def getOutput (self):
+    def getOutput(self):
         res = []
         for i in range ( len (self.neurons)):
             res.append(self.neurons[i].getOutput())

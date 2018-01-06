@@ -25,12 +25,12 @@ class Network:
         self.feed_input_neurons(pattern)
         self.propagate_input()
         self.set_output()
+        return self.output
 
     def set_output(self):
         # setting output
         last_layer = self.layers[-1]
-        for i in range(len(last_layer.neurons) - 1):  # exclude bias
-            self.output[i] = last_layer.neurons[i].getOutput()
+        self.output = last_layer.getOutput()[:-1]  # exclude bias neuron
 
     def propagate_input(self):
         # propagate result
