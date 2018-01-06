@@ -21,16 +21,14 @@ class Network:
             layer = Layer(architecture[i], architecture[i - 1], neuron)
             self.layers.append(layer)
 
+    def getOutput(self):
+        last_layer = self.layers[-1]
+        return last_layer.getOutput()[:-1]
+
     def forward(self, pattern):
         self.feed_input_neurons(pattern)
         self.propagate_input()
-        self.set_output()
-        return self.output
-
-    def set_output(self):
-        # setting output
-        last_layer = self.layers[-1]
-        self.output = last_layer.getOutput()[:-1]  # exclude bias neuron
+        return self.getOutput()
 
     def propagate_input(self):
         # propagate result

@@ -58,22 +58,19 @@ def main():
     plt.plot(range(len(squareE)),squareE)
     plt.xlabel("epochs")
     plt.ylabel("squaredError")
-    #plt.show()
+    plt.show()
 
     # predict
-    network = Network(architecture=[6, 5, 1], neurons=[InputNeuron, SigmoidNeuron, SigmoidNeuron])
     test_data = pd.read_csv("../monk_datasets/monks-1.test", delim_whitespace=True, header=None)
     test_data.columns = columns
     labels = test_data["label"]
     test_data = test_data[['f1', 'f2', 'f3', 'f4', 'f5', 'f6']].values
-    #patterns = []
-    #for i in range(len(test_data)):
-    #    patterns.append(decode(test_data[i], encoding))
-    #labels = transform_output(labels.values)
+    patterns = []
+    for i in range(len(test_data)):
+        patterns.append(decode(test_data[i], encoding))
+    labels = transform_output(labels.values)
 
-    network.train(data=test_data, targets=labels, epochs=50, learning_rate=0.01,
-                  batch_size=1, momentum=0.0)
-    print network.predict(test_data)
+    print network.predict(patterns)
 
 
 if __name__ == "__main__":
