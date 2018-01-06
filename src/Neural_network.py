@@ -181,7 +181,7 @@ class Network:
         scores = []
         for pattern in data:
             self.forward(pattern)
-            scores.append(self.output)
+            scores.append(self.getOutput())
         return scores
 
     def dump_weights(self, file_output=None):
