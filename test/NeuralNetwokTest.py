@@ -14,7 +14,7 @@ class TestNeuralNetwork(unittest.TestCase):
         self.set_weights(network)
 
         network.forward(data)
-        network_output = (network.output)
+        network_output = (network.getOutput())
         expected_output = [0.75136506955231575, 0.77292846532146253]
         self.assertEquals(network_output, expected_output)
 

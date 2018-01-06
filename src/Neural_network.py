@@ -7,7 +7,6 @@ class Network:
     def __init__(self, architecture, neurons):
         check_topology(architecture, neurons)
         self.layers = []
-        self.output = [0] * architecture[-1]
         self.architecture = architecture  # for quick access when writing weights to file
 
         # input layer
@@ -53,7 +52,7 @@ class Network:
         if isinstance(self.layers[-1].neurons[0],TanHNeuron):
             loss = SquaredError("t")
         # 1. get the output vector from the forward step
-        output_net = np.array(self.output)
+        output_net = np.array(self.getOutput())
         # propagate the errors backward through the network:
         # 2. for each network output unit compute its error term delta
         delta_output = self.compute_delta_output_units(output_net, target, loss)
