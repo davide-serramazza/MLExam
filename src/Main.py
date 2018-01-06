@@ -48,10 +48,16 @@ def dummy_test():
     network.dump_weights()
 
     # dump weights on file
+    print "dump..."
+    network.dump_weights()
     with open("weights.csv", "w") as file_weights:
         network.dump_weights(file_weights)
+
+    print "load..."
     with open("weights.csv", "r") as input_file:
         network.load_weights(input_file)
+
+    print "dump again..."
     network.dump_weights()
 
     arch = [2,2,1]

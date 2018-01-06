@@ -1,6 +1,7 @@
 from Layer import *
 from loss_functions import *
 import sys
+import pandas as pd
 
 class Network:
     def __init__(self, architecture, neurons):
@@ -119,7 +120,7 @@ class Network:
     def update_weights(self, delta_w):
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
-                # TODO delete this for loop (use +) after the unit tests pass again
+                # TODO delete this for loop (if weights are numpy array use + ) after the unit tests pass again
                 for k in range(len(self.layers[i].neurons[j].weights)):
                     self.layers[i].neurons[j].weights[k] += delta_w[i - 1][j][k]
 
@@ -191,19 +192,21 @@ class Network:
             layer.dump_weights(file_output)
 
     def load_weights(self, file_input):
-        architecture = file_input.readline()
-        if cmp(architecture, self.architecture) == 0:
+        architecture = eval(file_input.readline())  # eval converts string to list
+
+        if not np.array_equal(architecture, self.architecture):
             raise Exception("The network architectures do not match: "
                             "expected " + str(self.architecture) +
                             "\ngiven " + str(architecture))
+
         """ TODO maybe also check the type of neurons? (e.g. if the network that was trained
             had Sigmoids, should we raise an error if the network we want to load has TanH. I think so.
         """
 
         for layer in self.layers[1:]:  # skip input layer
-            for neuron in layer.neurons:
-                line = file_input.readline().strip()
-                neuron.weights = list(line.strip(','))
+            for neuron in layer.neurons[:-1]:  # skip bias neuron
+                line = file_input.readline()
+                neuron.weights = eval(line)
 
 
 def check_topology(architecture, neurons):
