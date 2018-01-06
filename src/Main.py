@@ -80,6 +80,5 @@ def dummy_test():
     # first layer 0.1497 0.1995 -
     #             0.2497 0.2995 -
 
-
 if __name__ == '__main__':
     main()

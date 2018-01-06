@@ -42,7 +42,7 @@ def main():
     tmps = train_data["label"].values
     labels = transform_output(tmps)
     losses,misClass = network.train(data=patterns, targets=labels, epochs=50, learning_rate=0.01,
-                           batch_size=1,momentum=0.0)
+                                    batch_size=1, momentum=0.0)
 
     # 4. visualize how loss changes over time
     #    plots changes a lot for different runs
@@ -57,7 +57,20 @@ def main():
     plt.plot(range(len(squareE)),squareE)
     plt.xlabel("epochs")
     plt.ylabel("squaredError")
-    plt.show()
+    #plt.show()
+
+    # predict
+    test_data = pd.read_csv("../monk_datasets/monks-1.test", delim_whitespace=True, header=None)
+    test_data.columns = columns
+    labels = test_data["label"]
+    test_data = test_data[['f1', 'f2', 'f3', 'f4', 'f5', 'f6']].values
+    patterns = []
+    for i in range(len(test_data)):
+        patterns.append(decode(test_data[i], encoding))
+    labels = transform_output(labels.values)
+
+    print network.predict(patterns), labels
+
 
 if __name__ == "__main__":
     main()

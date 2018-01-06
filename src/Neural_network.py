@@ -1,7 +1,7 @@
 from Layer import *
 from loss_functions import *
 import sys
-import pandas as pd
+
 
 class Network:
     def __init__(self, architecture, neurons):
@@ -20,7 +20,6 @@ class Network:
             neuron = neurons[i](len_weights=len_weights)
             layer = Layer(architecture[i], architecture[i - 1], neuron)
             self.layers.append(layer)
-
 
     def forward(self, pattern):
         self.feed_input_neurons(pattern)
@@ -179,9 +178,13 @@ class Network:
         return losses,misClassification
 
     def predict(self, data):
-        # predict target variable
-        # scores = forward(data)
-        pass
+        # predict target variables
+        # returns and array, where each element is an array of #output scores.
+        scores = []
+        for pattern in data:
+            self.forward(pattern)
+            scores.append(self.output)
+        return scores
 
     def dump_weights(self, file_output=None):
         # dump neural network weights to file, calls dump_weights() on each layer
