@@ -31,7 +31,7 @@ def main():
     print train_data.head()
 
     # 2. train neural network. set low learning rate because actual implementation is online
-    network = Network(architecture=[17, 5, 5, 1], neurons=[InputNeuron, TanHNeuron,TanHNeuron,TanHNeuron])
+    network = Network(architecture=[17, 5, 5, 1], neurons=[InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron])
     tmp = train_data[['f1', 'f2', 'f3', 'f4', 'f5', 'f6']].values
 
     #3. trasform encoding
@@ -41,8 +41,9 @@ def main():
         patterns.append(decode(tmp[i],encoding))
     tmps = train_data["label"].values
     labels = transform_output(tmps)
-    losses,misClass = network.train(data=patterns, targets=labels, epochs=50, learning_rate=0.01,
-                                    batch_size=1, momentum=0.0)
+    losses,misClass = network.train(data=patterns, targets=labels, epochs=100, learning_rate=0.01,
+                                    batch_size=len(patterns), momentum=0.0, regularization=0.01)
+    # TODO problemi con la regolarizzazione
 
 
     # 4. visualize how loss changes over time

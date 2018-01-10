@@ -34,7 +34,7 @@ def dummy_test():
     data = [[0.05, 0.1]]
     target = [[0.01, 0.99]]
     network.forward(pattern=data[0])
-    delta_w, _,_ = network.back_propagation(target=target[0], eta=0.5)
+    delta_w, _, _ = network.back_propagation(target=target[0], eta=0.5)
     print "weights after a back propagation step:"
     network.update_weights(delta_w=delta_w)
     network.dump_weights()

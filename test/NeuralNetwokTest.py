@@ -82,10 +82,10 @@ class TestNeuralNetwork(unittest.TestCase):
         neuronsType = [InputNeuron, SigmoidNeuron, SigmoidNeuron]
         network = Network(arch, neuronsType)
 
-        weights_1_0 = [0.15, 0.2, 0.35]
-        weights_1_1 = [0.25, 0.3, 0.35]
-        weights_2_0 = [0.4, 0.45, 0.6]
-        weights_2_1 = [0.5, 0.55, 0.6]
+        weights_1_0 = np.array([0.15, 0.2, 0.35])
+        weights_1_1 = np.array([0.25, 0.3, 0.35])
+        weights_2_0 = np.array([0.4, 0.45, 0.6])
+        weights_2_1 = np.array([0.5, 0.55, 0.6])
 
         # set weights
         network.layers[1].neurons[0].weights = weights_1_0
@@ -100,10 +100,10 @@ class TestNeuralNetwork(unittest.TestCase):
             network.load_weights(in_file)
 
         # check that the weights are the same
-        self.assertEqual(network.layers[1].neurons[0].weights, weights_1_0)
-        self.assertEqual(network.layers[1].neurons[1].weights, weights_1_1)
-        self.assertEqual(network.layers[2].neurons[0].weights, weights_2_0)
-        self.assertEqual(network.layers[2].neurons[1].weights, weights_2_1)
+        np.testing.assert_array_equal(network.layers[1].neurons[0].weights, weights_1_0)
+        np.testing.assert_array_equal(network.layers[1].neurons[1].weights, weights_1_1)
+        np.testing.assert_array_equal(network.layers[2].neurons[0].weights, weights_2_0)
+        np.testing.assert_array_equal(network.layers[2].neurons[1].weights, weights_2_1)
 
     def test_dummy_forward(self):
         network = Network([1,1], [InputNeuron, OutputNeuron])

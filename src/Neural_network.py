@@ -72,9 +72,11 @@ class Network:
         # i cambiamenti da apportare nel layer i+1 (no modifiche ad input layer), neurone j, peso k
         delta_w = self.compute_weight_update(delta_vectors, eta)
         # 5 report loss and missclassification count
-        #weights =
-        loss_value = loss.value(target, output_net)
-        misClassification = loss.misClassification(target,output_net)
+        weights = np.array([neuron.weights
+                            for layer in self.layers[1:]
+                            for neuron in layer.neurons[:-1]])
+        loss_value = loss.value(target, output_net, weights)
+        misClassification = loss.misClassification(target, output_net)
         return delta_w, loss_value, misClassification
 
     def compute_weight_update(self, delta_vectors, eta):
@@ -123,23 +125,9 @@ class Network:
                 lambda_vector.fill(regularization)
                 self.layers[i].neurons[j].weights[:-1] += np.array(lambda_vector)
 
-
-    def oldtrain(self, data, targets, epochs, learning_rate,l):  #, batch_size): TODO add batch size
-        # fit the data
-        losses = []
-        for epoch in range(epochs):
-            loss_batch = 0
-            for pattern, target in zip(data, targets):
-                self.forward(pattern)
-                delta_w, loss_p = self.back_propagation(target, learning_rate,loss=l)
-                loss_batch += loss_p
-                self.update_weights(delta_w)
-            losses.append(loss_batch)
-        return losses
-
     def train(self, data, targets, epochs, learning_rate, batch_size, momentum, regularization=0):
         # fit the data
-        # lists for specify missclassification and Squared erro
+        # lists for specify missclassification and Squared error
         losses = []
         misClassification = []
         # prev g is previous gradien  (for momentum)
@@ -160,7 +148,7 @@ class Network:
                     delta_w, loss_p, miss_p = self.back_propagation(t, learning_rate/batch_size)
                     loss_batch += loss_p
                     misC_batch +=miss_p
-                    # momenutm stuff
+                    # momentum stuff
                     if deltaw_Tot == []:
                         deltaw_Tot=delta_w
                     else:
@@ -176,7 +164,7 @@ class Network:
             #append the total loss and missClassification in single epoch
             losses.append(loss_batch)
             misClassification.append(misC_batch)
-        return losses,misClassification
+        return losses, misClassification
 
     def predict(self, data):
         # predict target variables
