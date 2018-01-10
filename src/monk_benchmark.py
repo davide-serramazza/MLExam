@@ -65,12 +65,13 @@ def main():
     test_data.columns = columns
     labels = test_data["label"]
     test_data = test_data[['f1', 'f2', 'f3', 'f4', 'f5', 'f6']].values
-    patterns = []
+    test_patterns = []
     for i in range(len(test_data)):
-        patterns.append(decode(test_data[i], encoding))
+        test_patterns.append(decode(test_data[i], encoding))
     labels = transform_output(labels.values)
 
-    print network.predict(patterns)
+    print network.predict(test_patterns[:5]), labels[:5]
+    print network.predict(patterns[:5]), labels[:5]
 
 
 if __name__ == "__main__":

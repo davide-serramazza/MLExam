@@ -57,7 +57,7 @@ class Network:
         # 2. for each network output unit compute its error term delta
         delta_output = self.compute_delta_output_units(output_net, target, loss)
         # 3. for each hidden unit compute its error term delta
-        #intialize a vector to contain delta founded for each layer(in reverse order)
+        #intialize a vector to contain delta found for each layer(in reverse order)
         delta_vectors = []
         delta_vectors.append(delta_output)
         #delta next_layer = temp variable containing next layer's delta
@@ -90,16 +90,15 @@ class Network:
             tmpL = np.asarray(tmpL)
             delta_w.append(tmpL)
         delta_w = np.asarray(delta_w)
+        # TODO regolarizzazione : ciclo for add lambda w, exclude bias
         return delta_w
 
     def compute_delta_hidden_units(self, delta_next_layer,i):
         #delta_layer vector
         delta_layer = []
         for h in range(len(self.layers[i].neurons)-1):
-            #downstream = list of neurons in current layer
             downstream = self.layers[i+ 1].neurons[:-1]
             weights = [neuron.weights[h] for neuron in downstream]
-            # gradient flow= downstream*weights
             gradient_flow = np.dot(weights, delta_next_layer)
             d_net = self.layers[i].neurons[h].activation_function_derivative()
             delta_h = gradient_flow * d_net
@@ -168,7 +167,7 @@ class Network:
                     tmp = copy.deepcopy(deltaw_Tot)
                     deltaw_Tot += (prevg*momentum)
                     prevg = tmp
-                    self.update_weights(deltaw_Tot)
+                self.update_weights(deltaw_Tot)
             #append the total loss and missClassification in single epoch
             losses.append(loss_batch)
             misClassification.append(misC_batch)

@@ -4,7 +4,8 @@
     <list default="true" id="b44bc679-7f78-43fc-a810-c6faf2c26eaa" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Neural_network.py" afterPath="$PROJECT_DIR$/src/Neural_network.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/NeuralNetwokTest.py" afterPath="$PROJECT_DIR$/test/NeuralNetwokTest.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/loss_functions.py" afterPath="$PROJECT_DIR$/src/loss_functions.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monk_benchmark.py" afterPath="$PROJECT_DIR$/src/monk_benchmark.py" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,8 +20,8 @@
       <file leaf-file-name="monk_benchmark.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/monk_benchmark.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="60" column="4" lean-forward="false" selection-start-line="60" selection-start-column="4" selection-end-line="60" selection-end-column="4" />
+            <state relative-caret-position="0">
+              <caret line="73" column="26" lean-forward="false" selection-start-line="73" selection-start-column="26" selection-end-line="73" selection-end-column="26" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -28,26 +29,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Main.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="35" column="16" lean-forward="true" selection-start-line="35" selection-start-column="16" selection-end-line="35" selection-end-column="16" />
+            <state relative-caret-position="612">
+              <caret line="35" column="16" lean-forward="false" selection-start-line="35" selection-start-column="16" selection-end-line="35" selection-end-column="16" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Neural_network.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Neural_network.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="54" column="46" lean-forward="false" selection-start-line="54" selection-start-column="46" selection-end-line="54" selection-end-column="46" />
+            <state relative-caret-position="115">
+              <caret line="166" column="13" lean-forward="true" selection-start-line="166" selection-start-column="13" selection-end-line="166" selection-end-column="13" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#8508#8852#0" expanded="false" />
-                <element signature="e#8902#9663#0" expanded="false" />
-                <element signature="e#9713#10251#0" expanded="false" />
+                <element signature="e#8466#8810#0" expanded="false" />
+                <element signature="e#8860#9621#0" expanded="false" />
+                <element signature="e#9671#10209#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -56,8 +57,8 @@
       <file leaf-file-name="NeuralNetwokTest.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/NeuralNetwokTest.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="16" column="45" lean-forward="false" selection-start-line="16" selection-start-column="45" selection-end-line="16" selection-end-column="45" />
+            <state relative-caret-position="159">
+              <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -68,8 +69,8 @@
       <file leaf-file-name="Neuron.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Neuron.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="29" column="8" lean-forward="false" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
+            <state relative-caret-position="133">
+              <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -78,8 +79,8 @@
       <file leaf-file-name="Layer.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Layer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="80">
-              <caret line="20" column="17" lean-forward="true" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="17" />
+            <state relative-caret-position="115">
+              <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -90,8 +91,8 @@
       <file leaf-file-name="loss_functions.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/loss_functions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+            <state relative-caret-position="118">
+              <caret line="9" column="59" lean-forward="false" selection-start-line="9" selection-start-column="59" selection-end-line="9" selection-end-column="59" />
               <folding />
             </state>
           </provider>
@@ -103,6 +104,10 @@
     <findStrings>
       <find>w</find>
       <find>print</find>
+      <find>loss.de</find>
+      <find>loss.value</find>
+      <find>loss.deri</find>
+      <find>loss.d</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -116,13 +121,13 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/loss_functions.py" />
         <option value="$PROJECT_DIR$/src/Neuron.py" />
         <option value="$PROJECT_DIR$/src/Main.py" />
         <option value="$PROJECT_DIR$/src/Layer.py" />
         <option value="$PROJECT_DIR$/src/monk_benchmark.py" />
-        <option value="$PROJECT_DIR$/src/Neural_network.py" />
+        <option value="$PROJECT_DIR$/src/loss_functions.py" />
         <option value="$PROJECT_DIR$/test/NeuralNetwokTest.py" />
+        <option value="$PROJECT_DIR$/src/Neural_network.py" />
       </list>
     </option>
   </component>
@@ -147,7 +152,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -165,6 +169,7 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -186,7 +191,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Main">
+  <component name="RunManager" selected="Python tests.Unittests in NeuralNetwokTest.py">
     <configuration name="Main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -323,9 +328,9 @@
     </list>
     <recent_temporary>
       <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="Python.Main" />
-        <item index="1" class="java.lang.String" itemvalue="Python tests.Unittests in NeuralNetwokTest.py" />
-        <item index="2" class="java.lang.String" itemvalue="Python.monk_benchmark" />
+        <item index="0" class="java.lang.String" itemvalue="Python tests.Unittests in NeuralNetwokTest.py" />
+        <item index="1" class="java.lang.String" itemvalue="Python.monk_benchmark" />
+        <item index="2" class="java.lang.String" itemvalue="Python.Main" />
       </list>
     </recent_temporary>
   </component>
@@ -346,34 +351,34 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.06 at 16h 42m 54s.xml">
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 15h 55m 27s.xml">
       <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.06 at 17h 01m 25s.xml">
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 15h 55m 50s.xml">
       <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.06 at 18h 08m 37s.xml">
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 15h 56m 37s.xml">
       <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.06 at 18h 09m 55s.xml">
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 15h 57m 28s.xml">
       <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.06 at 18h 10m 42s.xml">
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 16h 01m 11s.xml">
       <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.06 at 18h 22m 40s.xml">
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 16h 01m 54s.xml">
       <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.06 at 18h 24m 19s.xml">
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 16h 06m 50s.xml">
       <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.06 at 18h 37m 46s.xml">
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 16h 09m 34s.xml">
       <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.06 at 18h 45m 49s.xml">
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 16h 12m 19s.xml">
       <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.06 at 18h 46m 10s.xml">
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 16h 12m 23s.xml">
       <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
     </history-entry>
   </component>
@@ -386,11 +391,11 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37387386" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32882884" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39969015" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3993994" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32979238" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -412,6 +417,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/NeuralNetwokTest.py</url>
+          <line>45</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -422,7 +434,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="30" />
+      <option name="time" value="32" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -443,9 +455,9 @@
           <caret line="100" column="0" lean-forward="false" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#8508#8852#0" expanded="false" />
-            <element signature="e#8902#9663#0" expanded="false" />
-            <element signature="e#9713#10251#0" expanded="false" />
+            <element signature="e#8466#8810#0" expanded="false" />
+            <element signature="e#8860#9621#0" expanded="false" />
+            <element signature="e#9671#10209#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -516,9 +528,9 @@
           <caret line="66" column="0" lean-forward="false" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#8508#8852#0" expanded="false" />
-            <element signature="e#8902#9663#0" expanded="false" />
-            <element signature="e#9713#10251#0" expanded="false" />
+            <element signature="e#8466#8810#0" expanded="false" />
+            <element signature="e#8860#9621#0" expanded="false" />
+            <element signature="e#9671#10209#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -573,9 +585,9 @@
           <caret line="98" column="31" lean-forward="true" selection-start-line="98" selection-start-column="31" selection-end-line="98" selection-end-column="31" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#8508#8852#0" expanded="false" />
-            <element signature="e#8902#9663#0" expanded="false" />
-            <element signature="e#9713#10251#0" expanded="false" />
+            <element signature="e#8466#8810#0" expanded="false" />
+            <element signature="e#8860#9621#0" expanded="false" />
+            <element signature="e#9671#10209#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -604,9 +616,9 @@
           <caret line="109" column="0" lean-forward="false" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#8508#8852#0" expanded="false" />
-            <element signature="e#8902#9663#0" expanded="false" />
-            <element signature="e#9713#10251#0" expanded="false" />
+            <element signature="e#8466#8810#0" expanded="false" />
+            <element signature="e#8860#9621#0" expanded="false" />
+            <element signature="e#9671#10209#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -653,9 +665,9 @@
           <caret line="110" column="8" lean-forward="true" selection-start-line="110" selection-start-column="8" selection-end-line="110" selection-end-column="8" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#8508#8852#0" expanded="false" />
-            <element signature="e#8902#9663#0" expanded="false" />
-            <element signature="e#9713#10251#0" expanded="false" />
+            <element signature="e#8466#8810#0" expanded="false" />
+            <element signature="e#8860#9621#0" expanded="false" />
+            <element signature="e#9671#10209#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -676,9 +688,9 @@
           <caret line="135" column="12" lean-forward="true" selection-start-line="135" selection-start-column="12" selection-end-line="135" selection-end-column="12" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#8508#8852#0" expanded="false" />
-            <element signature="e#8902#9663#0" expanded="false" />
-            <element signature="e#9713#10251#0" expanded="false" />
+            <element signature="e#8466#8810#0" expanded="false" />
+            <element signature="e#8860#9621#0" expanded="false" />
+            <element signature="e#9671#10209#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -707,9 +719,9 @@
           <caret line="146" column="24" lean-forward="false" selection-start-line="146" selection-start-column="24" selection-end-line="146" selection-end-column="24" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#8508#8852#0" expanded="false" />
-            <element signature="e#8902#9663#0" expanded="false" />
-            <element signature="e#9713#10251#0" expanded="false" />
+            <element signature="e#8466#8810#0" expanded="false" />
+            <element signature="e#8860#9621#0" expanded="false" />
+            <element signature="e#9671#10209#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -730,9 +742,9 @@
           <caret line="121" column="21" lean-forward="false" selection-start-line="121" selection-start-column="21" selection-end-line="121" selection-end-column="21" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#8508#8852#0" expanded="false" />
-            <element signature="e#8902#9663#0" expanded="false" />
-            <element signature="e#9713#10251#0" expanded="false" />
+            <element signature="e#8466#8810#0" expanded="false" />
+            <element signature="e#8860#9621#0" expanded="false" />
+            <element signature="e#9671#10209#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -761,9 +773,9 @@
           <caret line="154" column="33" lean-forward="true" selection-start-line="154" selection-start-column="33" selection-end-line="154" selection-end-column="33" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#8508#8852#0" expanded="false" />
-            <element signature="e#8902#9663#0" expanded="false" />
-            <element signature="e#9713#10251#0" expanded="false" />
+            <element signature="e#8466#8810#0" expanded="false" />
+            <element signature="e#8860#9621#0" expanded="false" />
+            <element signature="e#9671#10209#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -835,78 +847,78 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/loss_functions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/unittest/case.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="722">
-          <caret line="553" column="0" lean-forward="false" selection-start-line="553" selection-start-column="0" selection-end-line="553" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Neuron.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="29" column="8" lean-forward="false" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Layer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="20" column="17" lean-forward="true" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/monk_benchmark.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="60" column="4" lean-forward="false" selection-start-line="60" selection-start-column="4" selection-end-line="60" selection-end-column="4" />
+        <state relative-caret-position="0">
+          <caret line="73" column="26" lean-forward="false" selection-start-line="73" selection-start-column="26" selection-end-line="73" selection-end-column="26" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="54" column="46" lean-forward="false" selection-start-line="54" selection-start-column="46" selection-end-line="54" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#8508#8852#0" expanded="false" />
-            <element signature="e#8902#9663#0" expanded="false" />
-            <element signature="e#9713#10251#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/NeuralNetwokTest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="16" column="45" lean-forward="false" selection-start-line="16" selection-start-column="45" selection-end-line="16" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="35" column="16" lean-forward="true" selection-start-line="35" selection-start-column="16" selection-end-line="35" selection-end-column="16" />
+        <state relative-caret-position="612">
+          <caret line="35" column="16" lean-forward="false" selection-start-line="35" selection-start-column="16" selection-end-line="35" selection-end-column="16" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/unittest/case.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="113">
+          <caret line="505" column="0" lean-forward="false" selection-start-line="505" selection-start-column="0" selection-end-line="505" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/loss_functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="118">
+          <caret line="9" column="59" lean-forward="false" selection-start-line="9" selection-start-column="59" selection-end-line="9" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Neuron.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Layer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/NeuralNetwokTest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="166" column="13" lean-forward="true" selection-start-line="166" selection-start-column="13" selection-end-line="166" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#8466#8810#0" expanded="false" />
+            <element signature="e#8860#9621#0" expanded="false" />
+            <element signature="e#9671#10209#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

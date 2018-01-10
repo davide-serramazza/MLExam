@@ -2,13 +2,15 @@ import numpy as np
 
 
 class SquaredError:
-    def __init__(self,t):
+    def __init__(self, t,):# regularization):
         self.type = t
+        #self.regularization = regularization
 
-    def value(self, target, output_net):
+    def value(self, target, output_net):#, weights):
         return np.sum(np.square((target - output_net))) / 2
+                # +self.regularization * np.multiply(weights, weights)) / 2  # L2-regularization
 
-    def misClassification(self, target, output_net):
+    def misClassification(self, target, output_net):#, weights):
         if self.type == "s":
             return np.sum(np.square((target - np.round(output_net))))
         if self.type == "t":
