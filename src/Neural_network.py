@@ -44,7 +44,8 @@ class Network:
         for input_neuron, x in zip(input_layer.neurons[:-1], data):  # exclude bias
             input_neuron.activation_function(x)
 
-    def back_propagation(self, target, eta=0.1, momentum=0.9):
+    def back_propagation(self, target, eta=0.1):
+        # TODO: add parameter loss
         loss = SquaredError("s") #todo init to a generic object
         # understand if is needed only squared error or misclassification too i.e task = Classification or regression?
         if isinstance(self.layers[-1].neurons[0],SigmoidNeuron):
@@ -141,7 +142,7 @@ class Network:
         prevg = []
         for epoch in range(epochs):
             # current epoch vale of missclassification and Squared error
-            loss_batch = 0
+            loss_batch = 0 # TODO: loss_epoch, misC_epoch
             misC_batch = 0
             for i in range(0,len(data),batch_size):
                 #take only batch_size examples

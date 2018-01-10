@@ -52,6 +52,7 @@ def main():
     plt.plot(range(len(misClass)), misClass)
     plt.xlabel("epochs")
     plt.ylabel("misClassification")
+    #plt.show()
     #plot squaredError
     plt.subplot(1,2,2)
     squareE = [2*i for i in losses]
