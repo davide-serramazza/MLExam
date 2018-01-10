@@ -1,5 +1,5 @@
 import numpy as np
-
+import sys
 
 #superclass abstract Neuron
 class Neuron(object):
@@ -21,7 +21,10 @@ class Neuron(object):
 
     def dump_weights(self, file_output):
         # prints weights to a file
-        print >> file_output, self.weights
+        if file_output == sys.stdout:
+            print self.weights
+        else:
+            np.save(file_output, self.weights)
 
 
 # subclasses

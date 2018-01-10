@@ -72,9 +72,10 @@ class Network:
         # i cambiamenti da apportare nel layer i+1 (no modifiche ad input layer), neurone j, peso k
         delta_w = self.compute_weight_update(delta_vectors, eta)
         # 5 report loss and missclassification count
+        #weights =
         loss_value = loss.value(target, output_net)
         misClassification = loss.misClassification(target,output_net)
-        return delta_w, loss_value,misClassification
+        return delta_w, loss_value, misClassification
 
     def compute_weight_update(self, delta_vectors, eta):
         delta_w = []
@@ -91,7 +92,6 @@ class Network:
             tmpL = np.asarray(tmpL)
             delta_w.append(tmpL)
         delta_w = np.asarray(delta_w)
-        # TODO regolarizzazione : ciclo for add lambda w, exclude bias
         return delta_w
 
     def compute_delta_hidden_units(self, delta_next_layer,i):
@@ -113,10 +113,16 @@ class Network:
         delta_output = np.multiply(af_derivatives, diff)
         return delta_output
 
-    def update_weights(self, delta_w):
+    def update_weights(self, delta_w, regularization=0):
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
-                    self.layers[i].neurons[j].weights += delta_w[i - 1][j]
+                self.layers[i].neurons[j].weights += delta_w[i - 1][j]
+                # add regularization (do not regularize bias weights)
+                temp = self.layers[i].neurons[j].weights[:-1]  # exclude weight of bias neuron
+                lambda_vector = np.empty(temp.shape)
+                lambda_vector.fill(regularization)
+                self.layers[i].neurons[j].weights[:-1] += np.array(lambda_vector)
+
 
     def oldtrain(self, data, targets, epochs, learning_rate,l):  #, batch_size): TODO add batch size
         # fit the data
@@ -131,7 +137,7 @@ class Network:
             losses.append(loss_batch)
         return losses
 
-    def train(self,data,targets, epochs, learning_rate,batch_size,momentum):
+    def train(self, data, targets, epochs, learning_rate, batch_size, momentum, regularization=0):
         # fit the data
         # lists for specify missclassification and Squared erro
         losses = []
@@ -151,7 +157,7 @@ class Network:
                 #now really train
                 for p,t in zip (pattern,target):
                     self.forward(p)
-                    delta_w, loss_p,miss_p = self.back_propagation(t, learning_rate/batch_size)
+                    delta_w, loss_p, miss_p = self.back_propagation(t, learning_rate/batch_size)
                     loss_batch += loss_p
                     misC_batch +=miss_p
                     # momenutm stuff
@@ -166,7 +172,7 @@ class Network:
                     tmp = copy.deepcopy(deltaw_Tot)
                     deltaw_Tot += (prevg*momentum)
                     prevg = tmp
-                self.update_weights(deltaw_Tot)
+                self.update_weights(deltaw_Tot, regularization)
             #append the total loss and missClassification in single epoch
             losses.append(loss_batch)
             misClassification.append(misC_batch)
@@ -185,12 +191,16 @@ class Network:
         # dump neural network weights to file, calls dump_weights() on each layer
         file_output = sys.stdout if file_output is None else file_output
         # the first line is the architecture
-        print >> file_output, self.architecture
+        if file_output == sys.stdout:
+            print self.architecture
+        else:
+            np.save(file_output, self.architecture)
+        # subsequent lines are the weights
         for layer in self.layers[1:]:  # exclude input layer
             layer.dump_weights(file_output)
 
     def load_weights(self, file_input):
-        architecture = eval(file_input.readline())  # eval converts string to list
+        architecture = np.load(file_input)
 
         if not np.array_equal(architecture, self.architecture):
             raise Exception("The network architectures do not match: "
@@ -200,11 +210,9 @@ class Network:
         """ TODO maybe also check the type of neurons? (e.g. if the network that was trained
             had Sigmoids, should we raise an error if the network we want to load has TanH. I think so.
         """
-
         for layer in self.layers[1:]:  # skip input layer
             for neuron in layer.neurons[:-1]:  # skip bias neuron
-                line = file_input.readline()
-                neuron.weights = eval(line)
+                neuron.weights = np.load(file_input)
 
 
 def check_topology(architecture, neurons):
