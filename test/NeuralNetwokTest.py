@@ -49,10 +49,10 @@ class TestNeuralNetwork(unittest.TestCase):
         self.assert_weights(layers)
 
     def assert_weights(self, layers):
-        self.assertEqual(layers[1].neurons[0].weights, [0.14978071613276281, 0.19956143226552567, 0.34561432265525649])
-        self.assertEqual(layers[1].neurons[1].weights, [0.24975114363236958, 0.29950228726473915, 0.3450228726473914])
-        self.assertEqual(layers[2].neurons[0].weights, [0.35891647971788465, 0.4086661860762334, 0.53075071918572148])
-        self.assertEqual(layers[2].neurons[1].weights, [0.5113012702387375, 0.56137012110798912, 0.61904911825827813])
+        np.testing.assert_array_equal(layers[1].neurons[0].weights, [0.14978071613276281, 0.19956143226552567, 0.34561432265525649])
+        np.testing.assert_array_equal(layers[1].neurons[1].weights, [0.24975114363236958, 0.29950228726473915, 0.3450228726473914])
+        np.testing.assert_array_equal(layers[2].neurons[0].weights, [0.35891647971788465, 0.4086661860762334, 0.53075071918572148])
+        np.testing.assert_array_equal(layers[2].neurons[1].weights, [0.5113012702387375, 0.56137012110798912, 0.61904911825827813])
 
     def set_weights(self, network):
         network.layers[1].neurons[0].weights = [0.15, 0.2, 0.35]

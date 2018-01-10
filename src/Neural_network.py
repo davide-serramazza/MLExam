@@ -116,9 +116,7 @@ class Network:
     def update_weights(self, delta_w):
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
-                # TODO delete this for loop (if weights are numpy array use + ) after the unit tests pass again
-                for k in range(len(self.layers[i].neurons[j].weights)):
-                    self.layers[i].neurons[j].weights[k] += delta_w[i - 1][j][k]
+                    self.layers[i].neurons[j].weights += delta_w[i - 1][j]
 
     def oldtrain(self, data, targets, epochs, learning_rate,l):  #, batch_size): TODO add batch size
         # fit the data
