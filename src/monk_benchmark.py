@@ -41,8 +41,8 @@ def main():
         patterns.append(decode(tmp[i],encoding))
     tmps = train_data["label"].values
     labels = transform_output(tmps)
-    losses,misClass = network.train(data=patterns, targets=labels, epochs=100, learning_rate=0.01,
-                                    batch_size=len(patterns), momentum=0.0, regularization=0.01)
+    losses,misClass = network.train(data=patterns, targets=labels, epochs=200, learning_rate=0.01,
+                                    batch_size=len(patterns), momentum=0.0, regularization=0.03)
     # TODO problemi con la regolarizzazione
 
 
@@ -56,7 +56,7 @@ def main():
     #plt.show()
     #plot squaredError
     plt.subplot(1,2,2)
-    squareE = [2*i for i in losses]
+    squareE = np.asarray(losses) * 2 / len(losses)  # TODO: divide by len(losses) to obtain MSE?
     plt.plot(range(len(squareE)),squareE)
     plt.xlabel("epochs")
     plt.ylabel("squaredError")
@@ -72,8 +72,8 @@ def main():
         test_patterns.append(decode(test_data[i], encoding))
     labels = transform_output(labels.values)
 
-    print network.predict(test_patterns[:5]), labels[:5]
-    print network.predict(patterns[:5]), labels[:5]
+    scores = network.predict(test_patterns)
+    print scores[:5], labels[:5]
 
 
 if __name__ == "__main__":

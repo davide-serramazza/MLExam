@@ -2,7 +2,7 @@ import numpy as np
 
 
 class SquaredError:
-    def __init__(self, t,):
+    def __init__(self, t):
         self.type = t
 
     def value(self, target, output_net, weights, regularization=0):

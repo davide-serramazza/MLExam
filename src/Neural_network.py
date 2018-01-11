@@ -118,12 +118,13 @@ class Network:
     def update_weights(self, delta_w, regularization=0):
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
-                self.layers[i].neurons[j].weights += delta_w[i - 1][j]
                 # add regularization (do not regularize bias weights)
-                temp = self.layers[i].neurons[j].weights[:-1]  # exclude weight of bias neuron
+                temp = self.layers[i].neurons[j].weights[:-1]  # weights to regularize, exclude weight of bias neuron
                 lambda_vector = np.empty(temp.shape)
                 lambda_vector.fill(regularization)
-                self.layers[i].neurons[j].weights[:-1] += np.array(lambda_vector)
+                self.layers[i].neurons[j].weights[:-1] -= np.multiply(lambda_vector, temp)
+                # add gradient
+                self.layers[i].neurons[j].weights += delta_w[i - 1][j]
 
     def train(self, data, targets, epochs, learning_rate, batch_size, momentum, regularization=0):
         # fit the data
@@ -152,7 +153,7 @@ class Network:
                     if deltaw_Tot == []:
                         deltaw_Tot=delta_w
                     else:
-                        deltaw_Tot += delta_w      #non riesco ad usare np.sum...sorry
+                        deltaw_Tot += delta_w
             #update weights
                 if (prevg == []):
                     prevg = copy.deepcopy(deltaw_Tot)
