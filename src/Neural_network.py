@@ -161,7 +161,7 @@ class Network:
                     tmp = copy.deepcopy(deltaw_Tot)
                     deltaw_Tot += (prevg*momentum)
                     prevg = tmp
-                self.update_weights(deltaw_Tot, regularization)
+                self.update_weights(deltaw_Tot, regularization * batch_size / len(data))
             #append the total loss and missClassification in single epoch
             losses.append(loss_batch)
             misClassification.append(misC_batch)

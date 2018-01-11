@@ -41,8 +41,9 @@ def main():
         patterns.append(decode(tmp[i],encoding))
     tmps = train_data["label"].values
     labels = transform_output(tmps)
-    losses,misClass = network.train(data=patterns, targets=labels, epochs=200, learning_rate=0.01,
-                                    batch_size=len(patterns), momentum=0.0, regularization=0.03)
+    losses, misClass = network.train(data=patterns, targets=labels, epochs=100, learning_rate=0.01,
+                                    batch_size=1, momentum=0, regularization=0.01)
+    misClass = np.array(misClass) / len(patterns)
     # TODO problemi con la regolarizzazione
 
 
@@ -72,8 +73,8 @@ def main():
         test_patterns.append(decode(test_data[i], encoding))
     labels = transform_output(labels.values)
 
-    scores = network.predict(test_patterns)
-    print scores[:5], labels[:5]
+    #scores = network.predict(test_patterns)
+    #print scores[:5], labels[:5]
 
 
 if __name__ == "__main__":
