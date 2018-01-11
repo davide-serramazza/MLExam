@@ -24,27 +24,27 @@ def dummy_test():
     print "weights:"
     network.dump_weights()
 
-    network.layers[1].neurons[0].weights = [0.15, 0.2, 0.35]
-    network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
-    network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
-    network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
+    network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
+    network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
+    network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
+    network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
     print "new weights: "
     network.dump_weights()
 
     data = [[0.05, 0.1]]
     target = [[0.01, 0.99]]
     network.forward(pattern=data[0])
-    delta_w, _, _ = network.back_propagation(target=target[0], eta=0.5)
+    delta_w, _, _ = network.back_propagation(target=target[0], lossObject=SquaredError("sigmoid"), eta=0.5)
     print "weights after a back propagation step:"
     network.update_weights(delta_w=delta_w)
     network.dump_weights()
 
     print "weights after one epoch of training:"
-    network.layers[1].neurons[0].weights = [0.15, 0.2, 0.35]
-    network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
-    network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
-    network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
-    network.train(data=data, targets=target, learning_rate=0.5, epochs=1, batch_size=len(data), momentum=0.0)
+    network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
+    network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
+    network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
+    network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
+    network.train(data=data, targets=target, lossObject=SquaredError("sigmoid"), learning_rate=0.5, epochs=1, batch_size=len(data), momentum=0.0)
     network.dump_weights()
 
     # dump weights on file
@@ -65,8 +65,8 @@ def dummy_test():
     network = Network(arch, neuronsType)
     datal = [[0,1],[0,0],[1,0],[1,1]]
     target = [0,1,0,1]
-    losses = network.train(data=datal, targets=target, epochs=100, learning_rate=0.5,
-                       batch_size=2,momentum=0.0)
+    losses = network.train(data=datal, targets=target, lossObject=SquaredError("sigmoid"), epochs=100,
+                           learning_rate=0.5, batch_size=2, momentum=0.0)
     # 4. visualize how loss changes over time
     #    plots changes a lot for different runs
     plt.plot(range(len(losses)), losses)

@@ -15,9 +15,9 @@ class SquaredError:
         return data_error + regularization_error
 
     def misClassification(self, target, output_net):
-        if self.type == "s":
+        if self.type == "sigmoid":
             return np.sum(np.square((target - np.round(output_net))))
-        if self.type == "t":
+        if self.type == "tangentH":
             return np.sum(np.square(target-np.sign(output_net)[0]))/4
 
     def derivative(self, target, output_net):

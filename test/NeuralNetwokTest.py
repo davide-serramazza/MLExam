@@ -28,7 +28,7 @@ class TestNeuralNetwork(unittest.TestCase):
         data = [0.05, 0.1]
         target = [0.01, 0.99]
         network.forward(data)
-        delta_w, loss_value, _ = network.back_propagation(target=target, eta=0.5)
+        delta_w, loss_value, _ = network.back_propagation(target=target, lossObject=SquaredError("sigmoid"), eta=0.5)
         network.update_weights(delta_w)
 
         layers = network.layers
@@ -43,7 +43,7 @@ class TestNeuralNetwork(unittest.TestCase):
 
         data = [[0.05, 0.1]]
         target = [[0.01, 0.99]]
-        network.train(data=data, targets=target, epochs=1, learning_rate=0.5, batch_size=1, momentum=0)
+        network.train(data=data, targets=target, lossObject=SquaredError("sigmoid"), epochs=1, learning_rate=0.5, batch_size=1, momentum=0)
 
         layers = network.layers
         self.assert_weights(layers)
@@ -55,10 +55,10 @@ class TestNeuralNetwork(unittest.TestCase):
         np.testing.assert_array_equal(layers[2].neurons[1].weights, [0.5113012702387375, 0.56137012110798912, 0.61904911825827813])
 
     def set_weights(self, network):
-        network.layers[1].neurons[0].weights = [0.15, 0.2, 0.35]
-        network.layers[1].neurons[1].weights = [0.25, 0.3, 0.35]
-        network.layers[2].neurons[0].weights = [0.4, 0.45, 0.6]
-        network.layers[2].neurons[1].weights = [0.5, 0.55, 0.6]
+        network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
+        network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
+        network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
+        network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
 
     def test_topology(self):
         neuronsType = [InputNeuron, SigmoidNeuron, ReLuNeuron, OutputNeuron]
