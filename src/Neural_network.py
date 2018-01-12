@@ -210,7 +210,12 @@ class Network:
         return scores
 
     def dump_weights(self, file_output=None):
-        # dump neural network weights to file, calls dump_weights() on each layer
+        """
+        Dump neural network weights to file, calls dump_weights() on each layer
+
+        :param file_output: file to dump the weights to
+        :return:
+        """
         file_output = sys.stdout if file_output is None else file_output
         # the first line is the architecture
         if file_output == sys.stdout:
@@ -222,6 +227,12 @@ class Network:
             layer.dump_weights(file_output)
 
     def load_weights(self, file_input):
+        """
+        Load weights of a neural network from a file. Raises an exception if the architecture does not match.
+
+        :param file_input: file to read the weights from
+        :return:
+        """
         architecture = np.load(file_input)
 
         if not np.array_equal(architecture, self.architecture):
@@ -238,6 +249,14 @@ class Network:
 
 
 def check_topology(architecture, neurons):
+    """
+    Checks that the newly created neural network has a proper architectures
+    (i.e. the neurons of the first layer are InputNeurons)
+
+    :param architecture: network architecture
+    :param neurons: list of layers' neurons' type
+    :return:
+    """
     if len(architecture) != len(neurons):
         raise Exception("Architecture miss match")
     if not neurons[0].__name__ is InputNeuron.__name__:

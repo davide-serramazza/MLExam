@@ -1,13 +1,19 @@
 import numpy as np
 import sys
 
-#superclass abstract Neuron
+
+# superclass abstract Neuron
 class Neuron(object):
-    def __init__(self,len_weights):
+    def __init__(self, len_weights):
+        """
+        Creates and initializes a neuron.
+
+        :param len_weights: lenght of the weights
+        """
         self.output = 0.0
         self.weights = np.random.uniform(low=-0.7, high=0.7, size=len_weights)
 
-    def weights_init(self,len_weights):
+    def weights_init(self, len_weights):
         self.weights = np.random.uniform(low=-0.7, high=0.7, size=len_weights)
 
     def activation_function(self, x):
@@ -20,7 +26,12 @@ class Neuron(object):
         return self.output
 
     def dump_weights(self, file_output):
-        # prints weights to a file
+        """
+        Saves the weights of the neuron to a 'file_output'
+
+        :param file_output: file to print the weights to
+        :return:
+        """
         if file_output == sys.stdout:
             print self.weights
         else:

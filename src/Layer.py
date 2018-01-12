@@ -4,6 +4,13 @@ from Neuron import *
 
 class Layer:
     def __init__(self, size, prevSize, neuron):
+        """
+        Creates a layer of 'size' neurons and adds a bias neuron at the end.
+
+        :param size: number of neurons
+        :param prevSize: number of neurons of previous layer
+        :param neuron: type of neurons of the layer
+        """
         # neurons' list
         self.neurons = []
         # add hidden neurons
@@ -18,7 +25,10 @@ class Layer:
         return [neuron.getOutput() for neuron in self.neurons]
 
     def dump_weights(self, file_output):
-        # print weights to a file
-        # call serialize on each neuron
+        """
+        Prints weights to a file, call dump_weights on each neuron
+        :param file_output: file to print the weights to
+        :return:
+        """
         for neuron in self.neurons[:-1]:  # exclude bias
             neuron.dump_weights(file_output)

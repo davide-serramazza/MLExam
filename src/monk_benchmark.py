@@ -2,19 +2,31 @@ import pandas as pd
 from Neural_network import *
 import matplotlib.pyplot as plt
 
-# decode inout from 1-to-k enconding
-def decode(data,encode):
+def decode(data,encoding):
+    """
+    Decode examples encoded with 1-of-k
+
+    :param data: vector of examples to decode
+    :param encoding: 1-of-k encoding used
+    :return: decoded data
+    """
     ris = []
     for i in range (len(data)):
-        for j in range(1,encode[i]+1):
+        for j in range(1,encoding[i]+1):
             if j==data[i]:
                 ris.append(1)
             else:
                 ris.append(0)
     return ris
 
-#transform output from 0 to -1 for Tanh
-def transform_output(l):
+def transform_target(l):
+    """
+    transform specific negative example's target from 0 to -1
+    (needed if using tanH as output)
+
+    :param l: vector containing targets
+    :return: transformed vector targets
+    """
     res = []
     for i in l:
         if i==0:
@@ -38,12 +50,12 @@ def main():
     encoding = [3,3,2,3,4,2]
     patterns = []
     for i in range(len(tmp)):
-        patterns.append(decode(tmp[i],encoding))
+        patterns.append(decode(tmp[i], encoding))
     tmps = train_data["label"].values
-    labels = transform_output(tmps)
+    labels = transform_target(tmps)
     lossObject = SquaredError("tangentH")
-    losses, misClass = network.train(data=patterns, targets=labels,lossObject=lossObject, epochs=100, learning_rate=0.01,
-                                    batch_size=1, momentum=0, regularization=0.01)
+    losses, misClass = network.train(data=patterns, targets=labels,lossObject=lossObject, epochs=100, learning_rate=0.3,
+                                    batch_size=len(patterns), momentum=0.3, regularization=0.01)
     misClass = np.array(misClass) / len(patterns)
     # TODO problemi con la regolarizzazione
 
@@ -72,7 +84,7 @@ def main():
     test_patterns = []
     for i in range(len(test_data)):
         test_patterns.append(decode(test_data[i], encoding))
-    labels = transform_output(labels.values)
+    labels = transform_target(labels.values)
 
     #scores = network.predict(test_patterns)
     #print scores[:5], labels[:5]
