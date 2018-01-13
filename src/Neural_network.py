@@ -163,7 +163,7 @@ class Network:
         # lists for specify missclassification and Squared error
         losses = np.array([])
         misClassification = np.array([])
-        # prev g is previous gradien  (for momentum)
+        # prevg is previous gradient  (for momentum)
         prevg = []
         for epoch in range(epochs):
             # current epoch value of misclassification and Squared error
@@ -173,7 +173,7 @@ class Network:
                 # take only batch_size examples
                 batch_pattern = data[i:i+batch_size]
                 batch_target = targets[i:i+batch_size]
-                
+
                 # delta_w_epoch = sum of delta_w for the epoch
                 delta_w_epoch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
                                           for i in range(1, len(self.architecture))])
@@ -184,15 +184,14 @@ class Network:
                     delta_w, loss_p, miss_p = self.back_propagation(t, lossObject, learning_rate/batch_size)
                     loss_epoch += loss_p
                     misC_epoch += miss_p
-
                     delta_w_epoch += delta_w
-            #momentum stuff
-                if (prevg == []):
+            # add momentum from the second epoch onwards
+                if epoch == 0:
                     prevg = copy.deepcopy(delta_w_epoch)
                 else:
-                    tmp = copy.deepcopy(delta_w_epoch)
-                    delta_w_epoch += (prevg*momentum)
-                    prevg = tmp
+                    tmp = copy.deepcopy(delta_w_epoch)   # save gradient at current epoch
+                    delta_w_epoch += prevg * momentum    # add momentum
+                    prevg = tmp                          # store previous gradient
                 self.update_weights(delta_w_epoch, regularization * batch_size / len(data))
             #append the total loss and missClassification in single epoch
             losses = np.append(losses,loss_epoch)
