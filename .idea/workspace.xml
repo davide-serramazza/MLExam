@@ -4,7 +4,15 @@
     <list default="true" id="b44bc679-7f78-43fc-a810-c6faf2c26eaa" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+<<<<<<< HEAD
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ML.iml" afterPath="$PROJECT_DIR$/ML.iml" />
+=======
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Layer.py" afterPath="$PROJECT_DIR$/src/Layer.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Neural_network.py" afterPath="$PROJECT_DIR$/src/Neural_network.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Neuron.py" afterPath="$PROJECT_DIR$/src/Neuron.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/loss_functions.py" afterPath="$PROJECT_DIR$/src/loss_functions.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monk_benchmark.py" afterPath="$PROJECT_DIR$/src/monk_benchmark.py" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,8 +27,13 @@
       <file leaf-file-name="monk_benchmark.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/monk_benchmark.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="774">
               <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+=======
+            <state relative-caret-position="1026">
+              <caret line="57" column="74" lean-forward="false" selection-start-line="57" selection-start-column="74" selection-end-line="57" selection-end-column="74" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -31,12 +44,19 @@
       <file leaf-file-name="NeuralNetwokTest.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/NeuralNetwokTest.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="774">
               <caret line="45" column="77" lean-forward="false" selection-start-line="45" selection-start-column="77" selection-end-line="45" selection-end-column="77" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
                 <marker date="1515832138925" expanded="true" signature="192:3040" ph="..." />
                 <marker date="1515832138925" expanded="true" signature="220:484" ph="..." />
+=======
+            <state relative-caret-position="810">
+              <caret line="45" column="85" lean-forward="false" selection-start-line="45" selection-start-column="85" selection-end-line="45" selection-end-column="85" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
               </folding>
             </state>
           </provider>
@@ -45,10 +65,19 @@
       <file leaf-file-name="Neural_network.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="968">
               <caret line="97" column="24" lean-forward="false" selection-start-line="97" selection-start-column="24" selection-end-line="97" selection-end-column="24" />
+=======
+            <state relative-caret-position="194">
+              <caret line="135" column="45" lean-forward="false" selection-start-line="135" selection-start-column="45" selection-end-line="135" selection-end-column="45" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#8626#8880#0" expanded="false" />
+                <element signature="e#8936#9511#0" expanded="false" />
+                <element signature="e#9561#10454#0" expanded="false" />
+                <element signature="e#10504#11303#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -57,6 +86,7 @@
       <file leaf-file-name="Neuron.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Neuron.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="90">
               <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
               <folding>
@@ -79,6 +109,13 @@
                 <marker date="1515832138925" expanded="true" signature="1774:1928" ph="..." />
                 <marker date="1515832138925" expanded="true" signature="1813:1864" ph="..." />
                 <marker date="1515832138925" expanded="true" signature="1911:1928" ph="..." />
+=======
+            <state relative-caret-position="162">
+              <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#678#960#0" expanded="false" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
               </folding>
             </state>
           </provider>
@@ -90,7 +127,15 @@
     <findStrings>
       <find>w</find>
       <find>print</find>
+      <find>loss.de</find>
+      <find>loss.value</find>
+      <find>loss.deri</find>
+      <find>loss.d</find>
+      <find>delta_output</find>
     </findStrings>
+    <replaceStrings>
+      <replace>delta_outputLayer</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -103,12 +148,13 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/Layer.py" />
-        <option value="$PROJECT_DIR$/src/Neuron.py" />
-        <option value="$PROJECT_DIR$/src/loss_functions.py" />
+        <option value="$PROJECT_DIR$/test/NeuralNetwokTest.py" />
         <option value="$PROJECT_DIR$/src/Main.py" />
-        <option value="$PROJECT_DIR$/src/monk_benchmark.py" />
         <option value="$PROJECT_DIR$/src/Neural_network.py" />
+        <option value="$PROJECT_DIR$/src/Layer.py" />
+        <option value="$PROJECT_DIR$/src/loss_functions.py" />
+        <option value="$PROJECT_DIR$/src/Neuron.py" />
+        <option value="$PROJECT_DIR$/src/monk_benchmark.py" />
       </list>
     </option>
   </component>
@@ -133,8 +179,12 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+<<<<<<< HEAD
       <pane id="Scope" />
+=======
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -194,6 +244,20 @@
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="Unittests in NeuralNetwokTest.py" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="ML" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/NeuralNetwokTest.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
     </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="HTML_USED" value="false" />
@@ -293,14 +357,16 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
-    <list size="2">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Python.Main" />
       <item index="1" class="java.lang.String" itemvalue="Python.monk_benchmark" />
+      <item index="2" class="java.lang.String" itemvalue="Python tests.Unittests in NeuralNetwokTest.py" />
     </list>
     <recent_temporary>
-      <list size="2">
+      <list size="3">
         <item index="0" class="java.lang.String" itemvalue="Python.monk_benchmark" />
-        <item index="1" class="java.lang.String" itemvalue="Python.Main" />
+        <item index="1" class="java.lang.String" itemvalue="Python tests.Unittests in NeuralNetwokTest.py" />
+        <item index="2" class="java.lang.String" itemvalue="Python.Main" />
       </list>
     </recent_temporary>
   </component>
@@ -320,11 +386,44 @@
     </task>
     <servers />
   </component>
+  <component name="TestHistory">
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 17h 52m 50s.xml">
+      <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 18h 52m 20s.xml">
+      <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 18h 52m 56s.xml">
+      <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 21h 15m 46s.xml">
+      <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.10 at 22h 20m 51s.xml">
+      <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.11 at 16h 01m 39s.xml">
+      <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.11 at 16h 02m 32s.xml">
+      <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.11 at 16h 05m 30s.xml">
+      <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.11 at 16h 05m 56s.xml">
+      <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_NeuralNetwokTest_py - 2018.01.11 at 17h 17m 46s.xml">
+      <configuration name="Unittests in NeuralNetwokTest.py" configurationId="tests" />
+    </history-entry>
+  </component>
   <component name="ToolWindowManager">
     <frame x="89" y="-6" width="1303" height="780" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18063028" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+<<<<<<< HEAD
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -356,6 +455,31 @@
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32979238" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+=======
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33933935" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.07957958" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32974634" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -363,6 +487,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/NeuralNetwokTest.py</url>
+          <line>45</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -373,11 +504,12 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="29" />
+      <option name="time" value="38" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/Main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1320">
@@ -395,10 +527,19 @@
         </state>
       </provider>
     </entry>
+=======
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
     <entry file="file://$PROJECT_DIR$/src/Layer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="456">
           <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+<<<<<<< HEAD
+=======
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#831#1089#0" expanded="false" />
+          </folding>
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
         </state>
       </provider>
     </entry>
@@ -408,6 +549,10 @@
           <caret line="100" column="0" lean-forward="false" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#8626#8880#0" expanded="false" />
+            <element signature="e#8936#9511#0" expanded="false" />
+            <element signature="e#9561#10454#0" expanded="false" />
+            <element signature="e#10504#11303#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -418,6 +563,7 @@
           <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+<<<<<<< HEAD
             <marker date="1515832138925" expanded="true" signature="671:825" ph="..." />
             <marker date="1515832138925" expanded="true" signature="808:825" ph="..." />
             <marker date="1515832138925" expanded="true" signature="856:1060" ph="..." />
@@ -436,6 +582,9 @@
             <marker date="1515832138925" expanded="true" signature="1774:1928" ph="..." />
             <marker date="1515832138925" expanded="true" signature="1813:1864" ph="..." />
             <marker date="1515832138925" expanded="true" signature="1911:1928" ph="..." />
+=======
+            <element signature="e#678#960#0" expanded="false" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
           </folding>
         </state>
       </provider>
@@ -470,6 +619,7 @@
           <caret line="81" column="0" lean-forward="false" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+<<<<<<< HEAD
             <marker date="1515832138925" expanded="true" signature="671:825" ph="..." />
             <marker date="1515832138925" expanded="true" signature="808:825" ph="..." />
             <marker date="1515832138925" expanded="true" signature="856:1060" ph="..." />
@@ -488,6 +638,9 @@
             <marker date="1515832138925" expanded="true" signature="1774:1928" ph="..." />
             <marker date="1515832138925" expanded="true" signature="1813:1864" ph="..." />
             <marker date="1515832138925" expanded="true" signature="1911:1928" ph="..." />
+=======
+            <element signature="e#678#960#0" expanded="false" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
           </folding>
         </state>
       </provider>
@@ -496,6 +649,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="15" column="35" lean-forward="false" selection-start-line="15" selection-start-column="35" selection-end-line="15" selection-end-column="35" />
+<<<<<<< HEAD
+=======
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#831#1089#0" expanded="false" />
+          </folding>
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
         </state>
       </provider>
     </entry>
@@ -512,6 +672,10 @@
           <caret line="66" column="0" lean-forward="false" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#8626#8880#0" expanded="false" />
+            <element signature="e#8936#9511#0" expanded="false" />
+            <element signature="e#9561#10454#0" expanded="false" />
+            <element signature="e#10504#11303#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -539,6 +703,7 @@
           <caret line="46" column="0" lean-forward="false" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+<<<<<<< HEAD
             <marker date="1515832138925" expanded="true" signature="671:825" ph="..." />
             <marker date="1515832138925" expanded="true" signature="808:825" ph="..." />
             <marker date="1515832138925" expanded="true" signature="856:1060" ph="..." />
@@ -557,6 +722,9 @@
             <marker date="1515832138925" expanded="true" signature="1774:1928" ph="..." />
             <marker date="1515832138925" expanded="true" signature="1813:1864" ph="..." />
             <marker date="1515832138925" expanded="true" signature="1911:1928" ph="..." />
+=======
+            <element signature="e#678#960#0" expanded="false" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
           </folding>
         </state>
       </provider>
@@ -565,6 +733,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
           <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+<<<<<<< HEAD
+=======
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#831#1089#0" expanded="false" />
+          </folding>
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
         </state>
       </provider>
     </entry>
@@ -581,6 +756,10 @@
           <caret line="98" column="31" lean-forward="true" selection-start-line="98" selection-start-column="31" selection-end-line="98" selection-end-column="31" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#8626#8880#0" expanded="false" />
+            <element signature="e#8936#9511#0" expanded="false" />
+            <element signature="e#9561#10454#0" expanded="false" />
+            <element signature="e#10504#11303#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -601,6 +780,7 @@
           <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+<<<<<<< HEAD
             <marker date="1515832138925" expanded="true" signature="671:825" ph="..." />
             <marker date="1515832138925" expanded="true" signature="808:825" ph="..." />
             <marker date="1515832138925" expanded="true" signature="856:1060" ph="..." />
@@ -619,6 +799,9 @@
             <marker date="1515832138925" expanded="true" signature="1774:1928" ph="..." />
             <marker date="1515832138925" expanded="true" signature="1813:1864" ph="..." />
             <marker date="1515832138925" expanded="true" signature="1911:1928" ph="..." />
+=======
+            <element signature="e#678#960#0" expanded="false" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
           </folding>
         </state>
       </provider>
@@ -629,6 +812,10 @@
           <caret line="109" column="0" lean-forward="false" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#8626#8880#0" expanded="false" />
+            <element signature="e#8936#9511#0" expanded="false" />
+            <element signature="e#9561#10454#0" expanded="false" />
+            <element signature="e#10504#11303#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -637,6 +824,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="15" column="42" lean-forward="false" selection-start-line="15" selection-start-column="42" selection-end-line="15" selection-end-column="42" />
+<<<<<<< HEAD
+=======
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#831#1089#0" expanded="false" />
+          </folding>
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
         </state>
       </provider>
     </entry>
@@ -670,6 +864,10 @@
           <caret line="110" column="8" lean-forward="true" selection-start-line="110" selection-start-column="8" selection-end-line="110" selection-end-column="8" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#8626#8880#0" expanded="false" />
+            <element signature="e#8936#9511#0" expanded="false" />
+            <element signature="e#9561#10454#0" expanded="false" />
+            <element signature="e#10504#11303#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -690,6 +888,10 @@
           <caret line="135" column="12" lean-forward="true" selection-start-line="135" selection-start-column="12" selection-end-line="135" selection-end-column="12" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#8626#8880#0" expanded="false" />
+            <element signature="e#8936#9511#0" expanded="false" />
+            <element signature="e#9561#10454#0" expanded="false" />
+            <element signature="e#10504#11303#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -717,6 +919,10 @@
           <caret line="146" column="24" lean-forward="false" selection-start-line="146" selection-start-column="24" selection-end-line="146" selection-end-column="24" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#8626#8880#0" expanded="false" />
+            <element signature="e#8936#9511#0" expanded="false" />
+            <element signature="e#9561#10454#0" expanded="false" />
+            <element signature="e#10504#11303#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -737,6 +943,10 @@
           <caret line="121" column="21" lean-forward="false" selection-start-line="121" selection-start-column="21" selection-end-line="121" selection-end-column="21" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#8626#8880#0" expanded="false" />
+            <element signature="e#8936#9511#0" expanded="false" />
+            <element signature="e#9561#10454#0" expanded="false" />
+            <element signature="e#10504#11303#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -764,6 +974,10 @@
           <caret line="154" column="33" lean-forward="true" selection-start-line="154" selection-start-column="33" selection-end-line="154" selection-end-column="33" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#8626#8880#0" expanded="false" />
+            <element signature="e#8936#9511#0" expanded="false" />
+            <element signature="e#9561#10454#0" expanded="false" />
+            <element signature="e#10504#11303#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -813,13 +1027,9 @@
       </provider>
     </entry>
     <entry file="file://$APPLICATION_PLUGINS_DIR$/python-ce/helpers/pydev/pydevd.py" />
+<<<<<<< HEAD
     <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/site-packages/numpy/core/fromnumeric.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="1833" column="0" lean-forward="false" selection-start-line="1833" selection-start-column="0" selection-end-line="1833" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+=======
     <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/site-packages/numpy/core/_methods.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
@@ -828,28 +1038,67 @@
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/site-packages/pandas/core/generic.py">
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
           <caret line="954" column="0" lean-forward="false" selection-start-line="954" selection-start-column="0" selection-end-line="954" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Layer.py">
+    <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/unittest/case.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+        <state relative-caret-position="113">
+          <caret line="505" column="0" lean-forward="false" selection-start-line="505" selection-start-column="0" selection-end-line="505" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/site-packages/numpy/core/fromnumeric.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="123">
+          <caret line="1816" column="0" lean-forward="false" selection-start-line="1816" selection-start-column="0" selection-end-line="1816" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/loss_functions.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="13" column="34" lean-forward="false" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Layer.py">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="364">
+          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+=======
+        <state relative-caret-position="468">
+          <caret line="26" column="40" lean-forward="false" selection-start-line="26" selection-start-column="40" selection-end-line="26" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#831#1089#0" expanded="false" />
+          </folding>
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Main.py">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="120">
           <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+=======
+        <state relative-caret-position="1206">
+          <caret line="68" column="60" lean-forward="false" selection-start-line="68" selection-start-column="60" selection-end-line="68" selection-end-column="60" />
+          <folding />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Neuron.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="90">
           <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
           <folding>
@@ -872,33 +1121,62 @@
             <marker date="1515832138925" expanded="true" signature="1774:1928" ph="..." />
             <marker date="1515832138925" expanded="true" signature="1813:1864" ph="..." />
             <marker date="1515832138925" expanded="true" signature="1911:1928" ph="..." />
+=======
+        <state relative-caret-position="162">
+          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#678#960#0" expanded="false" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
+    <entry file="file://$PROJECT_DIR$/test/NeuralNetwokTest.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="968">
           <caret line="97" column="24" lean-forward="false" selection-start-line="97" selection-start-column="24" selection-end-line="97" selection-end-column="24" />
+=======
+        <state relative-caret-position="810">
+          <caret line="45" column="85" lean-forward="false" selection-start-line="45" selection-start-column="85" selection-end-line="45" selection-end-column="85" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="54" column="65" lean-forward="false" selection-start-line="54" selection-start-column="65" selection-end-line="54" selection-end-column="65" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/monk_benchmark.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="774">
-          <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+<<<<<<< HEAD
+        <state relative-caret-position="550">
+          <caret line="54" column="65" lean-forward="false" selection-start-line="54" selection-start-column="65" selection-end-line="54" selection-end-column="65" />
+=======
+        <state relative-caret-position="1026">
+          <caret line="57" column="74" lean-forward="false" selection-start-line="57" selection-start-column="74" selection-end-line="57" selection-end-column="74" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+          </folding>
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="774">
+          <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+=======
+        <state relative-caret-position="194">
+          <caret line="135" column="45" lean-forward="false" selection-start-line="135" selection-start-column="45" selection-end-line="135" selection-end-column="45" />
+>>>>>>> ffb27e47943d150e790bfd0455e14275612628f1
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#8626#8880#0" expanded="false" />
+            <element signature="e#8936#9511#0" expanded="false" />
+            <element signature="e#9561#10454#0" expanded="false" />
+            <element signature="e#10504#11303#0" expanded="false" />
           </folding>
         </state>
       </provider>
