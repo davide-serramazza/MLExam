@@ -34,9 +34,9 @@ def dummy_test():
     data = [[0.05, 0.1]]
     target = [[0.01, 0.99]]
     network.forward(pattern=data[0])
-    delta_w, _, _ = network.back_propagation(target=target[0], lossObject=SquaredError("sigmoid"), eta=0.5)
+    delta_w, _, _ = network.back_propagation(target=target[0], lossObject=SquaredError("sigmoid"))
     print "weights after a back propagation step:"
-    network.update_weights(delta_w=delta_w)
+    network.update_weights(delta_w=delta_w, learning_rate=0.5)
     network.dump_weights()
 
     print "weights after one epoch of training:"

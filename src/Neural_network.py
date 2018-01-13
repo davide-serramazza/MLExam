@@ -1,6 +1,7 @@
 from Layer import *
 from loss_functions import *
 import sys
+from collections import deque
 
 
 class Network:
@@ -30,17 +31,18 @@ class Network:
 
     def getOutput(self):
         """
-
-        :return: returns outputs of the neural network
+        Returns the computed scores of the neural network
+        (i.e the output of the neurons of the last layer).
+        :return: outputs of the neural network
         """
         last_layer = self.layers[-1]
         return last_layer.getOutput()[:-1]
 
     def forward(self, pattern):
         """
-
+        Computes output of the neural network as a function of the data pattern.
         :param pattern: a single training example
-        :return:
+        :return: output of the neural network
         """
         self.feed_input_neurons(pattern)
         self.propagate_input()
@@ -71,17 +73,19 @@ class Network:
         for input_neuron, x in zip(input_layer.neurons[:-1], pattern):  # exclude bias
             input_neuron.activation_function(x)
 
-    def back_propagation(self, target, lossObject, eta=0.1):
+    def back_propagation(self, target, lossObject):
         """
+        Performs backpropagation.
 
         :param target: target vector for a single training example
         :param lossObject: function to optimize
-        :param eta: learning rate
-        :return:
+        :return: gradient_weights, gradient w.r.t network weights
+                 loss_value, loss value computed by lossObject
+                 misClassification, misclassification error
         """
         # vector containing the deltas of each layer in reverse order
         # (i.e from output layer to first hidden layer)
-        delta_vectors = []
+        delta_vectors = deque()
 
         # 1. get output vector from forward step
         output_net = np.array(self.getOutput())
@@ -95,40 +99,41 @@ class Network:
         # compute delta vector for each hidden layer and append it to delta_vectors
         for hidden_layer_index in range(len(self.layers) - 2, 0, -1):
             delta_next_layer = self.compute_delta_hidden_layer(delta_next_layer, hidden_layer_index)
-            delta_vectors.append(delta_next_layer)
+            delta_vectors.appendleft(delta_next_layer)
 
-        # 4. update network weights
-        # gradient_weights[i][j][k] is the gradient w.r.t. layer i+1, neuron j, weight k
-        gradient_weights = self.compute_weight_update(np.asarray(delta_vectors), eta)
+        # 4. compute network weights update
+        gradient_weights = self.compute_gradient(np.asarray(delta_vectors))
 
         # 5 report loss and misclassification count
         weights = np.asarray([neuron.weights
-                            for layer in self.layers[1:]
-                            for neuron in layer.neurons[:-1]])
+                              for layer in self.layers[1:]
+                              for neuron in layer.neurons[:-1]])
+
         loss_value = lossObject.value(target, output_net, weights)
         misClassification = lossObject.misClassification(target, output_net)
+
         return gradient_weights, loss_value, misClassification
 
-#TODO to change
-    def compute_weight_update(self, delta_vectors, eta):
-        delta_w = []
-        for i in range(1, len(self.layers)):
+    def compute_gradient(self, delta_vectors):
+        """
+        Computes the gradient from the delta of each neuron.
+
+        :param delta_vectors: vector where each entry delta_vectors[l][n]
+                contains the delta of each neuron 'n' in layer 'l'.
+        :return: a matrix gradient_w where each entry gradient[l][n][w] is the gradient w.r.t
+                the weight 'w' of the neuron 'n' in the layer 'l'.
+        """
+        gradient_w = []
+        for l in range(1, len(self.layers)):
             tmpL = []
-            for j in range(len(self.layers[i].neurons) - 1):
-                tmpN = np.array([])
-                for w in range(len(self.layers[i].neurons[j].weights)):
-                    # qui errore precedente, ad ogni passo il neuronre di cui si prendere l'output
-                    # e diverso, tuo codice aveta ...neurons[j] , adesso ...neuron[w].
-                    tmp = np.array(eta * self.layers[i - 1].neurons[w].output * delta_vectors[-i][j])
-                    tmpN = np.append(tmpN,tmp)
-                tmpL.append(tmpN)
-            tmpL = np.asarray(tmpL)
-            delta_w.append(tmpL)
-        delta_w = np.asarray(delta_w)
-        return delta_w
+            for n in range(len(self.layers[l].neurons[:-1])):  # exclude bias neuron
+                neuron_input = np.asarray([neuron.getOutput() for neuron in self.layers[l-1].neurons])
+                tmpL.append(neuron_input * delta_vectors[l-1][n])
+            gradient_w.append(tmpL)
 
+        return np.asarray(gradient_w)
 
-    def update_weights(self, delta_w, regularization=0):
+    def update_weights(self, delta_w, learning_rate, regularization=0):
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
                 # add regularization (do not regularize bias weights)
@@ -137,10 +142,10 @@ class Network:
                 lambda_vector.fill(regularization)
                 self.layers[i].neurons[j].weights[:-1] -= np.multiply(lambda_vector, temp)
                 # add gradient
-                self.layers[i].neurons[j].weights += delta_w[i - 1][j]
+                self.layers[i].neurons[j].weights += learning_rate * delta_w[i - 1][j]
 
     def compute_delta_hidden_layer(self, delta_next_layer, currentLayerIndex):
-        #delta_layer vector
+        # delta_layer vector
         delta_layer = np.array([])
         for h in range(len(self.layers[currentLayerIndex].neurons)-1):
             downstream = self.layers[currentLayerIndex + 1].neurons[:-1]
@@ -148,7 +153,7 @@ class Network:
             gradient_flow = np.dot(weights, delta_next_layer)
             derivative_net = self.layers[currentLayerIndex].neurons[h].activation_function_derivative()
             delta_h = gradient_flow * derivative_net
-            delta_layer = np.append(delta_layer,delta_h)
+            delta_layer = np.append(delta_layer, delta_h)
         return delta_layer
 
     def compute_delta_output_layer(self, output_net, target, loss):
@@ -158,46 +163,62 @@ class Network:
         delta_outputLayer = np.multiply(af_derivatives, error_derivatives)
         return delta_outputLayer
 
-    def train(self, data, targets,lossObject, epochs, learning_rate, batch_size, momentum, regularization=0):
-        # fit the data
+    def train(self, data, targets, lossObject, epochs, learning_rate, batch_size, momentum, regularization=0):
+        """
+        Performs the training of the neural network.
+
+        :param data: patterns
+        :param targets: target for each pattern in 'data'
+        :param lossObject: loss
+        :param epochs:
+        :param learning_rate:
+        :param batch_size:
+        :param momentum:
+        :param regularization: regularization strength
+
+        :return: losses, vector of the loss computed at each epoch
+                 misClassification, vector of misclassification loss for each epoch
+        """
         # lists for specify missclassification and Squared error
         losses = np.array([])
         misClassification = np.array([])
-        # prev g is previous gradien  (for momentum)
+        # prevg is previous gradient  (for momentum)
         prevg = []
         for epoch in range(epochs):
-            # current epoch vale of missclassification and Squared error
+            # current epoch value of misclassification and Squared error
             loss_epoch = 0
             misC_epoch = 0
-            for i in range(0,len(data),batch_size):
-                #take only batch_size examples
-                pattern = data[i:i+batch_size]
-                target = targets[i:i+batch_size]
-                #deltaw_tot = sum of delata_W (delta of a single iteration)
-                deltaw_Tot = []
-                #now really train
-                for p,t in zip (pattern,target):
-                    self.forward(p)
+            for i in range(0, len(data), batch_size):
+                # take only batch_size examples
+                batch_pattern = data[i:i + batch_size]
+                batch_target = targets[i:i + batch_size]
 
-                    delta_w, loss_p, miss_p = self.back_propagation(t,lossObject, learning_rate/batch_size)
+                # gradient_w_epoch = sum of gradient_w for the epoch
+                gradient_w_epoch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
+                                            for i in range(1, len(self.architecture))])
+                # now really train
+                for pattern, t in zip(batch_pattern, batch_target):
+                    self.forward(pattern)
+                    gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject)
+
                     loss_epoch += loss_p
-                    misC_epoch +=miss_p
-
-                    if deltaw_Tot == []:
-                        deltaw_Tot=delta_w
-                    else:
-                        deltaw_Tot += delta_w
-            #momentum stuff
-                if (prevg == []):
-                    prevg = copy.deepcopy(deltaw_Tot)
+                    misC_epoch += miss_p
+                    gradient_w_epoch += gradient_w
+                # add momentum from the second epoch onwards
+                if epoch == 0:
+                    prevg = copy.deepcopy(gradient_w_epoch)
                 else:
-                    tmp = copy.deepcopy(deltaw_Tot)
-                    deltaw_Tot += (prevg*momentum)
-                    prevg = tmp
-                self.update_weights(deltaw_Tot, regularization * batch_size / len(data))
-            #append the total loss and missClassification in single epoch
-            losses = np.append(losses,loss_epoch)
-            misClassification = np.append(misClassification,misC_epoch)
+                    tmp = copy.deepcopy(gradient_w_epoch)   # save gradient at current epoch
+                    gradient_w_epoch += prevg * momentum    # add momentum
+                    prevg = tmp                          # store previous gradient
+
+                # append the total loss and misClassification of single epoch
+                losses = np.append(losses, loss_epoch)
+                misClassification = np.append(misClassification, misC_epoch)
+
+                # update neural network weights
+                self.update_weights(gradient_w_epoch, learning_rate/batch_size, regularization * batch_size / len(data))
+
         return losses, misClassification
 
     def predict(self, data):
