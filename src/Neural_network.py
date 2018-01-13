@@ -31,17 +31,18 @@ class Network:
 
     def getOutput(self):
         """
-
-        :return: returns outputs of the neural network
+        Returns the computed scores of the neural network
+        (i.e the output of the neurons of the last layer).
+        :return: outputs of the neural network
         """
         last_layer = self.layers[-1]
         return last_layer.getOutput()[:-1]
 
     def forward(self, pattern):
         """
-
+        Computes output of the neural network as a function of the data pattern.
         :param pattern: a single training example
-        :return:
+        :return: output of the neural network
         """
         self.feed_input_neurons(pattern)
         self.propagate_input()
@@ -74,11 +75,13 @@ class Network:
 
     def back_propagation(self, target, lossObject):
         """
+        Performs backpropagation.
 
         :param target: target vector for a single training example
         :param lossObject: function to optimize
-        :param eta: learning rate
-        :return:
+        :return: gradient_weights, gradient w.r.t network weights
+                 loss_value, loss value computed by lossObject
+                 misClassification, misclassification error
         """
         # vector containing the deltas of each layer in reverse order
         # (i.e from output layer to first hidden layer)
@@ -98,20 +101,28 @@ class Network:
             delta_next_layer = self.compute_delta_hidden_layer(delta_next_layer, hidden_layer_index)
             delta_vectors.appendleft(delta_next_layer)
 
-        # 4. update network weights
-        # gradient_weights[i][j][k] is the gradient w.r.t. layer i+1, neuron j, weight k
+        # 4. compute network weights update
         gradient_weights = self.compute_gradient(np.asarray(delta_vectors))
 
         # 5 report loss and misclassification count
         weights = np.asarray([neuron.weights
-                            for layer in self.layers[1:]
-                            for neuron in layer.neurons[:-1]])
+                              for layer in self.layers[1:]
+                              for neuron in layer.neurons[:-1]])
 
         loss_value = lossObject.value(target, output_net, weights)
         misClassification = lossObject.misClassification(target, output_net)
+
         return gradient_weights, loss_value, misClassification
 
     def compute_gradient(self, delta_vectors):
+        """
+        Computes the gradient from the delta of each neuron.
+
+        :param delta_vectors: vector where each entry delta_vectors[l][n]
+                contains the delta of each neuron 'n' in layer 'l'.
+        :return: a matrix gradient_w where each entry gradient[l][n][w] is the gradient w.r.t
+                the weight 'w' of the neuron 'n' in the layer 'l'.
+        """
         gradient_w = []
         for l in range(1, len(self.layers)):
             tmpL = []
@@ -153,7 +164,21 @@ class Network:
         return delta_outputLayer
 
     def train(self, data, targets, lossObject, epochs, learning_rate, batch_size, momentum, regularization=0):
-        # fit the data
+        """
+        Performs the training of the neural network.
+
+        :param data: patterns
+        :param targets: target for each pattern in 'data'
+        :param lossObject: loss
+        :param epochs:
+        :param learning_rate:
+        :param batch_size:
+        :param momentum:
+        :param regularization: regularization strength
+
+        :return: losses, vector of the loss computed at each epoch
+                 misClassification, vector of misclassification loss for each epoch
+        """
         # lists for specify missclassification and Squared error
         losses = np.array([])
         misClassification = np.array([])
@@ -165,15 +190,15 @@ class Network:
             misC_epoch = 0
             for i in range(0, len(data), batch_size):
                 # take only batch_size examples
-                batch_pattern = data[i:i+batch_size]
-                batch_target = targets[i:i+batch_size]
+                batch_pattern = data[i:i + batch_size]
+                batch_target = targets[i:i + batch_size]
 
                 # gradient_w_epoch = sum of gradient_w for the epoch
                 gradient_w_epoch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
-                                          for i in range(1, len(self.architecture))])
+                                            for i in range(1, len(self.architecture))])
                 # now really train
-                for p, t in zip(batch_pattern, batch_target):
-                    self.forward(p)
+                for pattern, t in zip(batch_pattern, batch_target):
+                    self.forward(pattern)
                     gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject)
 
                     loss_epoch += loss_p
@@ -187,11 +212,13 @@ class Network:
                     gradient_w_epoch += prevg * momentum    # add momentum
                     prevg = tmp                          # store previous gradient
 
+                # append the total loss and misClassification of single epoch
+                losses = np.append(losses, loss_epoch)
+                misClassification = np.append(misClassification, misC_epoch)
+
+                # update neural network weights
                 self.update_weights(gradient_w_epoch, learning_rate/batch_size, regularization * batch_size / len(data))
 
-            # append the total loss and misClassification of single epoch
-            losses = np.append(losses, loss_epoch)
-            misClassification = np.append(misClassification,misC_epoch)
         return losses, misClassification
 
     def predict(self, data):
