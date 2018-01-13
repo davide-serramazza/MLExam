@@ -120,7 +120,7 @@ class Network:
                     # qui errore precedente, ad ogni passo il neuronre di cui si prendere l'output
                     # e diverso, tuo codice aveta ...neurons[j] , adesso ...neuron[w].
                     tmp = np.array(eta * self.layers[i - 1].neurons[w].output * delta_vectors[-i][j])
-                    tmpN = np.append(tmpN,tmp)
+                    tmpN = np.append(tmpN, tmp)
                 tmpL.append(tmpN)
             tmpL = np.asarray(tmpL)
             delta_w.append(tmpL)
@@ -166,35 +166,34 @@ class Network:
         # prev g is previous gradien  (for momentum)
         prevg = []
         for epoch in range(epochs):
-            # current epoch vale of missclassification and Squared error
+            # current epoch value of misclassification and Squared error
             loss_epoch = 0
             misC_epoch = 0
-            for i in range(0,len(data),batch_size):
-                #take only batch_size examples
-                pattern = data[i:i+batch_size]
-                target = targets[i:i+batch_size]
-                #deltaw_tot = sum of delata_W (delta of a single iteration)
-                deltaw_Tot = []
-                #now really train
-                for p,t in zip (pattern,target):
+            for i in range(0, len(data), batch_size):
+                # take only batch_size examples
+                batch_pattern = data[i:i+batch_size]
+                batch_target = targets[i:i+batch_size]
+                
+                # delta_w_epoch = sum of delta_w for the epoch
+                delta_w_epoch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
+                                          for i in range(1, len(self.architecture))])
+                # now really train
+                for p, t in zip(batch_pattern, batch_target):
                     self.forward(p)
 
-                    delta_w, loss_p, miss_p = self.back_propagation(t,lossObject, learning_rate/batch_size)
+                    delta_w, loss_p, miss_p = self.back_propagation(t, lossObject, learning_rate/batch_size)
                     loss_epoch += loss_p
-                    misC_epoch +=miss_p
+                    misC_epoch += miss_p
 
-                    if deltaw_Tot == []:
-                        deltaw_Tot=delta_w
-                    else:
-                        deltaw_Tot += delta_w
+                    delta_w_epoch += delta_w
             #momentum stuff
                 if (prevg == []):
-                    prevg = copy.deepcopy(deltaw_Tot)
+                    prevg = copy.deepcopy(delta_w_epoch)
                 else:
-                    tmp = copy.deepcopy(deltaw_Tot)
-                    deltaw_Tot += (prevg*momentum)
+                    tmp = copy.deepcopy(delta_w_epoch)
+                    delta_w_epoch += (prevg*momentum)
                     prevg = tmp
-                self.update_weights(deltaw_Tot, regularization * batch_size / len(data))
+                self.update_weights(delta_w_epoch, regularization * batch_size / len(data))
             #append the total loss and missClassification in single epoch
             losses = np.append(losses,loss_epoch)
             misClassification = np.append(misClassification,misC_epoch)
