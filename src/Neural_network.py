@@ -29,6 +29,12 @@ class Network:
             layer = Layer(architecture[i], architecture[i - 1], neuron)
             self.layers.append(layer)
 
+    def intialize_weight(self):
+        for l in range(1,len(self.layers)):
+            for n in range(0,len(self.layers[l].neurons)-1):
+                len_weights = len(self.layers[l].neurons[n].weights)
+                self.layers[l].neurons[n].weights = np.random.uniform(low=-0.7, high=0.7, size=len_weights)
+
     def getOutput(self):
         """
         Returns the computed scores of the neural network

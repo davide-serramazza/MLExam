@@ -14,10 +14,10 @@ def grid_search(network,loss_obj,n_epoch,tr_patterns,tr_labels,vl_pattern,vl_lab
         for n in range(10):
             # create net's copy to train
             #TODO reinizialize the weights
-            net = copy.deepcopy(network)
+            network.intialize_weight()
             # train
-            squared_error,misClass_error, squared_error_validation,misClass_error_validation = net.train(data=tr_patterns,
-                targets=tr_labels, vl_data=vl_pattern, vl_targets=vl_labels , lossObject=loss_obj,
+            squared_error,misClass_error, squared_error_validation,misClass_error_validation = network.train(
+                data=tr_patterns,targets=tr_labels, vl_data=vl_pattern, vl_targets=vl_labels , lossObject=loss_obj,
                                 epochs=val, learning_rate=0.03, batch_size=1, momentum=0.0, regularization=0.01)
 
             #append result of single epoch in list previously created
