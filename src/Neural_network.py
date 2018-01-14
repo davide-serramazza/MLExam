@@ -212,12 +212,11 @@ class Network:
                     gradient_w_epoch += prevg * momentum    # add momentum
                     prevg = tmp                          # store previous gradient
 
-                # append the total loss and misClassification of single epoch
-                losses = np.append(losses, loss_epoch)
-                misClassification = np.append(misClassification, misC_epoch)
-
-                # update neural network weights
-                self.update_weights(gradient_w_epoch, learning_rate/batch_size, regularization * batch_size / len(data))
+            # update neural network weights
+            self.update_weights(gradient_w_epoch, learning_rate/batch_size, regularization * batch_size / len(data))
+            # append the total loss and misClassification of single epoch
+            losses = np.append(losses, loss_epoch)
+            misClassification = np.append(misClassification, misC_epoch)
 
         return losses, misClassification
 
