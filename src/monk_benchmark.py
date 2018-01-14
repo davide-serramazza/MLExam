@@ -54,8 +54,8 @@ def main():
     tmps = train_data["label"].values
     labels = transform_target(tmps)
     lossObject = SquaredError("tangentH")
-    losses, misClass = network.train(data=patterns, targets=labels,lossObject=lossObject, epochs=100, learning_rate=0.3,
-                                    batch_size=len(patterns), momentum=0.3, regularization=0.01)
+    losses, misClass = network.train(data=patterns, targets=labels,lossObject=lossObject, epochs=100, learning_rate=0.01,
+                                    batch_size=1, momentum=0.01, regularization=0.01)
     misClass = np.array(misClass) / len(patterns)
     # TODO problemi con la regolarizzazione
 

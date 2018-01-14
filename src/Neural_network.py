@@ -194,7 +194,7 @@ class Network:
                 batch_target = targets[i:i + batch_size]
 
                 # gradient_w_epoch = sum of gradient_w for the epoch
-                gradient_w_epoch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
+                gradient_w_batch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
                                             for i in range(1, len(self.architecture))])
                 # now really train
                 for pattern, t in zip(batch_pattern, batch_target):
@@ -203,17 +203,18 @@ class Network:
 
                     loss_epoch += loss_p
                     misC_epoch += miss_p
-                    gradient_w_epoch += gradient_w
+                    gradient_w_batch += gradient_w
                 # add momentum from the second epoch onwards
                 if epoch == 0:
-                    prevg = copy.deepcopy(gradient_w_epoch)
+                    prevg = copy.deepcopy(gradient_w_batch)
                 else:
-                    tmp = copy.deepcopy(gradient_w_epoch)   # save gradient at current epoch
-                    gradient_w_epoch += prevg * momentum    # add momentum
+                    tmp = copy.deepcopy(gradient_w_batch)   # save gradient at current epoch
+                    gradient_w_batch += prevg * momentum    # add momentum
                     prevg = tmp                          # store previous gradient
 
-            # update neural network weights
-            self.update_weights(gradient_w_epoch, learning_rate/batch_size, regularization * batch_size / len(data))
+                # update neural network weights after a batch
+                self.update_weights(gradient_w_batch, learning_rate/batch_size, regularization * batch_size / len(data))
+
             # append the total loss and misClassification of single epoch
             losses = np.append(losses, loss_epoch)
             misClassification = np.append(misClassification, misC_epoch)
