@@ -205,6 +205,7 @@ class Network:
                 batch_pattern = data[i:i + batch_size]
                 batch_target = targets[i:i + batch_size]
 
+
                 # gradient_w_batch = sum of gradient_w for the epoch
                 gradient_w_batch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
                                             for i in range(1, len(self.architecture))])

@@ -39,15 +39,15 @@ def grid_search(network,loss_obj,n_epoch,tr_patterns,tr_labels,vl_pattern,vl_lab
 
         # plot result
         plt.subplot(1, 2, 1)
-        plt.plot(range(len(misClass_error)), misClass_error)
-        plt.plot(range(len(misClass_error_validation)), misClass_error_validation)
+        plt.plot(range(len(misClass_error_avarage)), misClass_error_avarage)
+        plt.plot(range(len(misClass_error_validation_avarage)), misClass_error_validation_avarage)
         plt.legend(['traing set', 'validation set'])
         plt.xlabel("epochs")
         plt.ylabel("misClassification")
         #plot squaredError
         plt.subplot(1,2,2)
-        plt.plot(range(len(squared_error)),squared_error)
-        plt.plot(range(len(squared_error_validation)),squared_error_validation)
+        plt.plot(range(len(squared_error_avarage)),squared_error_avarage)
+        plt.plot(range(len(squared_error_validation_avarage)),squared_error_validation_avarage)
         plt.legend(['traing set', 'validation set'])
         plt.xlabel("epochs")
         plt.ylabel("squaredError")
