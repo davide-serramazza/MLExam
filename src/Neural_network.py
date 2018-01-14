@@ -178,6 +178,13 @@ class Network:
             misClass_error.append( loss_obj.misClassification (targets[i],scores[i]) )
         return np.sum(squared_error), np.sum(misClass_error)
 
+    def shuffle_patterns(self,patterns,target):
+        lenght= len(patterns)
+        permutation = np.random.permutation(lenght)
+        patterns = [patterns[i] for i in permutation]
+        target = [target[i] for i in permutation]
+        return patterns,target
+
     def train(self, data, targets, vl_data, vl_targets, lossObject, epochs, learning_rate, batch_size, momentum,
               regularization=0):
         """
@@ -195,6 +202,11 @@ class Network:
         :return: losses, vector of the loss computed at each epoch
                  misClassification, vector of misclassification loss for each epoch
         """
+
+        #shuffle data (useful for minibatch/online)
+        data_shuffled,targets_shuffled = self.shuffle_patterns(data,targets)
+
+
         # lists for specify missclassification and Squared error
         losses = np.array([])
         misClassification = np.array([])
@@ -206,10 +218,10 @@ class Network:
             # current epoch value of misclassification and Squared error
             loss_epoch = 0
             misC_epoch = 0
-            for i in range(0, len(data), batch_size):
+            for i in range(0, len(data_shuffled), batch_size):
                 # take only batch_size examples
-                batch_pattern = data[i:i + batch_size]
-                batch_target = targets[i:i + batch_size]
+                batch_pattern = data_shuffled[i:i + batch_size]
+                batch_target = targets_shuffled[i:i + batch_size]
 
 
                 # gradient_w_batch = sum of gradient_w for the epoch
