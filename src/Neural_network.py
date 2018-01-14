@@ -172,7 +172,8 @@ class Network:
             misClass_error.append( loss_obj.misClassification (targets[i],scores[i]) )
         return np.sum(squared_error), np.sum(misClass_error)
 
-    def train(self, data, targets, lossObject, epochs, learning_rate, batch_size, momentum, regularization=0):
+    def train(self, data, targets, vl_data, vl_targets, lossObject, epochs, learning_rate, batch_size, momentum,
+              regularization=0):
         """
         Performs the training of the neural network.
 
@@ -191,6 +192,8 @@ class Network:
         # lists for specify missclassification and Squared error
         losses = np.array([])
         misClassification = np.array([])
+        losses_valdation = np.array([])
+        misClassification_validation = np.array([])
         # prevg is previous gradient  (for momentum)
         prevg = []
         for epoch in range(epochs):
@@ -227,8 +230,11 @@ class Network:
             # append the total loss and misClassification of single epoch
             losses = np.append(losses, loss_epoch)
             misClassification = np.append(misClassification, misC_epoch)
-
-        return losses, misClassification
+            squared_error_validation_epoch,misClass_error_validation_epoch = self.validation_error(vl_data,
+                                                                                                vl_targets,lossObject)
+            losses_valdation = np.append(losses_valdation, squared_error_validation_epoch)
+            misClassification_validation = np.append(misClassification_validation,misClass_error_validation_epoch)
+        return losses, misClassification, losses_valdation,misClassification_validation
 
     def predict(self, data):
         # predict target variables
