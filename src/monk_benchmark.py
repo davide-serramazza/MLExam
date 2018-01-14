@@ -42,7 +42,9 @@ def main():
     train_data = pd.read_csv("../monk_datasets/monks-1.train", delim_whitespace=True, header=None)
     train_data.columns = columns
     print train_data.head()
-    
+    # shuffle data set
+    train_data = train_data.reindex(np.random.permutation(train_data.index))
+    print "after shffle", train_data.head()
 
     # 2. train neural network. set low learning rate because actual implementation is online
     network = Network(architecture=[17, 5, 5, 1], neurons=[InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron])
