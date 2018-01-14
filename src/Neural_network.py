@@ -163,6 +163,15 @@ class Network:
         delta_outputLayer = np.multiply(af_derivatives, error_derivatives)
         return delta_outputLayer
 
+    def validation_error(self,patterns,targets,loss_obj):
+        scores = self.predict(patterns)
+        squared_error = []
+        misClass_error = []
+        for i in range(len(scores)):
+            squared_error.append( loss_obj.value(targets[i],scores[i][0],[ [], [] ]) )
+            misClass_error.append( loss_obj.misClassification (targets[i],scores[i]) )
+        return np.sum(squared_error), np.sum(misClass_error)
+
     def train(self, data, targets, lossObject, epochs, learning_rate, batch_size, momentum, regularization=0):
         """
         Performs the training of the neural network.
@@ -212,12 +221,12 @@ class Network:
                     gradient_w_epoch += prevg * momentum    # add momentum
                     prevg = tmp                          # store previous gradient
 
-                # append the total loss and misClassification of single epoch
-                losses = np.append(losses, loss_epoch)
-                misClassification = np.append(misClassification, misC_epoch)
-
                 # update neural network weights
                 self.update_weights(gradient_w_epoch, learning_rate/batch_size, regularization * batch_size / len(data))
+
+            # append the total loss and misClassification of single epoch
+            losses = np.append(losses, loss_epoch)
+            misClassification = np.append(misClassification, misC_epoch)
 
         return losses, misClassification
 
