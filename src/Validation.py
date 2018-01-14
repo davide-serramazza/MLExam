@@ -31,11 +31,13 @@ def grid_search(network,loss_obj,n_epoch,tr_patterns,tr_labels,vl_pattern,vl_lab
                 misClass_error_avarage += misClass_error
                 squared_error_validation_avarage += squared_error_validation
                 misClass_error_validation_avarage += misClass_error_validation
-        # taking mean
-        squared_error_avarage/=10
-        misClass_error_avarage/=10
-        squared_error_validation_avarage/=10
-        misClass_error_validation_avarage/=10
+
+        # taking mean of dataset and 10 trials
+        squared_error_avarage/=((5*len(tr_patterns)))
+        # divide only by 5 beacuse our implementation of squared error is 2(output-traning)
+        misClass_error_avarage/=(10*len(tr_patterns))
+        squared_error_validation_avarage/=(5*len(tr_patterns))
+        misClass_error_validation_avarage/=(10*len(tr_patterns))
 
         # plot result
         plt.subplot(1, 2, 1)
