@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 import copy
 import numpy as np
+from Neural_network import *
 
-def grid_search(network,loss_obj,learn_rate,n_trials, tr_patterns,tr_labels,vl_patterns,vl_labels):
+def grid_search(architecture,neurons,loss_obj,learn_rate,n_trials, tr_patterns,tr_labels,vl_patterns,vl_labels):
     """
     grid search for optimal hyperparameter
     :param network: network to be trained
@@ -15,7 +16,7 @@ def grid_search(network,loss_obj,learn_rate,n_trials, tr_patterns,tr_labels,vl_p
     :param vl_labels: validation set target
     :return:
     """
-    fixed_number_epoch = 200
+    fixed_number_epoch = 10
     # for every value (per adesso solo numero di iterazione)
     for val in learn_rate:
         # initialize lists for saving reslut
@@ -25,8 +26,8 @@ def grid_search(network,loss_obj,learn_rate,n_trials, tr_patterns,tr_labels,vl_p
         misClass_error_validation_avarage = np.zeros(fixed_number_epoch)
         # 10 trails then avarage
         for n in range(n_trials):
-            # reinitilize weigths
-            network.intialize_weight()
+            # buid a new network
+            network = Network(architecture[0],neurons[0])
             # train
             squared_error,misClass_error, squared_error_validation,misClass_error_validation = network.train(
                 data=tr_patterns,targets=tr_labels, vl_data=vl_patterns, vl_targets=vl_labels , lossObject=loss_obj,
@@ -60,7 +61,8 @@ def grid_search(network,loss_obj,learn_rate,n_trials, tr_patterns,tr_labels,vl_p
         plt.legend(['traing set', 'validation set'])
         plt.xlabel("epochs")
         plt.ylabel("squaredError")
-        plt.show()
+        s = "./learning rate_"+ str(learn_rate[0]).replace(".",",")
+        plt.savefig(s)
 
 
 def hold_out(pattrns,targets,frac):

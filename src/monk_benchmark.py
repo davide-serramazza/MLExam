@@ -61,7 +61,9 @@ def main():
     #4. hold out
     tr_patterns,tr_labels,vl_patterns,vl_labels = Validation.hold_out(patterns,labels,0.7)
     #validation
-    Validation.grid_search(network,lossObject,[0.01],5, tr_patterns,tr_labels,vl_patterns,vl_labels)
+    architecture =[ [17,10,1] ]
+    neurons=[ [InputNeuron, TanHNeuron, TanHNeuron] ]
+    Validation.grid_search(architecture,neurons,lossObject,[0.01],5, tr_patterns,tr_labels,vl_patterns,vl_labels)
     """
     losses, misClass = network.train(data=patterns, targets=labels,lossObject=lossObject, epochs=100, learning_rate=0.01,
                                     batch_size=1, momentum=0.0, regularization=0.01)
