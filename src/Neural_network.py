@@ -232,6 +232,7 @@ class Network:
             misC_epoch = 0
             #shuffle data set
             data_shuffled, targets_shuffled = self.shuffle_dataset(data,targets)
+            
             for i in range(0, len(data_shuffled), batch_size):
                 # take only batch_size examples
                 #shuffle data set

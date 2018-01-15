@@ -86,7 +86,7 @@ def grid_search(architecture, neurons, momentum, regularization,learn_rate, loss
                     plt.legend(['traing set', 'validation set'])
                     plt.xlabel("epochs")
                     plt.ylabel("squaredError")
-                    s = "./lr_"+transf_value(lr)+" mo_"+transf_value(mo)+" reg:"+transf_value(reg)+" arc_"+tranf_arc(architecture)
+                    s = "../image/lr_"+transf_value(lr)+" mo_"+transf_value(mo)+" reg:"+transf_value(reg)+" arc_"+tranf_arc(architecture)
                     plt.savefig(s)
 
 
