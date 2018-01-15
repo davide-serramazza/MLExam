@@ -29,6 +29,12 @@ class Network:
             layer = Layer(architecture[i], architecture[i - 1], neuron)
             self.layers.append(layer)
 
+    def shuffle_dataset(self,data,targets):
+        permumation = np.random.permutation(len(data))
+        data_shuffled = [data[i] for i in permumation]
+        targets_shuffled = [targets[i] for i in permumation]
+        return data_shuffled,targets_shuffled
+
     def intialize_weight(self):
         """
         reinitialize network's wights (usefule in grid search?)
@@ -212,6 +218,7 @@ class Network:
         :return: losses, vector of the loss computed at each epoch
                  misClassification, vector of misclassification loss for each epoch
         """
+
         # lists for specify missclassification and Squared error (for traning and validation)
         losses = np.array([])
         misClassification = np.array([])
@@ -223,11 +230,13 @@ class Network:
             # current epoch value of misclassification and Squared error
             loss_epoch = 0
             misC_epoch = 0
-            for i in range(0, len(data), batch_size):
+            #shuffle data set
+            data_shuffled, targets_shuffled = self.shuffle_dataset(data,targets)
+            for i in range(0, len(data_shuffled), batch_size):
                 # take only batch_size examples
-                batch_pattern = data[i:i + batch_size]
-                batch_target = targets[i:i + batch_size]
-
+                #shuffle data set
+                batch_pattern = data_shuffled[i:i + batch_size]
+                batch_target = targets_shuffled[i:i + batch_size]
                 # gradient_w_batch = sum of gradient_w for the epoch
                 gradient_w_batch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
                                             for i in range(1, len(self.architecture))])

@@ -18,10 +18,10 @@ def grid_search(network,loss_obj,reguaritazion,n_trials, tr_patterns,tr_labels,v
     # for every value (per adesso solo numero di iterazione)
     for val in reguaritazion:
         # initialize lists for saving reslut
-        squared_error_avarage = np.array([])
-        misClass_error_avarage = np.array([])
-        squared_error_validation_avarage = np.array([])
-        misClass_error_validation_avarage = np.array([])
+        squared_error_avarage = np.zeros(200) #np.array([])
+        misClass_error_avarage = np.zeros(200)
+        squared_error_validation_avarage = np.zeros(200)
+        misClass_error_validation_avarage = np.zeros(200)
         # 10 trails then avarage
         for n in range(n_trials):
             # reinitilize weigths
@@ -32,22 +32,14 @@ def grid_search(network,loss_obj,reguaritazion,n_trials, tr_patterns,tr_labels,v
                                 epochs=200, learning_rate=val, batch_size=1, momentum=0.0, regularization=0.01)
 
             #append result of single epoch in list previously created
-            if n==0:
-                # in n==0 create list
-                squared_error_avarage = copy.deepcopy( squared_error)
-                misClass_error_avarage = copy.deepcopy( misClass_error)
-                squared_error_validation_avarage = copy.deepcopy( squared_error_validation)
-                misClass_error_validation_avarage =copy.deepcopy( misClass_error_validation)
-            else:
-                #else sum
-                squared_error_avarage +=squared_error
-                misClass_error_avarage += misClass_error
-                squared_error_validation_avarage += squared_error_validation
-                misClass_error_validation_avarage += misClass_error_validation
+            squared_error_avarage +=squared_error
+            misClass_error_avarage += misClass_error
+            squared_error_validation_avarage += squared_error_validation
+            misClass_error_validation_avarage += misClass_error_validation
 
         # taking mean
         squared_error_avarage/= (( float(n_trials)/2 *len(tr_patterns)))
-        # dividing by n_trials/2 beacuse our implementation of squared error is 2(output-traning)
+        # dividing by n_trials/2 beacuse our implementation of squared error is (target-output)/2
         #dividing by len(tr_patterns) beacuse loss return absolute value, not mean
         misClass_error_avarage/=( n_trials *len(tr_patterns))
         squared_error_validation_avarage/=( float(n_trials)/2 *len(vl_patterns))
@@ -85,4 +77,4 @@ def hold_out(network,loss_obj,pattrns,targets,frac):
     tr_labels = targets[:lenght]
     vl_pattern = pattrns[lenght:]
     vl_labels = targets[lenght:]
-    grid_search(network,loss_obj,[0.02,0.03],5, tr_pattern,tr_labels,vl_pattern,vl_labels)
+    grid_search(network,loss_obj,[0.01],5, tr_pattern,tr_labels,vl_pattern,vl_labels)
