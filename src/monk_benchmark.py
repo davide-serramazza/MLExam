@@ -63,7 +63,11 @@ def main():
     #validation
     architecture =[ [17,10,1] ]
     neurons=[ [InputNeuron, TanHNeuron, TanHNeuron] ]
-    Validation.grid_search(architecture,neurons,lossObject,[0.01],5, tr_patterns,tr_labels,vl_patterns,vl_labels)
+    momentum = [0.3]
+    regularization = [0.01]
+    learing_rate = [0.3]
+    Validation.grid_search(architecture,neurons,momentum,regularization,learing_rate,lossObject,5,
+                           tr_patterns,tr_labels,vl_patterns,vl_labels)
     """
     losses, misClass = network.train(data=patterns, targets=labels,lossObject=lossObject, epochs=100, learning_rate=0.01,
                                     batch_size=1, momentum=0.0, regularization=0.01)
