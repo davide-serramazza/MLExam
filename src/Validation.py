@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import copy
 import numpy as np
 
-def grid_search(network,loss_obj,n_epoch,tr_patterns,tr_labels,vl_pattern,vl_labels):
+def grid_search(network,loss_obj,n_epoch,n_trials, tr_patterns,tr_labels,vl_patterns,vl_labels):
     # for every value (per adesso solo numero di iterazione)
     for val in n_epoch:
         # create lists for saving reslut
@@ -11,13 +11,13 @@ def grid_search(network,loss_obj,n_epoch,tr_patterns,tr_labels,vl_pattern,vl_lab
         squared_error_validation_avarage = np.array([])
         misClass_error_validation_avarage = np.array([])
         # 10 trails then avarage
-        for n in range(10):
+        for n in range(n_trials):
             # create net's copy to train
             #TODO reinizialize the weights
             network.intialize_weight()
             # train
             squared_error,misClass_error, squared_error_validation,misClass_error_validation = network.train(
-                data=tr_patterns,targets=tr_labels, vl_data=vl_pattern, vl_targets=vl_labels , lossObject=loss_obj,
+                data=tr_patterns,targets=tr_labels, vl_data=vl_patterns, vl_targets=vl_labels , lossObject=loss_obj,
                                 epochs=val, learning_rate=0.03, batch_size=1, momentum=0.0, regularization=0.01)
 
             #append result of single epoch in list previously created
@@ -33,11 +33,11 @@ def grid_search(network,loss_obj,n_epoch,tr_patterns,tr_labels,vl_pattern,vl_lab
                 misClass_error_validation_avarage += misClass_error_validation
 
         # taking mean of dataset and 10 trials
-        squared_error_avarage/=((5*len(tr_patterns)))
+        squared_error_avarage/= (( float(n_trials)/2 *len(tr_patterns)))
         # divide only by 5 beacuse our implementation of squared error is 2(output-traning)
-        misClass_error_avarage/=(10*len(tr_patterns))
-        squared_error_validation_avarage/=(5*len(tr_patterns))
-        misClass_error_validation_avarage/=(10*len(tr_patterns))
+        misClass_error_avarage/=( n_trials *len(tr_patterns))
+        squared_error_validation_avarage/=( float(n_trials)/2 *len(vl_patterns))
+        misClass_error_validation_avarage/=( n_trials *len(vl_patterns))
 
         # plot result
         plt.subplot(1, 2, 1)
@@ -63,4 +63,4 @@ def hold_out(network,loss_obj,pattrns,targets,frac):
     tr_labels = targets[:lenght]
     vl_pattern = pattrns[lenght:]
     vl_labels = targets[lenght:]
-    grid_search(network,loss_obj,[50], tr_pattern,tr_labels,vl_pattern,vl_labels)
+    grid_search(network,loss_obj,[50],2, tr_pattern,tr_labels,vl_pattern,vl_labels)
