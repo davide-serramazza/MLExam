@@ -30,6 +30,10 @@ class Network:
             self.layers.append(layer)
 
     def intialize_weight(self):
+        """
+        reinitialize network's wights (usefule in grid search?)
+        :return:
+        """
         for l in range(1,len(self.layers)):
             for n in range(0,len(self.layers[l].neurons)-1):
                 len_weights = len(self.layers[l].neurons[n].weights)
@@ -170,12 +174,23 @@ class Network:
         return delta_outputLayer
 
     def validation_error(self,patterns,targets,loss_obj):
+        """
+        compute squared and misclassification error on validation set
+        :param patterns: validation set patterns
+        :param targets: validation set targets
+        :param loss_obj: loss for computing error (same of traning set)
+        :return:
+        """
+        #predict eeach validation set pattern
         scores = self.predict(patterns)
+        #create list to append results
         squared_error = []
         misClass_error = []
+        #compute error
         for i in range(len(scores)):
             squared_error.append( loss_obj.value(targets[i],scores[i][0],[ [], [] ]) )
             misClass_error.append( loss_obj.misClassification (targets[i],scores[i]) )
+        #return sum of a single validation epoch
         return np.sum(squared_error), np.sum(misClass_error)
 
     def train(self, data, targets, vl_data, vl_targets, lossObject, epochs, learning_rate, batch_size, momentum,
@@ -183,8 +198,10 @@ class Network:
         """
         Performs the training of the neural network.
 
-        :param data: patterns
-        :param targets: target for each pattern in 'data'
+        :param data: traning set patterns
+        :param targets: traning set target for each pattern in 'data'
+        :param vl_data : validation set patterns
+        :param vl_targets: validation set targets
         :param lossObject: loss
         :param epochs:
         :param learning_rate:
@@ -195,7 +212,7 @@ class Network:
         :return: losses, vector of the loss computed at each epoch
                  misClassification, vector of misclassification loss for each epoch
         """
-        # lists for specify missclassification and Squared error
+        # lists for specify missclassification and Squared error (for traning and validation)
         losses = np.array([])
         misClassification = np.array([])
         losses_valdation = np.array([])
@@ -210,7 +227,6 @@ class Network:
                 # take only batch_size examples
                 batch_pattern = data[i:i + batch_size]
                 batch_target = targets[i:i + batch_size]
-
 
                 # gradient_w_batch = sum of gradient_w for the epoch
                 gradient_w_batch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
@@ -237,6 +253,7 @@ class Network:
             # append the total loss and misClassification of single epoch
             losses = np.append(losses, loss_epoch)
             misClassification = np.append(misClassification, misC_epoch)
+            # computing loss and misClassification on validation set then append to list
             squared_error_validation_epoch,misClass_error_validation_epoch = self.validation_error(vl_data,
                                                                                                 vl_targets,lossObject)
             losses_valdation = np.append(losses_valdation, squared_error_validation_epoch)
