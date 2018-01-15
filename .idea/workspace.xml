@@ -31,8 +31,8 @@
       <file leaf-file-name="Validation.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Validation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="382">
-              <caret line="39" column="72" lean-forward="true" selection-start-line="39" selection-start-column="72" selection-end-line="39" selection-end-column="72" />
+            <state relative-caret-position="1560">
+              <caret line="65" column="46" lean-forward="false" selection-start-line="65" selection-start-column="46" selection-end-line="65" selection-end-column="46" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -43,7 +43,7 @@
       <file leaf-file-name="Neuron.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Neuron.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
+            <state relative-caret-position="312">
               <caret line="13" column="16" lean-forward="false" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="78" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -55,32 +55,10 @@
       <file leaf-file-name="Neural_network.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="744">
+            <state relative-caret-position="600">
               <caret line="34" column="27" lean-forward="false" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <marker date="1515959950857" expanded="true" signature="106:12996" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="9164:10409" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="9164:11041" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="9164:11129" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="9299:9447" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="9552:9814" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="9988:10239" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="11159:11422" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="11168:11273" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="11322:11400" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="11469:12053" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="11478:11647" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
-                <marker date="1515959950857" expanded="true" signature="12094:12996" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="12103:12303" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
-                <marker date="1515959950857" expanded="true" signature="12411:12609" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="12440:12522" ph="&quot;...&quot;" />
-                <marker date="1515959950857" expanded="true" signature="12619:12819" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1515959950857" expanded="true" signature="12857:12996" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="13041:13845" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="13046:13302" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1515959950857" expanded="true" signature="13517:13634" ph="..." />
-                <marker date="1515959950857" expanded="true" signature="13675:13845" ph="..." />
               </folding>
             </state>
           </provider>
@@ -89,8 +67,8 @@
       <file leaf-file-name="loss_functions.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/loss_functions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="18" lean-forward="false" selection-start-line="0" selection-start-column="4" selection-end-line="0" selection-end-column="18" />
+            <state relative-caret-position="456">
+              <caret line="19" column="54" lean-forward="true" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
               <folding />
             </state>
           </provider>
@@ -378,28 +356,6 @@
           <caret line="34" column="27" lean-forward="false" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <marker date="1515959950857" expanded="true" signature="106:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:10409" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:11041" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:11129" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9299:9447" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9552:9814" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9988:10239" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11159:11422" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11168:11273" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11322:11400" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11469:12053" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11478:11647" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12094:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="12103:12303" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12411:12609" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="12440:12522" ph="&quot;...&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12619:12819" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12857:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13041:13845" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13046:13302" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="13517:13634" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13675:13845" ph="..." />
           </folding>
         </state>
       </provider>
@@ -458,28 +414,6 @@
           <caret line="204" column="54" lean-forward="true" selection-start-line="204" selection-start-column="54" selection-end-line="204" selection-end-column="54" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <marker date="1515959950857" expanded="true" signature="106:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:10409" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:11041" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:11129" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9299:9447" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9552:9814" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9988:10239" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11159:11422" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11168:11273" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11322:11400" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11469:12053" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11478:11647" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12094:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="12103:12303" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12411:12609" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="12440:12522" ph="&quot;...&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12619:12819" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12857:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13041:13845" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13046:13302" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="13517:13634" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13675:13845" ph="..." />
           </folding>
         </state>
       </provider>
@@ -502,28 +436,6 @@
           <caret line="224" column="52" lean-forward="false" selection-start-line="224" selection-start-column="36" selection-end-line="224" selection-end-column="52" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <marker date="1515959950857" expanded="true" signature="106:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:10409" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:11041" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:11129" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9299:9447" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9552:9814" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9988:10239" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11159:11422" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11168:11273" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11322:11400" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11469:12053" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11478:11647" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12094:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="12103:12303" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12411:12609" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="12440:12522" ph="&quot;...&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12619:12819" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12857:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13041:13845" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13046:13302" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="13517:13634" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13675:13845" ph="..." />
           </folding>
         </state>
       </provider>
@@ -572,28 +484,6 @@
           <caret line="197" column="13" lean-forward="false" selection-start-line="197" selection-start-column="8" selection-end-line="197" selection-end-column="13" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <marker date="1515959950857" expanded="true" signature="106:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:10409" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:11041" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:11129" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9299:9447" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9552:9814" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9988:10239" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11159:11422" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11168:11273" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11322:11400" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11469:12053" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11478:11647" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12094:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="12103:12303" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12411:12609" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="12440:12522" ph="&quot;...&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12619:12819" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12857:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13041:13845" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13046:13302" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="13517:13634" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13675:13845" ph="..." />
           </folding>
         </state>
       </provider>
@@ -626,28 +516,6 @@
           <caret line="224" column="52" lean-forward="false" selection-start-line="224" selection-start-column="36" selection-end-line="224" selection-end-column="52" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <marker date="1515959950857" expanded="true" signature="106:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:10409" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:11041" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:11129" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9299:9447" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9552:9814" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9988:10239" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11159:11422" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11168:11273" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11322:11400" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11469:12053" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11478:11647" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12094:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="12103:12303" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12411:12609" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="12440:12522" ph="&quot;...&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12619:12819" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12857:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13041:13845" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13046:13302" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="13517:13634" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13675:13845" ph="..." />
           </folding>
         </state>
       </provider>
@@ -670,56 +538,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/loss_functions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="18" lean-forward="false" selection-start-line="0" selection-start-column="4" selection-end-line="0" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Neuron.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="13" column="16" lean-forward="false" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="78" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="744">
-          <caret line="34" column="27" lean-forward="false" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <marker date="1515959950857" expanded="true" signature="106:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:10409" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:11041" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9164:11129" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9299:9447" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9552:9814" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="9988:10239" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11159:11422" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11168:11273" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11322:11400" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11469:12053" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="11478:11647" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12094:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="12103:12303" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12411:12609" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="12440:12522" ph="&quot;...&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12619:12819" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="12857:12996" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13041:13845" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13046:13302" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1515959950857" expanded="true" signature="13517:13634" ph="..." />
-            <marker date="1515959950857" expanded="true" signature="13675:13845" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/monk_benchmark.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1344">
@@ -732,10 +550,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/loss_functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="19" column="54" lean-forward="true" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="600">
+          <caret line="34" column="27" lean-forward="false" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Neuron.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="13" column="16" lean-forward="false" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="78" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Validation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
-          <caret line="39" column="72" lean-forward="true" selection-start-line="39" selection-start-column="72" selection-end-line="39" selection-end-column="72" />
+        <state relative-caret-position="1560">
+          <caret line="65" column="46" lean-forward="false" selection-start-line="65" selection-start-column="46" selection-end-line="65" selection-end-column="46" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>

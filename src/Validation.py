@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import copy
 import numpy as np
 
-def grid_search(network,loss_obj,n_epoch,n_trials, tr_patterns,tr_labels,vl_patterns,vl_labels):
+def grid_search(network,loss_obj,reguaritazion,n_trials, tr_patterns,tr_labels,vl_patterns,vl_labels):
     # for every value (per adesso solo numero di iterazione)
-    for val in n_epoch:
+    for val in reguaritazion:
         # create lists for saving reslut
         squared_error_avarage = np.array([])
         misClass_error_avarage = np.array([])
@@ -18,7 +18,7 @@ def grid_search(network,loss_obj,n_epoch,n_trials, tr_patterns,tr_labels,vl_patt
             # train
             squared_error,misClass_error, squared_error_validation,misClass_error_validation = network.train(
                 data=tr_patterns,targets=tr_labels, vl_data=vl_patterns, vl_targets=vl_labels , lossObject=loss_obj,
-                                epochs=val, learning_rate=0.03, batch_size=1, momentum=0.0, regularization=0.01)
+                                epochs=200, learning_rate=val, batch_size=1, momentum=0.0, regularization=0.01)
 
             #append result of single epoch in list previously created
             if n==0:
@@ -63,4 +63,4 @@ def hold_out(network,loss_obj,pattrns,targets,frac):
     tr_labels = targets[:lenght]
     vl_pattern = pattrns[lenght:]
     vl_labels = targets[lenght:]
-    grid_search(network,loss_obj,[50],2, tr_pattern,tr_labels,vl_pattern,vl_labels)
+    grid_search(network,loss_obj,[0.02,0.03],5, tr_pattern,tr_labels,vl_pattern,vl_labels)
