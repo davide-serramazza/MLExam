@@ -41,7 +41,7 @@ def main():
     columns = ['label', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'id']
     train_data = pd.read_csv("../monk_datasets/monks-1.train", delim_whitespace=True, header=None)
     train_data.columns = columns
-    print train_data.head()
+    print "before shuffle\n", train_data.head()
     # shuffle data set
     train_data = train_data.reindex(np.random.permutation(train_data.index))
     print "after shffle\n", train_data.head()

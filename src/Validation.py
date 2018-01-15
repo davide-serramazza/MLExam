@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import copy
 import numpy as np
 
-def grid_search(network,loss_obj,reguaritazion,n_trials, tr_patterns,tr_labels,vl_patterns,vl_labels):
+def grid_search(network,loss_obj,learn_rate,n_trials, tr_patterns,tr_labels,vl_patterns,vl_labels):
     """
     grid search for optimal hyperparameter
     :param network: network to be trained
@@ -17,7 +17,7 @@ def grid_search(network,loss_obj,reguaritazion,n_trials, tr_patterns,tr_labels,v
     """
     fixed_number_epoch = 200
     # for every value (per adesso solo numero di iterazione)
-    for val in reguaritazion:
+    for val in learn_rate:
         # initialize lists for saving reslut
         squared_error_avarage = np.zeros(fixed_number_epoch) #np.array([])
         misClass_error_avarage = np.zeros(fixed_number_epoch)
@@ -30,7 +30,7 @@ def grid_search(network,loss_obj,reguaritazion,n_trials, tr_patterns,tr_labels,v
             # train
             squared_error,misClass_error, squared_error_validation,misClass_error_validation = network.train(
                 data=tr_patterns,targets=tr_labels, vl_data=vl_patterns, vl_targets=vl_labels , lossObject=loss_obj,
-                                epochs=fixed_number_epoch, learning_rate=val, batch_size=1, momentum=0.0, regularization=0.01)
+                        epochs=fixed_number_epoch, learning_rate=val, batch_size=1, momentum=0.0, regularization=0.01)
 
             #append result of single epoch in list previously created
             squared_error_avarage +=squared_error
