@@ -15,13 +15,14 @@ def grid_search(network,loss_obj,reguaritazion,n_trials, tr_patterns,tr_labels,v
     :param vl_labels: validation set target
     :return:
     """
+    fixed_number_epoch = 200
     # for every value (per adesso solo numero di iterazione)
     for val in reguaritazion:
         # initialize lists for saving reslut
-        squared_error_avarage = np.zeros(200) #np.array([])
-        misClass_error_avarage = np.zeros(200)
-        squared_error_validation_avarage = np.zeros(200)
-        misClass_error_validation_avarage = np.zeros(200)
+        squared_error_avarage = np.zeros(fixed_number_epoch) #np.array([])
+        misClass_error_avarage = np.zeros(fixed_number_epoch)
+        squared_error_validation_avarage = np.zeros(fixed_number_epoch)
+        misClass_error_validation_avarage = np.zeros(fixed_number_epoch)
         # 10 trails then avarage
         for n in range(n_trials):
             # reinitilize weigths
@@ -29,7 +30,7 @@ def grid_search(network,loss_obj,reguaritazion,n_trials, tr_patterns,tr_labels,v
             # train
             squared_error,misClass_error, squared_error_validation,misClass_error_validation = network.train(
                 data=tr_patterns,targets=tr_labels, vl_data=vl_patterns, vl_targets=vl_labels , lossObject=loss_obj,
-                                epochs=200, learning_rate=val, batch_size=1, momentum=0.0, regularization=0.01)
+                                epochs=fixed_number_epoch, learning_rate=val, batch_size=1, momentum=0.0, regularization=0.01)
 
             #append result of single epoch in list previously created
             squared_error_avarage +=squared_error
