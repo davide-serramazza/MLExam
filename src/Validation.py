@@ -63,7 +63,7 @@ def grid_search(network,loss_obj,reguaritazion,n_trials, tr_patterns,tr_labels,v
         plt.show()
 
 
-def hold_out(network,loss_obj,pattrns,targets,frac):
+def hold_out(pattrns,targets,frac):
     """
     hold out function: divide dataset in traning and validation then call grid search
     :param network: network to be train
@@ -78,4 +78,4 @@ def hold_out(network,loss_obj,pattrns,targets,frac):
     tr_labels = targets[:lenght]
     vl_pattern = pattrns[lenght:]
     vl_labels = targets[lenght:]
-    grid_search(network,loss_obj,[0.01],5, tr_pattern,tr_labels,vl_pattern,vl_labels)
+    return tr_pattern,tr_labels,vl_pattern,vl_labels
