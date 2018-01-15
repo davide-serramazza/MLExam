@@ -58,6 +58,8 @@ def main():
     tmps = train_data["label"].values
     labels = transform_target(tmps)
     lossObject = SquaredError("tangentH")
+    network.shuffle_patterns(patterns,labels)
+
     #4. hold out
     Validation.hold_out(network,lossObject,patterns,labels,0.7)
     """
