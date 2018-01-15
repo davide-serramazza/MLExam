@@ -1,6 +1,7 @@
 import pandas as pd
 from Neural_network import *
 import matplotlib.pyplot as plt
+import Validation
 
 def decode(data,encoding):
     """
@@ -40,7 +41,10 @@ def main():
     columns = ['label', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'id']
     train_data = pd.read_csv("../monk_datasets/monks-1.train", delim_whitespace=True, header=None)
     train_data.columns = columns
-    print train_data.head()
+    print "before shuffle\n", train_data.head()
+    # shuffle data set
+    train_data = train_data.reindex(np.random.permutation(train_data.index))
+    print "after shffle\n", train_data.head()
 
     # 2. train neural network. set low learning rate because actual implementation is online
     network = Network(architecture=[17, 5, 5, 1], neurons=[InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron])
@@ -54,8 +58,19 @@ def main():
     tmps = train_data["label"].values
     labels = transform_target(tmps)
     lossObject = SquaredError("tangentH")
-    losses, misClass = network.train(data=patterns, targets=labels,lossObject=lossObject, epochs=100, learning_rate=0.3,
-                                    batch_size=len(patterns), momentum=0.3, regularization=0.01)
+    #4. hold out
+    tr_patterns,tr_labels,vl_patterns,vl_labels = Validation.hold_out(patterns,labels,0.7)
+    #validation
+    architecture =[ [17,10,1] ]
+    neurons=[ [InputNeuron, TanHNeuron, TanHNeuron] ]
+    momentum = [0.3]
+    regularization = [0.01]
+    learing_rate = [0.3]
+    Validation.grid_search(architecture,neurons,momentum,regularization,learing_rate,lossObject,5,
+                           tr_patterns,tr_labels,vl_patterns,vl_labels)
+    """
+    losses, misClass = network.train(data=patterns, targets=labels,lossObject=lossObject, epochs=100, learning_rate=0.01,
+                                    batch_size=1, momentum=0.0, regularization=0.01)
     misClass = np.array(misClass) / len(patterns)
     # TODO problemi con la regolarizzazione
 
@@ -86,9 +101,9 @@ def main():
         test_patterns.append(decode(test_data[i], encoding))
     labels = transform_target(labels.values)
 
-    #scores = network.predict(test_patterns)
-    #print scores[:5], labels[:5]
-
+    scores = network.predict(test_patterns)
+    print scores[:10], labels[:10]
+"""
 
 if __name__ == "__main__":
     main()
