@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5493944f-cc3c-4fa9-bceb-1c743191bd2d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Validation.py" afterPath="$PROJECT_DIR$/src/Validation.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monk_benchmark.py" afterPath="$PROJECT_DIR$/src/monk_benchmark.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/NeuralNetwokTest.py" afterPath="$PROJECT_DIR$/test/NeuralNetwokTest.py" />
-    </list>
+    <list default="true" id="5493944f-cc3c-4fa9-bceb-1c743191bd2d" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
