@@ -45,7 +45,7 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
     :return:
     """
     n_figure = 0  # index of figures
-    fixed_number_epoch = 300
+    fixed_number_epoch = 50
     # for every value
     for lr in parameter.learning_rate:
         for mo in parameter.momentum:

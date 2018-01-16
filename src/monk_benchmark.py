@@ -63,9 +63,9 @@ def main():
     # validation: define hyperparameters to test
     architecture = [ [17,10,1]] #[ [17,10,1], [17,5,5,1] ]
     neurons= [ [InputNeuron, TanHNeuron, TanHNeuron]] #[ [InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron] ]
-    momentum = [0.5, 0.7, 0.9]
-    regularization = [0.01] # [0.01, 0.03, 0.05]
-    learing_rate = [0.3] #[0.3, 0.5, 0.7]
+    momentum = [0.1, 0.3, 0.5, 0.7, 0.9]
+    regularization = [0.01] #[0.01, 0.03, 0.05]
+    learing_rate = [0.1, 0.3, 0.5, 0.7]
     param = Validation.grid_search_parameter(learing_rate,momentum,regularization,architecture,neurons)
     Validation.grid_search(param,lossObject,tr_patterns,tr_labels,vl_patterns,vl_labels, n_trials=2)
     """
