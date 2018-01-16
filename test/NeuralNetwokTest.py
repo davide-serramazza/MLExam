@@ -43,7 +43,7 @@ class TestNeuralNetwork(unittest.TestCase):
 
         data = [[0.05, 0.1]]
         target = [[0.01, 0.99]]
-        network.train(data=data, targets=target, lossObject=SquaredError("sigmoid"), epochs=1, learning_rate=0.5, batch_size=1, momentum=0)
+        network.train(data=data, targets=target, vl_data=[], vl_targets=[], lossObject=SquaredError("sigmoid"), epochs=1, learning_rate=0.5, batch_size=1, momentum=0)
 
         layers = network.layers
         self.assert_weights(layers)

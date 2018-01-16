@@ -60,14 +60,14 @@ def main():
     lossObject = SquaredError("tangentH")
     #4. hold out
     tr_patterns,tr_labels,vl_patterns,vl_labels = Validation.hold_out(patterns,labels,0.7)
-    #validation
-    architecture =[ [17,10,1] ]
-    neurons=[ [InputNeuron, TanHNeuron, TanHNeuron] ]
-    momentum = [0.3]
-    regularization = [0.01]
-    learing_rate = [0.3]
-    Validation.grid_search(architecture,neurons,momentum,regularization,learing_rate,lossObject,5,
-                           tr_patterns,tr_labels,vl_patterns,vl_labels)
+    # validation: define hyperparameters to test
+    architecture =[ [17,10,1], [17,5,5,1] ]
+    neurons=[ [InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron] ]
+    momentum = [0.5, 0.7, 0.9]
+    regularization = [0.01, 0.03, 0.05]
+    learing_rate = [0.3, 0.5, 0.7]
+    param = Validation.grid_search_parameter(learing_rate,momentum,regularization,architecture,neurons)
+    Validation.grid_search(param,lossObject,tr_patterns,tr_labels,vl_patterns,vl_labels,n_trials=5)
     """
     losses, misClass = network.train(data=patterns, targets=labels,lossObject=lossObject, epochs=100, learning_rate=0.01,
                                     batch_size=1, momentum=0.0, regularization=0.01)

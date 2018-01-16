@@ -3,6 +3,14 @@ import copy
 import numpy as np
 from Neural_network import *
 
+class grid_search_parameter:
+    def __init__(self,learning_rate,momentum,regularization,architecture,neurons):
+        self.learning_rate = learning_rate
+        self.momentum = momentum
+        self.regularization = regularization
+        self.architecture = architecture
+        self.neurons = neurons
+
 def transf_value(value):
     """
     transform value of variable to suitable string
@@ -23,7 +31,7 @@ def tranf_arc(architecture):
     string +="]"
     return string
 
-def grid_search(architecture, neurons, momentum, regularization,learn_rate, loss_obj, n_trials, tr_patterns,tr_labels,vl_patterns,vl_labels):
+def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels, n_trials):
     """
     grid search for optimal hyperparameter
     :param network: network to be trained
@@ -36,21 +44,21 @@ def grid_search(architecture, neurons, momentum, regularization,learn_rate, loss
     :param vl_labels: validation set target
     :return:
     """
-    fixed_number_epoch = 300
+    fixed_number_epoch = 3
     # for every value
-    for lr in learn_rate:
-        for mo in momentum:
-            for reg in regularization:
-                for arc in architecture:
+    for lr in parameter.learning_rate:
+        for mo in parameter.momentum:
+            for reg in parameter.regularization:
+                for arc,neur in zip(parameter.architecture,parameter.neurons):
                     # initialize lists for saving reslut
-                    squared_error_avarage = np.zeros(fixed_number_epoch) #np.array([])
+                    squared_error_avarage = np.zeros(fixed_number_epoch)
                     misClass_error_avarage = np.zeros(fixed_number_epoch)
                     squared_error_validation_avarage = np.zeros(fixed_number_epoch)
                     misClass_error_validation_avarage = np.zeros(fixed_number_epoch)
-                    # 10 trails then avarage
+                    # n_trials then avarage
                     for n in range(n_trials):
                         # buid a new network
-                        network = Network(arc,neurons[0])
+                        network = Network(arc,neur)
                         # train
                         squared_error,misClass_error, squared_error_validation,misClass_error_validation = network.train(
                             #specify dataset and loss
@@ -86,7 +94,7 @@ def grid_search(architecture, neurons, momentum, regularization,learn_rate, loss
                     plt.legend(['traing set', 'validation set'])
                     plt.xlabel("epochs")
                     plt.ylabel("squaredError")
-                    s = "../image/lr_"+transf_value(lr)+" mo_"+transf_value(mo)+" reg:"+transf_value(reg)+" arc_"+tranf_arc(architecture)
+                    s = "../image/lr_"+transf_value(lr)+" mo_"+transf_value(mo)+" reg:"+transf_value(reg)+" arc_"+tranf_arc(arc)
                     plt.savefig(s)
 
 
