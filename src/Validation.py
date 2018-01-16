@@ -84,19 +84,20 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
                     # plot result
                     plt.figure(n_figure) # select figure number 'n_figure'
                     plt.subplot(1, 2, 1)
-                    plt.plot(range(len(misClass_error_avarage)), misClass_error_avarage)
-                    plt.plot(range(len(misClass_error_validation_avarage)), misClass_error_validation_avarage)
+                    plt.plot(range(1, len(misClass_error_avarage) + 1), misClass_error_avarage, '--D')
+                    plt.plot(range(1, len(misClass_error_validation_avarage) + 1), misClass_error_validation_avarage, '-o')
                     plt.legend(['traing set', 'validation set'])
                     plt.xlabel("epochs")
                     plt.ylabel("misClassification")
                     #plot squaredError
                     plt.subplot(1,2,2)
-                    plt.plot(range(len(squared_error_avarage)),squared_error_avarage)
-                    plt.plot(range(len(squared_error_validation_avarage)),squared_error_validation_avarage)
+                    plt.plot(range(1, len(squared_error_avarage) + 1), squared_error_avarage, '--D')
+                    plt.plot(range(1, len(squared_error_validation_avarage) + 1),squared_error_validation_avarage, '-o')
                     plt.legend(['traing set', 'validation set'])
                     plt.xlabel("epochs")
                     plt.ylabel("squaredError")
                     s = "../image/lr_"+transf_value(lr)+" mo_"+transf_value(mo)+" reg:"+transf_value(reg)+" arc_"+tranf_arc(arc)
+                    plt.tight_layout()  # minimize overlap of subplots
                     plt.savefig(s)
                     n_figure += 1 # increment to create a new figure
 
