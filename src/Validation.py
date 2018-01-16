@@ -44,6 +44,7 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
     :param vl_labels: validation set target
     :return:
     """
+    n_figure = 0  # index of figures
     fixed_number_epoch = 3
     # for every value
     for lr in parameter.learning_rate:
@@ -81,6 +82,7 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
                     misClass_error_validation_avarage/=( n_trials *len(vl_patterns))
 
                     # plot result
+                    plt.figure(n_figure) # select figure number 'n_figure'
                     plt.subplot(1, 2, 1)
                     plt.plot(range(len(misClass_error_avarage)), misClass_error_avarage)
                     plt.plot(range(len(misClass_error_validation_avarage)), misClass_error_validation_avarage)
@@ -96,6 +98,7 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
                     plt.ylabel("squaredError")
                     s = "../image/lr_"+transf_value(lr)+" mo_"+transf_value(mo)+" reg:"+transf_value(reg)+" arc_"+tranf_arc(arc)
                     plt.savefig(s)
+                    n_figure += 1 # increment to create a new figure
 
 
 def hold_out(pattrns,targets,frac):
