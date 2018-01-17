@@ -160,8 +160,7 @@ class Network:
                 self.layers[i].neurons[j].weights[:-1] -= np.multiply(lambda_vector, temp)
                 # add gradient of data error and momentum
                 self.layers[i].neurons[j].weights += weight_update[i-1][j]
-                # add momentum
-                #self.layers[i].neurons[j].weights +=
+
         return weight_update
 
     def compute_delta_hidden_layer(self, delta_next_layer, currentLayerIndex):
