@@ -3,6 +3,14 @@ import copy
 import numpy as np
 from Neural_network import *
 
+class grid_search_parameter:
+    def __init__(self,learning_rate,momentum,regularization,architecture,neurons):
+        self.learning_rate = learning_rate
+        self.momentum = momentum
+        self.regularization = regularization
+        self.architecture = architecture
+        self.neurons = neurons
+
 def transf_value(value):
     """
     transform value of variable to suitable string
@@ -23,7 +31,7 @@ def tranf_arc(architecture):
     string +="]"
     return string
 
-def grid_search(architecture, neurons, momentum, regularization,learn_rate, loss_obj, n_trials, tr_patterns,tr_labels,vl_patterns,vl_labels):
+def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels, n_trials):
     """
     grid search for optimal hyperparameter
     :param network: network to be trained
@@ -36,21 +44,22 @@ def grid_search(architecture, neurons, momentum, regularization,learn_rate, loss
     :param vl_labels: validation set target
     :return:
     """
-    fixed_number_epoch = 300
+    n_figure = 0  # index of figures
+    fixed_number_epoch = 50
     # for every value
-    for lr in learn_rate:
-        for mo in momentum:
-            for reg in regularization:
-                for arc in architecture:
+    for lr in parameter.learning_rate:
+        for mo in parameter.momentum:
+            for reg in parameter.regularization:
+                for arc,neur in zip(parameter.architecture,parameter.neurons):
                     # initialize lists for saving reslut
-                    squared_error_avarage = np.zeros(fixed_number_epoch) #np.array([])
+                    squared_error_avarage = np.zeros(fixed_number_epoch)
                     misClass_error_avarage = np.zeros(fixed_number_epoch)
                     squared_error_validation_avarage = np.zeros(fixed_number_epoch)
                     misClass_error_validation_avarage = np.zeros(fixed_number_epoch)
-                    # 10 trails then avarage
+                    # n_trials then avarage
                     for n in range(n_trials):
                         # buid a new network
-                        network = Network(arc,neurons[0])
+                        network = Network(arc,neur)
                         # train
                         squared_error,misClass_error, squared_error_validation,misClass_error_validation = network.train(
                             #specify dataset and loss
@@ -73,21 +82,24 @@ def grid_search(architecture, neurons, momentum, regularization,learn_rate, loss
                     misClass_error_validation_avarage/=( n_trials *len(vl_patterns))
 
                     # plot result
-                    plt.subplot(1, 2, 1)
-                    plt.plot(range(len(misClass_error_avarage)), misClass_error_avarage)
-                    plt.plot(range(len(misClass_error_validation_avarage)), misClass_error_validation_avarage)
-                    plt.legend(['traing set', 'validation set'])
+                    plt.figure(n_figure, dpi=1600) # select figure number 'n_figure'
+                    plt.subplot(2, 1, 1)
+                    plt.plot(range(1, len(misClass_error_avarage) + 1), misClass_error_avarage, '--')
+                    plt.plot(range(1, len(misClass_error_validation_avarage) + 1), misClass_error_validation_avarage, '-')
+                    plt.legend(['training set', 'validation set'])
                     plt.xlabel("epochs")
-                    plt.ylabel("misClassification")
+                    plt.ylabel("misclassification")
                     #plot squaredError
-                    plt.subplot(1,2,2)
-                    plt.plot(range(len(squared_error_avarage)),squared_error_avarage)
-                    plt.plot(range(len(squared_error_validation_avarage)),squared_error_validation_avarage)
-                    plt.legend(['traing set', 'validation set'])
+                    plt.subplot(2, 1, 2)
+                    plt.plot(range(1, len(squared_error_avarage) + 1), squared_error_avarage, '--')
+                    plt.plot(range(1, len(squared_error_validation_avarage) + 1),squared_error_validation_avarage, '-')
+                    plt.legend(['training set', 'validation set'])
                     plt.xlabel("epochs")
-                    plt.ylabel("squaredError")
-                    s = "../image/lr_"+transf_value(lr)+" mo_"+transf_value(mo)+" reg:"+transf_value(reg)+" arc_"+tranf_arc(architecture)
+                    plt.ylabel("squared error")
+                    s = "../image/lr_"+transf_value(lr)+"-mo_"+transf_value(mo)+"-reg:"+transf_value(reg)+"-arc_"+tranf_arc(arc)
+                    plt.tight_layout()  # minimize overlap of subplots
                     plt.savefig(s)
+                    n_figure += 1 # increment to create a new figure
 
 
 def hold_out(pattrns,targets,frac):

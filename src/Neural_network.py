@@ -149,16 +149,19 @@ class Network:
 
         return np.asarray(gradient_w)
 
-    def update_weights(self, delta_w, learning_rate, regularization=0):
+    def update_weights(self, delta_w, learning_rate, prevg, momentum, regularization=0):
+        weight_update = learning_rate * delta_w + momentum * prevg
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
-                # add regularization (do not regularize bias weights)
+                # add gradient of regularization error(do not regularize bias weights)
                 temp = self.layers[i].neurons[j].weights[:-1]  # weights to regularize, exclude weight of bias neuron
                 lambda_vector = np.empty(temp.shape)
                 lambda_vector.fill(regularization)
                 self.layers[i].neurons[j].weights[:-1] -= np.multiply(lambda_vector, temp)
-                # add gradient
-                self.layers[i].neurons[j].weights += learning_rate * delta_w[i - 1][j]
+                # add gradient of data error and momentum
+                self.layers[i].neurons[j].weights += weight_update[i-1][j]
+
+        return weight_update
 
     def compute_delta_hidden_layer(self, delta_next_layer, currentLayerIndex):
         # delta_layer vector
@@ -225,7 +228,8 @@ class Network:
         losses_valdation = np.array([])
         misClassification_validation = np.array([])
         # prevg is previous gradient  (for momentum)
-        prevg = []
+        prevg = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
+                         for i in range(1, len(self.architecture))])
         for epoch in range(epochs):
             # current epoch value of misclassification and Squared error
             loss_epoch = 0
@@ -241,7 +245,7 @@ class Network:
                 # gradient_w_batch = sum of gradient_w for the epoch
                 gradient_w_batch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
                                             for i in range(1, len(self.architecture))])
-                # now really train
+                # train, compute gradient for a batch
                 for pattern, t in zip(batch_pattern, batch_target):
                     self.forward(pattern)
                     gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject)
@@ -249,22 +253,17 @@ class Network:
                     loss_epoch += loss_p
                     misC_epoch += miss_p
                     gradient_w_batch += gradient_w
-                # add momentum from the second epoch onwards
-                if epoch == 0:
-                    prevg = copy.deepcopy(gradient_w_batch)
-                else:
-                    tmp = copy.deepcopy(gradient_w_batch)   # save gradient at current epoch
-                    gradient_w_batch += prevg * momentum    # add momentum
-                    prevg = tmp                          # store previous gradient
 
-                # update neural network weights
-                self.update_weights(gradient_w_batch, learning_rate/batch_size, regularization * batch_size / len(data))
+                # update neural network weights after a batch of training example
+                # save previous weight update
+                prevg = self.update_weights(gradient_w_batch, learning_rate/batch_size, prevg, momentum,
+                                    regularization * batch_size / len(data))
 
             # append the total loss and misClassification of single epoch
             losses = np.append(losses, loss_epoch)
             misClassification = np.append(misClassification, misC_epoch)
             # computing loss and misClassification on validation set then append to list
-            squared_error_validation_epoch,misClass_error_validation_epoch = self.validation_error(vl_data,
+            squared_error_validation_epoch, misClass_error_validation_epoch = self.validation_error(vl_data,
                                                                                                 vl_targets,lossObject)
             losses_valdation = np.append(losses_valdation, squared_error_validation_epoch)
             misClassification_validation = np.append(misClassification_validation,misClass_error_validation_epoch)
