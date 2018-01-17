@@ -192,15 +192,15 @@ class Network:
         """
         #predict eeach validation set pattern
         scores = self.predict(patterns)
-        #create list to append results
-        squared_error = []
-        misClass_error = []
-        #compute error
+
+        squared_error_epoch = 0
+        misClass_error_epoch = 0
+        # add errors
         for i in range(len(scores)):
-            squared_error.append( loss_obj.value(targets[i],scores[i][0],[ [], [] ]) )
-            misClass_error.append( loss_obj.misClassification (targets[i],scores[i]) )
-        #return sum of a single validation epoch
-        return np.sum(squared_error), np.sum(misClass_error)
+            squared_error_epoch += loss_obj.value(targets[i],scores[i][0],[ [], [] ])
+            misClass_error_epoch += loss_obj.misClassification (targets[i],scores[i])
+        # return sum of a single validation epoch
+        return squared_error_epoch, misClass_error_epoch
 
     def train(self, data, targets, vl_data, vl_targets, lossObject, epochs, learning_rate, batch_size, momentum,
               regularization=0):
