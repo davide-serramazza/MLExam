@@ -45,12 +45,12 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
     :return:
     """
     n_figure = 0  # index of figures
-    fixed_number_epoch = 300
+    fixed_number_epoch = 100
     # for every value
     for lr in parameter.learning_rate:
         for mo in parameter.momentum:
             for bat in parameter.batch_size:
-                    for arc,neur in zip(parameter.architecture,parameter.neurons):
+                for arc,neur in zip(parameter.architecture,parameter.neurons):
                         # initialize lists for saving reslut
                         squared_error_avarage = np.zeros(fixed_number_epoch)
                         misClass_error_avarage = np.zeros(fixed_number_epoch)
