@@ -4,12 +4,12 @@ from monk_benchmark import *
 def main():
     columns = ['label', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'id']
     # 1. traning set
-    train_file = "../monk_datasets/monks-2.train"
+    train_file = "../monk_datasets/monks-3.train"
     train_data = pd.read_csv(train_file, delim_whitespace=True, header=None)
     train_data.columns = columns
 
     # 2. test set
-    test_file = "../monk_datasets/monks-2.test"
+    test_file = "../monk_datasets/monks-3.test"
     test_data = pd.read_csv(test_file, delim_whitespace=True, header=None)
     test_data.columns = columns
     #getting patterns and labels
@@ -23,10 +23,10 @@ def main():
     lossObject = SquaredError("tangentH")
 
     epochs = 50
-    learning_rate = 0.25
+    learning_rate = 0.2
     batch_size = 10
-    momentum = 0.5
-    regularization = 0
+    momentum = 0.6
+    regularization = 0.01
 
     squared_error,misClass_error, squared_error_test,misClass_error_test = network.train(
         data=training_patterns,targets=training_labels,eval_data=test_patterns,eval_targets=test_labels,
