@@ -74,7 +74,7 @@ def main():
     batch_size = [10]
     learning_rate = [0.15, 0.2, 0.25]
     regularization = [0]
-    epoch = 5
+    epoch = 2
     param = grid_search_parameter(learning_rate, momentum, batch_size,
                                   architecture, neurons, regularization, epoch)
 

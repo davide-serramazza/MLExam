@@ -14,28 +14,28 @@ class grid_search_parameter:
         self.regularization = regularization
         self.epoch = epoch
 
-def print_result(arc, bat, lr, misClass_error_avarage, misClass_error_validation_avarage, mo, n_figure,
-                 squared_error_avarage, squared_error_validation_avarage):
+def print_result( misClass_error, misClass_error_evaluation,
+                  squared_error, squared_error_evaluation,string, arc, bat, lr, mo, reg, n_figure):
     # get accuracy
-    accuracy = 1 - misClass_error_avarage
-    accuracy_avarage = 1 - misClass_error_validation_avarage
+    accuracy = 1 - misClass_error
+    accuracy_avarage = 1 - misClass_error_evaluation
     # plot result
     plt.figure(n_figure, dpi=300)  # select figure number 'n_figure'
     plt.subplot(2, 1, 1)
     plt.plot(range(1, len(accuracy) + 1), accuracy, '--')
     plt.plot(range(1, len(accuracy_avarage) + 1), accuracy_avarage, '-')
-    plt.legend(['training set', 'validation set'])
+    plt.legend(['training set', string])
     plt.xlabel("epochs")
     plt.ylabel("accuracy")
     # plot squaredError
     plt.subplot(2, 1, 2)
-    plt.plot(range(1, len(squared_error_avarage) + 1), squared_error_avarage, '--')
-    plt.plot(range(1, len(squared_error_validation_avarage) + 1), squared_error_validation_avarage, '-')
-    plt.legend(['training set', 'validation set'])
+    plt.plot(range(1, len(squared_error) + 1), squared_error, '--')
+    plt.plot(range(1, len(squared_error_evaluation) + 1), squared_error_evaluation, '-')
+    plt.legend(['training set', string])
     plt.xlabel("epochs")
     plt.ylabel("squared error")
     s = "../image/lr_" + transf_value(lr) + "-mo_" + transf_value(mo) + "-bat:" + transf_value(
-        bat) + "-arc_" + tranf_arc(arc)
+        bat) + "-reg" + transf_value(reg)+ "-arc_" + tranf_arc(arc)
     plt.tight_layout()  # minimize overlap of subplots
     plt.savefig(s)
     n_figure += 1  # increment to create a new figure
@@ -128,11 +128,11 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
                                 squared_error,misClass_error, squared_error_validation,misClass_error_validation = \
                                     network.train(data=tr_patterns,
                                                   targets=tr_labels,
-                                                  vl_data=vl_patterns,
-                                                  vl_targets=vl_labels,
+                                                  eval_data=vl_patterns,
+                                                  eval_targets=vl_labels,
                                                   lossObject=loss_obj, epochs=parameter.epoch,
                                                   learning_rate=lr,
-                                                  batch_size=bat, momentum=mo, regularization=0.01)
+                                                  batch_size=bat, momentum=mo, regularization=reg)
 
                                 #append result of single epoch in list previously created
                                 squared_error_avarage +=squared_error
@@ -147,6 +147,7 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
                             misClass_error_avarage/=( float(n_trials) *len(tr_patterns))
                             squared_error_validation_avarage/=( float(n_trials)/2 *len(vl_patterns))
                             misClass_error_validation_avarage/=( float(n_trials) *len(vl_patterns))
-                            print_result(arc, bat, lr, misClass_error_avarage, misClass_error_validation_avarage, mo,
-                                         n_figure, squared_error_avarage, squared_error_validation_avarage)
-
+                            print_result(misClass_error_avarage, misClass_error_validation_avarage,
+                                         squared_error_avarage, squared_error_validation_avarage,
+                                         arc, bat, lr, mo,reg,
+                                         n_figure)
