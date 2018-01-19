@@ -52,14 +52,14 @@ def main():
         tr_patterns,tr_labels,vl_patterns,vl_labels = Validation.hold_out(patterns,labels,0.7)
         if np.absolute(np.sum(vl_labels)) <4:
             break
-
     # validation: define hyperparameters to test
     architecture = [ [17, 10, 1]]
     neurons= [[InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron,TanHNeuron] ]
     momentum = [0.4, 0.5, 0.6]
     batch_size = [10]
     learning_rate = [0.15, 0.2, 0.25]
-    param = Validation.grid_search_parameter(learning_rate,momentum,batch_size,architecture,neurons)
+    regularization = [0.0]
+    param = Validation.grid_search_parameter(learning_rate,momentum,batch_size,architecture,neurons,regularization)
     Validation.grid_search(param,lossObject,tr_patterns,tr_labels,vl_patterns,vl_labels, n_trials=5)
 
 
