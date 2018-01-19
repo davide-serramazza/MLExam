@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import copy
 import numpy as np
 from Neural_network import *
+import pandas as pd
 
 class grid_search_parameter:
     def __init__(self,learning_rate,momentum,batch_size,architecture,neurons, regolarization, epoch):
@@ -108,19 +109,33 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
                             plt.close()
 
 
-def hold_out(patterns,targets,frac):
+def holdout(frac, train_data):
     """
-    hold out function: divide dataset in traning and validation set
-    :param network: network to be train
-    :param loss_obj: loss used in traning
-    :param pattrns: dataset patterns
-    :param targets: dataset targets
-    :param frac: fraction of data set for traning set (fraction of validation is 1-frac)
-    :return:
+    Splits train_data in training set and validation set. Each set has the property that
+    the positive and negative example follow roughly the same distribution of the original set.
+    The training set is 'frac' percent of the data whereas the validation set is the remaining
+    (1-frac) percent.
+
+    :param frac: fraction of the dataset used for training
+    :param train_data: dataset
+    :return: training_set and validation_set
     """
-    lenght = int (len(patterns)*frac )
-    tr_pattern = patterns[:lenght]
-    tr_labels = targets[:lenght]
-    vl_pattern = patterns[lenght:]
-    vl_labels = targets[lenght:]
-    return tr_pattern,tr_labels,vl_pattern,vl_labels
+    # shuffle data set
+    train_data = train_data.reindex(np.random.permutation(train_data.index))
+    # devide in positive and negative examples
+    positive_set = train_data[train_data["label"] == 1]  # len = 64
+    negative_set = train_data[train_data["label"] == 0]  # len = 105
+
+    # compute length of partitions given frac
+    len_pos_training = int(np.round(frac * len(positive_set)))  # for training set
+    len_neg_training = int(np.round(frac * len(negative_set)))  # for validation set
+    len_pos_validation = len(positive_set) - len_pos_training        # for training set
+    len_neg_validation = len(negative_set) - len_neg_training        # for validation set
+
+    positive_set_partition = positive_set.head(len_pos_training)  # len 45
+    negative_set_partition = negative_set.head(len_neg_training)  # len 74
+    positive_set_other = positive_set.head(len_pos_validation)  # len 19
+    negative_set_other = negative_set.head(len_neg_validation)  # len 31
+    training_set = pd.concat([positive_set_partition, negative_set_partition])  # len 119
+    validation_set = pd.concat([positive_set_other, negative_set_other])  # len 50
+    return training_set, validation_set
