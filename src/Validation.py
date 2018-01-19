@@ -86,14 +86,17 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
                             squared_error_validation_avarage/=( float(n_trials)/2 *len(vl_patterns))
                             misClass_error_validation_avarage/=( float(n_trials) *len(vl_patterns))
 
+                            #get accuracy
+                            accuracy = 1-misClass_error_avarage
+                            accuracy_avarage = 1 -misClass_error_validation_avarage
                             # plot result
                             plt.figure(n_figure, dpi=300) # select figure number 'n_figure'
                             plt.subplot(2, 1, 1)
-                            plt.plot(range(1, len(misClass_error_avarage) + 1), misClass_error_avarage, '--')
-                            plt.plot(range(1, len(misClass_error_validation_avarage) + 1), misClass_error_validation_avarage, '-')
+                            plt.plot(range(1, len(accuracy) + 1), accuracy, '--')
+                            plt.plot(range(1, len(accuracy_avarage) + 1), accuracy_avarage, '-')
                             plt.legend(['training set', 'validation set'])
                             plt.xlabel("epochs")
-                            plt.ylabel("misclassification")
+                            plt.ylabel("accuracy")
                             #plot squaredError
                             plt.subplot(2, 1, 2)
                             plt.plot(range(1, len(squared_error_avarage) + 1), squared_error_avarage, '--')
