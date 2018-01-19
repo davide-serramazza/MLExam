@@ -22,10 +22,10 @@ def main():
     network = Network(architecture,neurons)
     lossObject = SquaredError("tangentH")
 
-    epochs = 25
-    learning_rate = 0.2
+    epochs = 50
+    learning_rate = 0.25
     batch_size = 10
-    momentum = 0.6
+    momentum = 0.5
     regularization = 0
 
     squared_error,misClass_error, squared_error_test,misClass_error_test = network.train(
