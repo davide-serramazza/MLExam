@@ -85,30 +85,36 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
                             misClass_error_avarage/=( float(n_trials) *len(tr_patterns))
                             squared_error_validation_avarage/=( float(n_trials)/2 *len(vl_patterns))
                             misClass_error_validation_avarage/=( float(n_trials) *len(vl_patterns))
+                            print_result(arc, bat, lr, misClass_error_avarage, misClass_error_validation_avarage, mo,
+                                         n_figure, squared_error_avarage, squared_error_validation_avarage)
 
-                            #get accuracy
-                            accuracy = 1-misClass_error_avarage
-                            accuracy_avarage = 1 -misClass_error_validation_avarage
-                            # plot result
-                            plt.figure(n_figure, dpi=300) # select figure number 'n_figure'
-                            plt.subplot(2, 1, 1)
-                            plt.plot(range(1, len(accuracy) + 1), accuracy, '--')
-                            plt.plot(range(1, len(accuracy_avarage) + 1), accuracy_avarage, '-')
-                            plt.legend(['training set', 'validation set'])
-                            plt.xlabel("epochs")
-                            plt.ylabel("accuracy")
-                            #plot squaredError
-                            plt.subplot(2, 1, 2)
-                            plt.plot(range(1, len(squared_error_avarage) + 1), squared_error_avarage, '--')
-                            plt.plot(range(1, len(squared_error_validation_avarage) + 1),squared_error_validation_avarage, '-')
-                            plt.legend(['training set', 'validation set'])
-                            plt.xlabel("epochs")
-                            plt.ylabel("squared error")
-                            s = "../image/lr_"+transf_value(lr)+"-mo_"+transf_value(mo)+"-bat:"+transf_value(bat)+"-arc_"+tranf_arc(arc)
-                            plt.tight_layout()  # minimize overlap of subplots
-                            plt.savefig(s)
-                            n_figure += 1 # increment to create a new figure
-                            plt.close()
+
+def print_result(arc, bat, lr, misClass_error_avarage, misClass_error_validation_avarage, mo, n_figure,
+                 squared_error_avarage, squared_error_validation_avarage):
+    # get accuracy
+    accuracy = 1 - misClass_error_avarage
+    accuracy_avarage = 1 - misClass_error_validation_avarage
+    # plot result
+    plt.figure(n_figure, dpi=300)  # select figure number 'n_figure'
+    plt.subplot(2, 1, 1)
+    plt.plot(range(1, len(accuracy) + 1), accuracy, '--')
+    plt.plot(range(1, len(accuracy_avarage) + 1), accuracy_avarage, '-')
+    plt.legend(['training set', 'validation set'])
+    plt.xlabel("epochs")
+    plt.ylabel("accuracy")
+    # plot squaredError
+    plt.subplot(2, 1, 2)
+    plt.plot(range(1, len(squared_error_avarage) + 1), squared_error_avarage, '--')
+    plt.plot(range(1, len(squared_error_validation_avarage) + 1), squared_error_validation_avarage, '-')
+    plt.legend(['training set', 'validation set'])
+    plt.xlabel("epochs")
+    plt.ylabel("squared error")
+    s = "../image/lr_" + transf_value(lr) + "-mo_" + transf_value(mo) + "-bat:" + transf_value(
+        bat) + "-arc_" + tranf_arc(arc)
+    plt.tight_layout()  # minimize overlap of subplots
+    plt.savefig(s)
+    n_figure += 1  # increment to create a new figure
+    plt.close()
 
 
 def hold_out(pattrns,targets,frac):
