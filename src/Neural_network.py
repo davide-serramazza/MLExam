@@ -217,7 +217,7 @@ class Network:
         # return sum of a single validation epoch
         return squared_error_epoch, misClass_error_epoch
 
-    def train(self, data, targets, vl_data, vl_targets, lossObject, epochs, learning_rate, batch_size, momentum,
+    def train(self, data, targets, eval_data, eval_targets, lossObject, epochs, learning_rate, batch_size, momentum,
               regularization=0):
         """
         Performs the training of the neural network.
@@ -283,7 +283,7 @@ class Network:
             misClassification = np.append(misClassification, misC_epoch)
             # computing loss and misClassification on validation set then append to list
             squared_error_validation_epoch, misClass_error_validation_epoch = \
-                self.validation_error(vl_data, vl_targets, lossObject)
+                self.validation_error(eval_data, eval_targets, lossObject)
 
             losses_valdation = np.append(losses_valdation, squared_error_validation_epoch)
             misClassification_validation = np.append(misClassification_validation,misClass_error_validation_epoch)

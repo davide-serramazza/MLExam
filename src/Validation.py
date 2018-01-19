@@ -14,6 +14,65 @@ class grid_search_parameter:
         self.regularization = regularization
         self.epoch = epoch
 
+def print_result(arc, bat, lr, misClass_error_avarage, misClass_error_validation_avarage, mo, n_figure,
+                 squared_error_avarage, squared_error_validation_avarage):
+    # get accuracy
+    accuracy = 1 - misClass_error_avarage
+    accuracy_avarage = 1 - misClass_error_validation_avarage
+    # plot result
+    plt.figure(n_figure, dpi=300)  # select figure number 'n_figure'
+    plt.subplot(2, 1, 1)
+    plt.plot(range(1, len(accuracy) + 1), accuracy, '--')
+    plt.plot(range(1, len(accuracy_avarage) + 1), accuracy_avarage, '-')
+    plt.legend(['training set', 'validation set'])
+    plt.xlabel("epochs")
+    plt.ylabel("accuracy")
+    # plot squaredError
+    plt.subplot(2, 1, 2)
+    plt.plot(range(1, len(squared_error_avarage) + 1), squared_error_avarage, '--')
+    plt.plot(range(1, len(squared_error_validation_avarage) + 1), squared_error_validation_avarage, '-')
+    plt.legend(['training set', 'validation set'])
+    plt.xlabel("epochs")
+    plt.ylabel("squared error")
+    s = "../image/lr_" + transf_value(lr) + "-mo_" + transf_value(mo) + "-bat:" + transf_value(
+        bat) + "-arc_" + tranf_arc(arc)
+    plt.tight_layout()  # minimize overlap of subplots
+    plt.savefig(s)
+    n_figure += 1  # increment to create a new figure
+    plt.close()
+
+def holdout(frac, train_data):
+    """
+    Splits train_data in training set and validation set. Each set has the property that
+    the positive and negative example follow roughly the same distribution of the original set.
+    The training set is 'frac' percent of the data whereas the validation set is the remaining
+    (1-frac) percent.
+
+    :param frac: fraction of the dataset used for training
+    :param train_data: dataset
+    :return: training_set and validation_set
+    """
+    # shuffle data set
+    train_data = train_data.reindex(np.random.permutation(train_data.index))
+    # devide in positive and negative examples
+    positive_set = train_data[train_data["label"] == 1]
+    negative_set = train_data[train_data["label"] == 0]
+
+    # compute length of partitions given frac
+    len_pos_training = int(np.round(frac * len(positive_set)))  # for training set
+    len_neg_training = int(np.round(frac * len(negative_set)))  # for validation set
+    len_pos_validation = len(positive_set) - len_pos_training        # for training set
+    len_neg_validation = len(negative_set) - len_neg_training        # for validation set
+
+    positive_set_partition = positive_set.head(len_pos_training)
+    negative_set_partition = negative_set.head(len_neg_training)
+    positive_set_other = positive_set.head(len_pos_validation)
+    negative_set_other = negative_set.head(len_neg_validation)
+    training_set = pd.concat([positive_set_partition, negative_set_partition])
+    validation_set = pd.concat([positive_set_other, negative_set_other])
+    return training_set, validation_set
+
+
 def transf_value(value):
     """
     transform value of variable to suitable string
@@ -21,6 +80,7 @@ def transf_value(value):
     :return:
     """
     return str(value).replace(".",",")
+
 
 def tranf_arc(architecture):
     """
@@ -33,6 +93,7 @@ def tranf_arc(architecture):
         string += str(i)+","
     string +="]"
     return string
+
 
 def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels, n_trials):
     """
@@ -89,61 +150,3 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
                             print_result(arc, bat, lr, misClass_error_avarage, misClass_error_validation_avarage, mo,
                                          n_figure, squared_error_avarage, squared_error_validation_avarage)
 
-
-def print_result(arc, bat, lr, misClass_error_avarage, misClass_error_validation_avarage, mo, n_figure,
-                 squared_error_avarage, squared_error_validation_avarage):
-    # get accuracy
-    accuracy = 1 - misClass_error_avarage
-    accuracy_avarage = 1 - misClass_error_validation_avarage
-    # plot result
-    plt.figure(n_figure, dpi=300)  # select figure number 'n_figure'
-    plt.subplot(2, 1, 1)
-    plt.plot(range(1, len(accuracy) + 1), accuracy, '--')
-    plt.plot(range(1, len(accuracy_avarage) + 1), accuracy_avarage, '-')
-    plt.legend(['training set', 'validation set'])
-    plt.xlabel("epochs")
-    plt.ylabel("accuracy")
-    # plot squaredError
-    plt.subplot(2, 1, 2)
-    plt.plot(range(1, len(squared_error_avarage) + 1), squared_error_avarage, '--')
-    plt.plot(range(1, len(squared_error_validation_avarage) + 1), squared_error_validation_avarage, '-')
-    plt.legend(['training set', 'validation set'])
-    plt.xlabel("epochs")
-    plt.ylabel("squared error")
-    s = "../image/lr_" + transf_value(lr) + "-mo_" + transf_value(mo) + "-bat:" + transf_value(
-        bat) + "-arc_" + tranf_arc(arc)
-    plt.tight_layout()  # minimize overlap of subplots
-    plt.savefig(s)
-    n_figure += 1  # increment to create a new figure
-    plt.close()
-
-def holdout(frac, train_data):
-    """
-    Splits train_data in training set and validation set. Each set has the property that
-    the positive and negative example follow roughly the same distribution of the original set.
-    The training set is 'frac' percent of the data whereas the validation set is the remaining
-    (1-frac) percent.
-
-    :param frac: fraction of the dataset used for training
-    :param train_data: dataset
-    :return: training_set and validation_set
-    """
-    # shuffle data set
-    train_data = train_data.reindex(np.random.permutation(train_data.index))
-    # devide in positive and negative examples
-    positive_set = train_data[train_data["label"] == 1]  # len = 64
-    negative_set = train_data[train_data["label"] == 0]  # len = 105
-
-    # compute length of partitions given frac
-    len_pos_training = int(np.round(frac * len(positive_set)))  # for training set
-    len_neg_training = int(np.round(frac * len(negative_set)))  # for validation set
-    len_pos_validation = len(positive_set) - len_pos_training        # for training set
-    len_neg_validation = len(negative_set) - len_neg_training        # for validation set
-
-    positive_set_partition = positive_set.head(len_pos_training)  # len 45
-    negative_set_partition = negative_set.head(len_neg_training)  # len 74
-    positive_set_other = positive_set.head(len_pos_validation)  # len 19
-    negative_set_other = negative_set.head(len_neg_validation)  # len 31
-    training_set = pd.concat([positive_set_partition, negative_set_partition])  # len 119
-    validation_set = pd.concat([positive_set_other, negative_set_other])  # len 50
-    return training_set, validation_set

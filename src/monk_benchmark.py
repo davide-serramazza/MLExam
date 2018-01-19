@@ -36,6 +36,17 @@ def transform_target(l):
             res.append(1)
     return res
 
+def transform_labels(training_set, validation_set):
+    training_labels = transform_target(training_set["label"].values)
+    validation_labels = transform_target(validation_set["label"].values)
+    return training_labels, validation_labels
+
+
+def decode_patterns(encoding, features, training_set, validation_set):
+    training_patterns = [decode(pattern, encoding) for pattern in training_set[features].values]
+    validation_patterns = [decode(pattern, encoding) for pattern in validation_set[features].values]
+    return training_patterns, validation_patterns
+
 def main():
     train_file = "../monk_datasets/monks-2.train"
 
@@ -63,24 +74,13 @@ def main():
     batch_size = [10]
     learning_rate = [0.15, 0.2, 0.25]
     regularization = [0]
-    epoch = 1
+    epoch = 5
     param = grid_search_parameter(learning_rate, momentum, batch_size,
                                   architecture, neurons, regularization, epoch)
 
     grid_search(param, lossObject, training_patterns, training_labels,
                 validation_patterns, validation_labels, n_trials=5)
 
-
-def transform_labels(training_set, validation_set):
-    training_labels = transform_target(training_set["label"].values)
-    validation_labels = transform_target(validation_set["label"].values)
-    return training_labels, validation_labels
-
-
-def decode_patterns(encoding, features, training_set, validation_set):
-    training_patterns = [decode(pattern, encoding) for pattern in training_set[features].values]
-    validation_patterns = [decode(pattern, encoding) for pattern in validation_set[features].values]
-    return training_patterns, validation_patterns
 
 if __name__ == "__main__":
     main()
