@@ -4,7 +4,7 @@ from monk_benchmark import *
 from Neural_network import *
 
 def main():
-    train_file = "../monk_datasets/monks-2.train"
+    train_file = "../monk_datasets/monks-1.train"
 
         # 1. load dataset
     columns = ['label', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'id']
@@ -23,21 +23,22 @@ def main():
 
     lossObject = SquaredError("tangentH")
 
-    arch = [2,2,2]
-    neuronsType = [InputNeuron, SigmoidNeuron, SigmoidNeuron]
+    arch = [17, 10, 1]
+    neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
     network = Network(arch, neuronsType)
-    network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
-    network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
-    network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
-    network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
+    #network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
+    #network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
+    #network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
+    #network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
 
-    data = [[0.05, 0.1]]
-    target = [[0.01, 0.99]]
-    network.forward(pattern=data[0])
-    print network.predict(data)
+    #data = [[0.05, 0.1]]
+    #target = [[0.01, 0.99]]
+    #network.forward(pattern=data[0])
+    #print network.predict(data)
 
-    network.trainBFGS(data,target,data,target,lossObject,100)
-    print network.predict(data)
+    network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels,lossObject, 400)
+    scores = network.predict(training_patterns)
+    print "error:", np.sum(np.square(np.array(scores) - np.array(training_labels))) / len(training_labels)
     """
     net = Network([17,10,1],[InputNeuron,TanHNeuron,TanHNeuron])
 

@@ -292,7 +292,7 @@ class Network:
 #begginning CM part -------------------------------------------------------
 
     def line_search(self):
-        return 0.5
+        return 0.01
 
 
     def get_gradient_as_vector(self,list):
@@ -315,18 +315,18 @@ class Network:
 
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
-                current_newuron_weights = self.layers[i].neurons[j].weights
-                #append to x_k before updating
+                current_neuron_weights = self.layers[i].neurons[j].weights
+                # append to x_k before updating
 
-                #tanking only gradient's entry w.r.t. current gradient
-                weigths_len =  len(current_newuron_weights)
+                # taking only gradient's entry w.r.t. current gradient
+                weigths_len = len(current_neuron_weights)
                 tmp = delta[k:k+weigths_len]
                 k += weigths_len
-                #update weigths
-                current_newuron_weights -= tmp
+                # update weigths
+                current_neuron_weights += tmp
 
                 #append to x_{k+1} after updating
-                x_new = np.append(x_new,current_newuron_weights)
+                x_new = np.append(x_new,current_neuron_weights)
         return x_new
 
 
@@ -344,7 +344,7 @@ class Network:
 
         # getting the gradient as vector
         gradient = self.get_gradient_as_vector(gradient_w_batch)
-        return -1*gradient
+        return gradient
 
 
     def update_matrix(self,H_k,s_k,y_k):
@@ -377,25 +377,26 @@ class Network:
         for epoch in range(epochs):
 
             # stop criterion
-            if epoch>0 and (norm(gradient_old)) <1e-6:
+            if epoch > 0 and (norm(gradient_old)) < 1e-6:
+                print "break at", epoch  # TODO - delete, only for debug
                 break
 
-            if epoch==0:
+            if epoch == 0:
                 # compute initial gradient
-                gradient_old = self.calculate_gradient(data, targets,lossObject)
-                #computing initial (identity matrix)
+                gradient_old = self.calculate_gradient(data, targets, lossObject)
+                # computing initial (identity matrix)
                 shape = gradient_old.shape[0]
                 H = np.identity(shape)
 
             # compute search direction p = -H*gradeint
-            p = H.dot(gradient_old)
+            p = - H.dot(gradient_old)
             # compute x_{k+1}
             alpha = self.line_search()
             delta = p*alpha
 
-            # update weigths using x_{k+1}=x_{k}+alpha_k}*p_k
+            # update weights using x_{k+1} = x_{k} + alpha_{k} * p_k
             x_new = self.update_weights_CM(delta)
-            if epoch == 0 :
+            if epoch == 0:
                 x_old = 0*x_new
 
             # compute new gradient
