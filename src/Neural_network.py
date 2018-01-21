@@ -2,6 +2,7 @@ from Layer import *
 from loss_functions import *
 import sys
 from collections import deque
+from scipy.linalg import norm
 
 
 class Network:
@@ -264,7 +265,6 @@ class Network:
                 for pattern, t in zip(batch_pattern, batch_target):
                     self.forward(pattern)
                     gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject)
-
                     loss_epoch += loss_p
                     misC_epoch += miss_p
                     gradient_w_batch += gradient_w
@@ -288,6 +288,134 @@ class Network:
             losses_valdation = np.append(losses_valdation, squared_error_validation_epoch)
             misClassification_validation = np.append(misClassification_validation,misClass_error_validation_epoch)
         return losses, misClassification, losses_valdation,misClassification_validation
+
+#begginning CM part -------------------------------------------------------
+
+    def line_search(self):
+        return 0.5
+
+
+    def get_gradient_as_vector(self,list):
+        gradient = np.array([])
+        for l in list:
+            tmp = np.concatenate(l)
+            gradient = np.append(gradient,tmp)
+        return gradient
+
+
+    def update_weights_CM(self,delta):
+        """
+        update nerwork weigths
+        :param delta:
+        :return: x_k+1
+        """
+        k = 0
+        # initializing x_old = x_k and x_new = x_{k+1}
+        x_new = np.array([])
+
+        for i in range(1, len(self.layers)):
+            for j in range(len(self.layers[i].neurons) - 1):
+                current_newuron_weights = self.layers[i].neurons[j].weights
+                #append to x_k before updating
+
+                #tanking only gradient's entry w.r.t. current gradient
+                weigths_len =  len(current_newuron_weights)
+                tmp = delta[k:k+weigths_len]
+                k += weigths_len
+                #update weigths
+                current_newuron_weights -= tmp
+
+                #append to x_{k+1} after updating
+                x_new = np.append(x_new,current_newuron_weights)
+        return x_new
+
+
+    def calculate_gradient(self, data, targets,lossObject):
+
+        # create empty vector, gradient_w_old = sum of gradient_w for the epoch
+        gradient_w_batch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
+                                   for i in range(1, len(self.architecture))])
+        for pattern, t in zip(data, targets):
+            # calculate derivative for every patten, then append to gradient_w_batch
+            self.forward(pattern)
+            gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject)
+
+            gradient_w_batch += gradient_w
+
+        # getting the gradient as vector
+        gradient = self.get_gradient_as_vector(gradient_w_batch)
+        return -1*gradient
+
+
+    def update_matrix(self,H_k,s_k,y_k):
+        #get dimension
+        shape = H_k.shape[0]
+
+        #p_k = 1/(y_k^t*s_k)
+        p_k = float(1) / np.dot(s_k,y_k)
+
+        # I - p_k*s_k*y_k^t
+        tmp =  np.outer(s_k,y_k) * p_k
+        first_factor = np.identity(shape) - tmp
+
+        # I - p_k*s_k^t*y_k
+        tmp = np.outer(y_k,s_k) * p_k
+        second_factor = np.identity(shape) - tmp
+
+        # (I - p_k*s_k*y_k^t) * H_k * (I - p_k*s_k^t*y_k)
+        tmp = first_factor.dot(H_k)
+        H_new = tmp.dot(second_factor)
+        # adding p_k*s_k*s_k^t
+        tmp = np.outer(s_k,s_k) * p_k
+        H_new += tmp
+        return H_new
+
+
+
+    def trainBFGS (self, data, targets, eval_data, eval_targets, lossObject,epochs):
+
+        for epoch in range(epochs):
+
+            # stop criterion
+            if epoch>0 and (norm(gradient_old)) <1e-6:
+                break
+
+            if epoch==0:
+                # compute initial gradient
+                gradient_old = self.calculate_gradient(data, targets,lossObject)
+                #computing initial (identity matrix)
+                shape = gradient_old.shape[0]
+                H = np.identity(shape)
+
+            # compute search direction p = -H*gradeint
+            p = H.dot(gradient_old)
+            # compute x_{k+1}
+            alpha = self.line_search()
+            delta = p*alpha
+
+            # update weigths using x_{k+1}=x_{k}+alpha_k}*p_k
+            x_new = self.update_weights_CM(delta)
+            if epoch == 0 :
+                x_old = 0*x_new
+
+            # compute new gradient
+            gradient_new = self.calculate_gradient(data, targets,lossObject)
+            if epoch==0:
+                gradient_old = 0*gradient_new
+            #compute s_k = x_{k+1} - x_k = x_new - x_old
+            s_k = x_new - x_old
+            # compute y_k = nabla f_{k+1} - nabla f_k = gradient new - gradient old
+            y_k = gradient_new - gradient_old
+            #update matrix H
+            H = self.update_matrix(H,s_k,y_k)
+            # update x_old and gradient_old
+            x_old = x_new
+            gradient_old = gradient_new
+
+
+
+
+# end CM-----------------------------------------------------------
 
     def predict(self, data):
         # predict target variables

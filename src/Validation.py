@@ -149,5 +149,5 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
                             misClass_error_validation_avarage/=( float(n_trials) *len(vl_patterns))
                             print_result(misClass_error_avarage, misClass_error_validation_avarage,
                                          squared_error_avarage, squared_error_validation_avarage,
-                                         arc, bat, lr, mo,reg,
+                                         "trian set",arc, bat, lr, mo,reg,
                                          n_figure)
