@@ -347,27 +347,22 @@ class Network:
         return gradient
 
 
-    def update_matrix(self,H_k,s_k,y_k):
-        #get dimension
+    def update_matrix(self, H_k, s_k, y_k):
+        # get dimension
         shape = H_k.shape[0]
 
-        #p_k = 1/(y_k^t*s_k)
-        p_k = float(1) / np.dot(s_k,y_k)
+        # rho_k = 1/(y_k^t*s_k)
+        rho_k = float(1) / np.dot(s_k, y_k)
 
-        # I - p_k*s_k*y_k^t
-        tmp =  np.outer(s_k,y_k) * p_k
-        first_factor = np.identity(shape) - tmp
+        # V_k = I - rho_k * s_k * y_k^t
+        tmp = rho_k * np.outer(s_k, y_k)
+        V_k = np.identity(shape) - tmp
 
-        # I - p_k*s_k^t*y_k
-        tmp = np.outer(y_k,s_k) * p_k
-        second_factor = np.identity(shape) - tmp
-
-        # (I - p_k*s_k*y_k^t) * H_k * (I - p_k*s_k^t*y_k)
-        tmp = first_factor.dot(H_k)
-        H_new = tmp.dot(second_factor)
-        # adding p_k*s_k*s_k^t
-        tmp = np.outer(s_k,s_k) * p_k
-        H_new += tmp
+        # H_{k+1} = V_k^t * H_k * V_k - rho_k * s_k * s_k^t
+        tmp = np.dot(V_k.T, H_k)
+        H_new = np.dot(tmp, V_k)
+        # adding rho_k*s_k*s_k^t
+        H_new += np.outer(s_k, s_k) * rho_k
         return H_new
 
 
@@ -388,10 +383,10 @@ class Network:
                 shape = gradient_old.shape[0]
                 H = np.identity(shape)
 
-            # compute search direction p = -H*gradeint
+            # compute search direction p = -H * gradient
             p = - H.dot(gradient_old)
-            # compute x_{k+1}
             alpha = self.line_search()
+            # compute weight update
             delta = p*alpha
 
             # update weights using x_{k+1} = x_{k} + alpha_{k} * p_k
@@ -400,14 +395,14 @@ class Network:
                 x_old = 0*x_new
 
             # compute new gradient
-            gradient_new = self.calculate_gradient(data, targets,lossObject)
-            if epoch==0:
+            gradient_new = self.calculate_gradient(data, targets, lossObject)
+            if epoch == 0:
                 gradient_old = 0*gradient_new
-            #compute s_k = x_{k+1} - x_k = x_new - x_old
+            # compute s_k = x_{k+1} - x_k = x_new - x_old
             s_k = x_new - x_old
             # compute y_k = nabla f_{k+1} - nabla f_k = gradient new - gradient old
             y_k = gradient_new - gradient_old
-            #update matrix H
+            # update matrix H
             H = self.update_matrix(H,s_k,y_k)
             # update x_old and gradient_old
             x_old = x_new
