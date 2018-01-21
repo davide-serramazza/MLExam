@@ -122,14 +122,18 @@ class Network:
         gradient_weights = self.compute_gradient(np.asarray(delta_vectors))
 
         # 5 report loss and misclassification count
-        weights = np.asarray([neuron.weights
-                              for layer in self.layers[1:]
-                              for neuron in layer.neurons[:-1]])
+        weights = self.get_weights()
 
         loss_value = lossObject.value(target, output_net, weights)
         misClassification = lossObject.misClassification(target, output_net)
 
         return gradient_weights, loss_value, misClassification
+
+    def get_weights(self):
+        weights = np.asarray([neuron.weights
+                              for layer in self.layers[1:]
+                              for neuron in layer.neurons[:-1]])
+        return weights
 
     def compute_gradient(self, delta_vectors):
         """
