@@ -39,6 +39,8 @@ def main():
     network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels,lossObject, 400)
     scores = network.predict(training_patterns)
     print "error:", np.sum(np.square(np.array(scores) - np.array(training_labels))) / len(training_labels)
+    print "predictions:", scores
+    print "labels:", training_labels
     """
     net = Network([17,10,1],[InputNeuron,TanHNeuron,TanHNeuron])
 

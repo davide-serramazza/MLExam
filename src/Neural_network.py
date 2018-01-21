@@ -295,9 +295,6 @@ class Network:
 
 #begginning CM part -------------------------------------------------------
 
-    def line_search(self):
-        return 0.01
-
 
     def get_gradient_as_vector(self,list):
         gradient = np.array([])
@@ -339,16 +336,18 @@ class Network:
         # create empty vector, gradient_w_old = sum of gradient_w for the epoch
         gradient_w_batch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
                                    for i in range(1, len(self.architecture))])
+        loss_batch = 0
         for pattern, t in zip(data, targets):
             # calculate derivative for every patten, then append to gradient_w_batch
             self.forward(pattern)
             gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject)
 
             gradient_w_batch += gradient_w
+            loss_batch += loss_p
 
         # getting the gradient as vector
         gradient = self.get_gradient_as_vector(gradient_w_batch)
-        return gradient
+        return gradient/len(data), loss_batch/len(data)
 
 
     def update_matrix(self, H_k, s_k, y_k):
@@ -374,7 +373,7 @@ class Network:
     def trainBFGS (self, data, targets, eval_data, eval_targets, lossObject,epochs):
 
         for epoch in range(epochs):
-
+            print "training epoch...", epoch
             # stop criterion
             if epoch > 0 and (norm(gradient_old)) < 1e-6:
                 print "break at", epoch  # TODO - delete, only for debug
@@ -382,14 +381,19 @@ class Network:
 
             if epoch == 0:
                 # compute initial gradient
-                gradient_old = self.calculate_gradient(data, targets, lossObject)
+                gradient_old, loss = self.calculate_gradient(data, targets, lossObject)
                 # computing initial (identity matrix)
                 shape = gradient_old.shape[0]
                 H = np.identity(shape)
 
             # compute search direction p = -H * gradient
             p = - H.dot(gradient_old)
-            alpha = self.line_search()
+
+            theta = 0.9  # contraction factor of alpha
+            alpha = 1
+            c = 1e-4
+            alpha = self.line_search(alpha, c, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
+
             # compute weight update
             delta = p*alpha
 
@@ -399,7 +403,7 @@ class Network:
                 x_old = 0*x_new
 
             # compute new gradient
-            gradient_new = self.calculate_gradient(data, targets, lossObject)
+            gradient_new, loss = self.calculate_gradient(data, targets, lossObject)
             if epoch == 0:
                 gradient_old = 0*gradient_new
             # compute s_k = x_{k+1} - x_k = x_new - x_old
@@ -412,10 +416,33 @@ class Network:
             x_old = x_new
             gradient_old = gradient_new
 
+    def line_search(self, alpha, c, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
+        """
 
+        """
+        while True:
+            # phi(alpha) = f(x_k + alpha + p_k)
+            # phi'(alpha) = \nabla f(x_k + alpha * p_k) * p_k
+            self.update_weights_CM(alpha * p)  # x_i = x_i + alpha_i * p_k
+            # compute loss in new hypothetical position x_{i+1}
+            _, loss_alpha_i = self.calculate_gradient(data, targets, lossObject)
+            phi_alpha = loss_alpha_i
+            phi_0 = loss  # phi(0) = f(x_k + 0 * p) = f(x_k)
+            phi_p_0 = np.dot(gradient_old, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
+
+            if phi_alpha <= phi_0 + c * alpha * phi_p_0:
+                print "line search converged", "epoch", epoch, "alpha", alpha
+                break
+            if alpha < 1e-16:
+                print "some error in the algorithm. alpha:", alpha
+                break
+            alpha *= theta
+
+        return alpha
 
 
 # end CM-----------------------------------------------------------
+
 
     def predict(self, data):
         # predict target variables
