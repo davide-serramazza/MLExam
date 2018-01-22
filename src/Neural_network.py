@@ -326,13 +326,11 @@ class Network:
                 # update weigths
                 current_neuron_weights += tmp
 
-                #append to x_{k+1} after updating
-                x_new = np.append(x_new,current_neuron_weights)
+                # append to x_{k+1} after updating
+                x_new = np.append(x_new, current_neuron_weights)
         return x_new
 
-
-    def calculate_gradient(self, data, targets,lossObject):
-
+    def calculate_gradient(self, data, targets, lossObject):
         # create empty vector, gradient_w_old = sum of gradient_w for the epoch
         gradient_w_batch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
                                    for i in range(1, len(self.architecture))])
@@ -347,7 +345,7 @@ class Network:
 
         # getting the gradient as vector
         gradient = self.get_gradient_as_vector(gradient_w_batch)
-        return gradient/len(data), loss_batch/len(data)
+        return gradient, loss_batch
 
 
     def update_matrix(self, H_k, s_k, y_k):
@@ -376,26 +374,28 @@ class Network:
             print "training epoch...", epoch
             # stop criterion
             if epoch > 0 and (norm(gradient_old)) < 1e-6:
-                print "break at", epoch  # TODO - delete, only for debug
+                print "break at", epoch
                 break
 
             if epoch == 0:
                 # compute initial gradient
                 gradient_old, loss = self.calculate_gradient(data, targets, lossObject)
-                # computing initial (identity matrix)
+                # computing initial Hessian estimate H_0 (identity matrix)
                 shape = gradient_old.shape[0]
-                H = np.identity(shape)
+                H = 0.5 * np.identity(shape)
 
             # compute search direction p = -H * gradient
             p = - H.dot(gradient_old)
 
             theta = 0.9  # contraction factor of alpha
             alpha = 1
-            c = 1e-4
-            alpha = self.line_search(alpha, c, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
+            c_1 = 1e-4
+            c_2 = 0.9
+            #alpha = self.line_search(alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
+            alpha = self.armijo_wolfe_line_search(alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
 
             # compute weight update
-            delta = p*alpha
+            delta = p * alpha
 
             # update weights using x_{k+1} = x_{k} + alpha_{k} * p_k
             x_new = self.update_weights_CM(delta)
@@ -411,37 +411,119 @@ class Network:
             # compute y_k = nabla f_{k+1} - nabla f_k = gradient new - gradient old
             y_k = gradient_new - gradient_old
             # update matrix H
-            H = self.update_matrix(H,s_k,y_k)
+            H = self.update_matrix(H, s_k, y_k)
+            print "Hessian norm =", norm(H)
             # update x_old and gradient_old
             x_old = x_new
             gradient_old = gradient_new
 
-    def line_search(self, alpha, c, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
-        """
-
-        """
+    def line_search(self, alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
         while True:
-            # phi(alpha) = f(x_k + alpha + p_k)
+            temp_network = copy.deepcopy(self)
+            # phi(alpha) = f(x_k + alpha * p_k)
             # phi'(alpha) = \nabla f(x_k + alpha * p_k) * p_k
-            self.update_weights_CM(alpha * p)  # x_i = x_i + alpha_i * p_k
+            temp_network.update_weights_CM(alpha * p)  # x_i = x_i + alpha_i * p_k
             # compute loss in new hypothetical position x_{i+1}
-            _, loss_alpha_i = self.calculate_gradient(data, targets, lossObject)
+            gradient_alpha_i, loss_alpha_i = temp_network.calculate_gradient(data, targets, lossObject)
+
             phi_alpha = loss_alpha_i
             phi_0 = loss  # phi(0) = f(x_k + 0 * p) = f(x_k)
             phi_p_0 = np.dot(gradient_old, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
+            phi_p_alpha = np.dot(gradient_alpha_i, p)
 
-            if phi_alpha <= phi_0 + c * alpha * phi_p_0:
+            if phi_alpha <= phi_0 + c_1 * alpha * phi_p_0 and abs(phi_p_alpha) <= c_2 * abs(phi_p_0):
+                # Armijo and strong Wolfe satisfied
                 print "line search converged", "epoch", epoch, "alpha", alpha
                 break
             if alpha < 1e-16:
                 print "some error in the algorithm. alpha:", alpha
                 break
-            alpha *= theta
+
+            alpha /= theta  # TODO dovrebbe essere /=
 
         return alpha
 
+    def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
+        # phi(alpha) = f(x_k + alpha * p_k)
+        # phi'(alpha) = \nabla f(x_k + alpha * p_k) * p_k
+        alpha_max = 2
+        alpha_i = alpha  # alpha_1 > 0
+        alpha_old = 0  # alpha_0
+        i = 1
+        while True:
+            # 1. evaluate phi(alpha_i)
+            gradient_alpha_i, loss_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets)
+            phi_alpha_i = loss_alpha_i
 
-# end CM-----------------------------------------------------------
+            # 2. if phi(alpha_i) > phi(0) + c1 * alpha_i * phi_p(0) or [phi(alpha_i) >= phi(alpha_{i-1}) and i > 1]
+            phi_0 = loss                       # phi(0) = f(x_k + 0 * p) = f(x_k)
+            phi_p_0 = np.dot(gradient_old, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
+            if phi_alpha_i > phi_0 + c_1 * alpha_i * phi_p_0 or (i > 1 and phi_alpha_i >= phi_alpha_old):
+                alpha_star = self.zoom(alpha_old, alpha_i, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject)
+                break
+
+            # 3. evaluate phi'(alpha_i)
+            phi_p_alpha_i = np.dot(gradient_alpha_i, p)
+
+            # 4. if |phi'(alpha_i)| <= - c_2 * phi'(0) (strong Wolfe satisfied?)
+            if abs(phi_p_alpha_i) <= - c_2 * phi_p_0:
+                alpha_star = alpha_i
+                break
+
+            # 5. if phi'(alpha_i) >= 0 (if the derivative is positive)
+            if phi_p_alpha_i >= 0:
+                alpha_star = self.zoom(alpha_i, alpha_old, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject)
+                break
+
+            # 6. choose alpha_{i+1} in (alpha_i, alpha_max)
+            alpha_i = alpha_i / theta if alpha_i / theta <= alpha_max else alpha_max
+
+            # save previous results and iterate
+            alpha_old = alpha_i
+            phi_alpha_old = phi_p_alpha_i
+            i += 1
+
+        return alpha_star
+
+    def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
+        feval = 0
+        max_feval = 10
+        while True:
+            # 1. interpolate to find a step trial alpha_low <= alpha_j <= alpha_high
+            alpha_j = (alpha_low + alpha_high) / float(2)  # TODO : really interpolate
+
+            # 2. evaluate phi(alpha_j)
+            gradient_alpha_j, loss_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets)
+            phi_alpha_j = loss_alpha_j
+
+            # 3. if phi(alpha_j) > phi(0) + c_1 * alpha_j * phi'(0) or phi(alpha_j) >= phi(alpha_low)
+            # evaluate phi(alpha_low)
+            gradient_alpha_low, loss_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
+            phi_alpha_low = loss_alpha_low
+            if phi_alpha_j >= phi_0 + c_1 * alpha_j * phi_p_0 or phi_alpha_j >= phi_alpha_low:
+                alpha_high = alpha_j
+            else:
+                # 4. evaluate phi'(alpha_j)
+                phi_p_alpha_j = np.dot(gradient_alpha_j, p)
+                # 5. if |phi'(alpha_j)| <= - c_2 * phi'(0) (Wolfe satisfied?)
+                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:
+                    return alpha_j
+                # 6. if phi'(alpha_j)(alpha_high - alpha_low) >= 0
+                if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:
+                    alpha_high = alpha_low
+                alpha_low = alpha_j
+
+            if feval >= max_feval:
+                return alpha_j
+            feval += 1
+
+    def evaluate_phi_alpha(self, alpha_j, data, lossObject, p, targets):
+        temp_network = copy.deepcopy(self)
+        temp_network.update_weights_CM(alpha_j * p)
+        gradient_alpha_j, loss_alpha_j = temp_network.calculate_gradient(data, targets, lossObject)
+        return gradient_alpha_j, loss_alpha_j
+
+    # end CM-----------------------------------------------------------
 
 
     def predict(self, data):

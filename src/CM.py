@@ -6,7 +6,7 @@ from Neural_network import *
 def main():
     train_file = "../monk_datasets/monks-1.train"
 
-        # 1. load dataset
+    # 1. load dataset
     columns = ['label', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'id']
     train_data = pd.read_csv(train_file, delim_whitespace=True, header=None)
     train_data.columns = columns
@@ -26,29 +26,31 @@ def main():
     arch = [17, 10, 1]
     neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
     network = Network(arch, neuronsType)
-    #network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
-    #network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
-    #network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
-    #network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
-
-    #data = [[0.05, 0.1]]
-    #target = [[0.01, 0.99]]
-    #network.forward(pattern=data[0])
-    #print network.predict(data)
-
-    network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels,lossObject, 400)
+    network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels, lossObject, 50)
     scores = network.predict(training_patterns)
+
     print "error:", np.sum(np.square(np.array(scores) - np.array(training_labels))) / len(training_labels)
     print "predictions:", scores
     print "labels:", training_labels
-    """
-    net = Network([17,10,1],[InputNeuron,TanHNeuron,TanHNeuron])
 
-    net.trainBFGS(training_patterns,training_labels,validation_patterns,validation_labels,lossObject,5)
+    ##' esempio
+    arch = [2, 2, 2]
+    neuronsType = [InputNeuron, SigmoidNeuron, SigmoidNeuron]
+    network = Network(arch, neuronsType)
+    network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
+    network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
+    network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
+    network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
 
-    tmp = net.predict(training_patterns)
-    print tmp
-"""
+    data = [[0.05, 0.1]]
+    target = [[0.01, 0.99]]
+    network.forward(pattern=data[0])
+    #print network.predict(data)
+
+    #network.trainBFGS(data,target,data,target,lossObject, 100)
+
+    tmp = network.predict(data)
+    #print tmp
 
 if __name__ == '__main__':
     main()
