@@ -29,10 +29,6 @@ def main():
     network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels, lossObject, 50)
     scores = network.predict(training_patterns)
 
-    print "error:", np.sum(np.square(np.array(scores) - np.array(training_labels))) / len(training_labels)
-    print "predictions:", scores
-    print "labels:", training_labels
-
     ##' esempio
     arch = [2, 2, 2]
     neuronsType = [InputNeuron, SigmoidNeuron, SigmoidNeuron]

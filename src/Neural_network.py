@@ -3,6 +3,7 @@ from loss_functions import *
 import sys
 from collections import deque
 from scipy.linalg import norm
+import random
 
 
 class Network:
@@ -333,8 +334,9 @@ class Network:
     def calculate_gradient(self, data, targets, lossObject):
         # create empty vector, gradient_w_old = sum of gradient_w for the epoch
         gradient_w_batch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
-                                   for i in range(1, len(self.architecture))])
+                                     for i in range(1, len(self.architecture))])
         loss_batch = 0
+        miss_batch = 0
         for pattern, t in zip(data, targets):
             # calculate derivative for every patten, then append to gradient_w_batch
             self.forward(pattern)
@@ -342,10 +344,11 @@ class Network:
 
             gradient_w_batch += gradient_w
             loss_batch += loss_p
+            miss_batch += miss_p
 
         # getting the gradient as vector
         gradient = self.get_gradient_as_vector(gradient_w_batch)
-        return gradient, loss_batch
+        return gradient / len(data), loss_batch / len(data), miss_batch / float(len(data))
 
 
     def update_matrix(self, H_k, s_k, y_k):
@@ -379,7 +382,7 @@ class Network:
 
             if epoch == 0:
                 # compute initial gradient
-                gradient_old, loss = self.calculate_gradient(data, targets, lossObject)
+                gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject)
                 # computing initial Hessian estimate H_0 (identity matrix)
                 shape = gradient_old.shape[0]
                 H = 0.5 * np.identity(shape)
@@ -389,10 +392,11 @@ class Network:
 
             theta = 0.9  # contraction factor of alpha
             alpha = 1
-            c_1 = 1e-4
+            c_1 = 0.01
             c_2 = 0.9
             #alpha = self.line_search(alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
             alpha = self.armijo_wolfe_line_search(alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
+            print "\talpha = ", alpha
 
             # compute weight update
             delta = p * alpha
@@ -403,7 +407,8 @@ class Network:
                 x_old = 0*x_new
 
             # compute new gradient
-            gradient_new, loss = self.calculate_gradient(data, targets, lossObject)
+            print "\tloss =", loss, "misclassification =", miss
+            gradient_new, loss, miss = self.calculate_gradient(data, targets, lossObject)
             if epoch == 0:
                 gradient_old = 0*gradient_new
             # compute s_k = x_{k+1} - x_k = x_new - x_old
@@ -412,7 +417,8 @@ class Network:
             y_k = gradient_new - gradient_old
             # update matrix H
             H = self.update_matrix(H, s_k, y_k)
-            print "Hessian norm =", norm(H)
+            print "\trho =", np.dot(s_k, y_k)
+            print "\tHessian norm =", norm(H)
             # update x_old and gradient_old
             x_old = x_new
             gradient_old = gradient_new
@@ -476,7 +482,8 @@ class Network:
                 break
 
             # 6. choose alpha_{i+1} in (alpha_i, alpha_max)
-            alpha_i = alpha_i / theta if alpha_i / theta <= alpha_max else alpha_max
+            tmp_alpha = alpha_i / theta
+            alpha_i = tmp_alpha if tmp_alpha < alpha_max else alpha_max
 
             # save previous results and iterate
             alpha_old = alpha_i
@@ -487,7 +494,7 @@ class Network:
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
         feval = 0
-        max_feval = 10
+        max_feval = 10  # with max_feval = 100 hessian norm becomes NaN
         while True:
             # 1. interpolate to find a step trial alpha_low <= alpha_j <= alpha_high
             alpha_j = (alpha_low + alpha_high) / float(2)  # TODO : really interpolate
@@ -514,13 +521,14 @@ class Network:
                 alpha_low = alpha_j
 
             if feval >= max_feval:
+                print "max feval"
                 return alpha_j
             feval += 1
 
     def evaluate_phi_alpha(self, alpha_j, data, lossObject, p, targets):
         temp_network = copy.deepcopy(self)
         temp_network.update_weights_CM(alpha_j * p)
-        gradient_alpha_j, loss_alpha_j = temp_network.calculate_gradient(data, targets, lossObject)
+        gradient_alpha_j, loss_alpha_j, _ = temp_network.calculate_gradient(data, targets, lossObject)
         return gradient_alpha_j, loss_alpha_j
 
     # end CM-----------------------------------------------------------
