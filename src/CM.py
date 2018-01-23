@@ -27,7 +27,7 @@ def main():
     arch = [17, 10, 1]
     neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
     network = Network(arch, neuronsType)
-    network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels, lossObject, 100)
+    network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels, lossObject, 50)
     scores = network.predict(training_patterns)
 ### END MONK
 
@@ -50,7 +50,7 @@ def main():
             [2,2], [2.2, 2.2]]
     target = [[np.sin(d[0]), np.cos(d[1])] for d in data]
 
-    network.trainBFGS(data,target,data,target,lossObject, 100)
+    #network.trainBFGS(data,target,data,target,lossObject, 100)
 
     predictions = network.predict(data)
     print "target example:", target

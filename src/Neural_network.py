@@ -396,11 +396,11 @@ class Network:
             p = - H.dot(gradient_old)
 
             theta = 0.9  # contraction factor of alpha
-            alpha = 1
+            alpha_0 = 1
             c_1 = 0.01
             c_2 = 0.9
-            #alpha = self.backtracking_line_search(alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
-            alpha = self.armijo_wolfe_line_search(alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
+            #alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
+            alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
             print "\talpha = ", alpha
 
             # compute weight update
@@ -408,6 +408,7 @@ class Network:
 
             # update weights using x_{k+1} = x_{k} + alpha_{k} * p_k
             x_new = self.update_weights_CM(delta)
+
 
             # compute new gradient
             print "\tloss =", loss, "misclassification =", miss
@@ -424,22 +425,14 @@ class Network:
             x_old = x_new
             gradient_old = gradient_new
 
-    def backtracking_line_search(self, alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
+    def backtracking_line_search(self, alpha, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
         while True:
-            temp_network = copy.deepcopy(self)
-            # phi(alpha) = f(x_k + alpha * p_k)
-            # phi'(alpha) = \nabla f(x_k + alpha * p_k) * p_k
-            temp_network.update_weights_CM(alpha * p)  # x_i = x_i + alpha_i * p_k
-            # compute loss in new hypothetical position x_{i+1}
-            gradient_alpha_i, loss_alpha_i = temp_network.calculate_gradient(data, targets, lossObject)
-
-            phi_alpha = loss_alpha_i
+            _, phi_alpha = self.evaluate_phi_alpha(alpha, data, lossObject, p, targets)
             phi_0 = loss  # phi(0) = f(x_k + 0 * p) = f(x_k)
             phi_p_0 = np.dot(gradient_old, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
-            phi_p_alpha = np.dot(gradient_alpha_i, p)
 
-            if phi_alpha <= phi_0 + c_1 * alpha * phi_p_0 and abs(phi_p_alpha) <= c_2 * abs(phi_p_0):
-                # Armijo and strong Wolfe satisfied
+            if phi_alpha <= phi_0 + c_1 * alpha * phi_p_0:
+                # Armijo condition satisfied
                 print "line search converged", "epoch", epoch, "alpha", alpha
                 break
             if alpha < 1e-16:
