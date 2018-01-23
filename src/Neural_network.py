@@ -433,7 +433,6 @@ class Network:
 
             if phi_alpha <= phi_0 + c_1 * alpha * phi_p_0:
                 # Armijo condition satisfied
-                print "line search converged", "epoch", epoch, "alpha", alpha
                 break
             if alpha < 1e-16:
                 print "some error in the algorithm. alpha:", alpha
