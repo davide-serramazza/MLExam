@@ -27,8 +27,19 @@ def main():
     arch = [17, 10, 1]
     neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
     network = Network(arch, neuronsType)
-    network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels, lossObject, 100)
+    losses, misses = network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels, lossObject, 200)
     scores = network.predict(training_patterns)
+
+    plt.subplot(1,2,1)
+    plt.plot(range(len(losses)), losses)
+    plt.xlabel("epoch")
+    plt.ylabel("Mean Squared Error")
+    plt.subplot(1,2,2)
+    plt.plot(range(len(misses)), misses)
+    plt.xlabel("epoch")
+    plt.ylabel("misclassification error")
+    plt.tight_layout()
+    plt.show()
 ### END MONK
 
 ### EXAMPLE

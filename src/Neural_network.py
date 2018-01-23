@@ -362,7 +362,7 @@ class Network:
 
         # rho_k = 1/(y_k^t*s_k)
         rho_k = float(1) / np.dot(s_k, y_k)
-        print "\trho_k =", rho_k
+        #print "\trho_k =", rho_k
 
         # V_k = I - rho_k * s_k * y_k^t
         tmp = rho_k * np.outer(s_k, y_k)
@@ -377,15 +377,21 @@ class Network:
 
 
     def trainBFGS (self, data, targets, eval_data, eval_targets, lossObject,epochs):
-        # compute initial gradient and initial Hessian approximation H_0
+        losses = []  # vector containing the loss of each epoch
+        misses = []  # vector containing the misclassification for each epoch
+        # 1. compute initial gradient and initial Hessian approximation H_0
         gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject)
         H = np.identity(gradient_old.shape[0])
         x_old = self.get_weights_as_vector()
-
+        # append losses
+        losses.append(loss)
+        misses.append(miss)
+        print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
+        print "---------------------------------------------------------------------------"
         for epoch in range(epochs):
-            print "training epoch...", epoch
+            #print "training epoch...", epoch
             # stop criterion
-            print "\tnorm(gradient) =", norm(gradient_old)
+            #print "\tnorm(gradient) =", norm(gradient_old)
             if epoch > 0 and (norm(gradient_old)) < 1e-6:
                 print "break at", epoch
                 break
@@ -399,7 +405,7 @@ class Network:
             c_2 = 0.9    # scaling factor for Wolfe condition
             #alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
             alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
-            print "\talpha = ", alpha
+            #print "\talpha = ", alpha
 
             # compute weight update
             delta = p * alpha
@@ -408,18 +414,28 @@ class Network:
             x_new = self.update_weights_CM(delta)
 
             # compute new gradient
-            print "\tloss =", loss, "misclassification =", miss
+            #print "\tloss =", loss, "misclassification =", miss
             gradient_new, loss, miss = self.calculate_gradient(data, targets, lossObject)
+            # append losses
+            losses.append(loss)
+            misses.append(miss)
+
             # compute s_k = x_{k+1} - x_k = x_new - x_old
             s_k = x_new - x_old
             # compute y_k = nabla f_{k+1} - nabla f_k = gradient new - gradient old
             y_k = gradient_new - gradient_old
             # update matrix H
             H = self.update_matrix(H, s_k, y_k)
-            print "\tHessian norm =", norm(H)
+            #print "\tHessian norm =", norm(H)
+
+            # print statistics
+            # epoch, loss, misclassification, norm gradient, norm hessian, rho, alpha
+            print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
+                  (epoch+1, loss, miss, norm(gradient_new), norm(H), float(1)/np.dot(s_k, y_k), alpha)
             # update x_old and gradient_old
             x_old = x_new
             gradient_old = gradient_new
+        return losses, misses
 
     def backtracking_line_search(self, alpha, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
         while True:
@@ -465,7 +481,7 @@ class Network:
             phi_p_alpha_i = np.dot(gradient_alpha_i, p)
 
             # 4. if |phi'(alpha_i)| <= - c_2 * phi'(0) (strong Wolfe satisfied?)
-            if abs(phi_p_alpha_i) <= - c_2 * phi_p_0:  # TODO try with c_2 * |phi'(0)| or with frangio's formulae
+            if abs(phi_p_alpha_i) <= - c_2 * phi_p_0:  # TODO try with c_2 * |phi'(0)| or with frangioni formulae
                 alpha_star = alpha_i
                 break
 
@@ -488,7 +504,6 @@ class Network:
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
         feval = 0
         max_feval = 50
-        sfgd = 0.01
         while True:
             # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
             convex = random.uniform(0.1, 0.9)
