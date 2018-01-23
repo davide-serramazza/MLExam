@@ -488,7 +488,7 @@ class Network:
         feval = 0
         max_feval = 50
         while True:
-            # 1. interpolate to find a step trial alpha_low <= alpha_j <= alpha_high
+            # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
             convex = random.uniform(0.1, 0.9)
             alpha_j = convex * alpha_low + (1 - convex) * alpha_high
             #alpha_j = (alpha_low + alpha_high) / float(2)
