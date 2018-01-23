@@ -309,14 +309,13 @@ class Network:
             gradient = np.append(gradient,tmp)
         return gradient
 
-
-    def update_weights_CM(self,delta):
+    def update_weights_CM(self, delta):
         """
-        update nerwork weigths
-        :param delta:
+        update network weights
+        :param delta: weight update p_k = - H * nabla f
         :return: x_k+1
         """
-        k = 0
+        start = 0
         # initializing x_old = x_k and x_new = x_{k+1}
         x_new = np.array([])
 
@@ -327,8 +326,8 @@ class Network:
 
                 # taking only gradient's entry w.r.t. current gradient
                 weigths_len = len(current_neuron_weights)
-                tmp = delta[k:k+weigths_len]
-                k += weigths_len
+                tmp = delta[start:start + weigths_len]
+                start += weigths_len
                 # update weigths
                 current_neuron_weights += tmp
 
