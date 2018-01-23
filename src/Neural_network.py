@@ -382,7 +382,7 @@ class Network:
         # compute initial gradient
         gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject)
         # computing initial Hessian estimate H_0 (identity matrix)
-        H = 0.5 * np.identity(gradient_old.shape[0])
+        H = np.identity(gradient_old.shape[0])
         x_old = self.get_weights_as_vector()
 
         for epoch in range(epochs):
