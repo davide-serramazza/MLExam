@@ -19,7 +19,6 @@ class SquaredError:
         difference = target - output_net
         data_error = np.sum(np.square(difference)) / 2
         # regularization error
-        weights = np.concatenate(weights)
         regularization_error = regularization * np.sum(np.square(weights)) / 2
         return data_error + regularization_error
 

@@ -123,21 +123,20 @@ class Network:
         gradient_weights = self.compute_gradient(np.asarray(delta_vectors))
 
         # 5 report loss and misclassification count
-        weights = self.get_weights()
+        weights = self.get_weights_as_vector()
 
         loss_value = lossObject.value(target, output_net, weights)
         misClassification = lossObject.misClassification(target, output_net)
 
         return gradient_weights, loss_value, misClassification
 
-    def get_weights(self):
-        weights = np.array([neuron.weights
-                              for layer in self.layers[1:]
-                              for neuron in layer.neurons[:-1]])
-        return weights
 
     def get_weights_as_vector(self):
-        weights = self.get_weights()
+        """
+        gets neural network weights as a single array.
+        :return: array of weights
+        """
+        weights = np.array([neuron.weights for layer in self.layers[1:] for neuron in layer.neurons[:-1]])
         weights = np.concatenate(weights).ravel()
         return weights
 
@@ -436,7 +435,7 @@ class Network:
                 print "some error in the algorithm. alpha:", alpha
                 break
 
-            alpha *= theta
+            alpha *= theta  # theta < 1, decrease alpha
 
         return alpha
 
@@ -489,7 +488,7 @@ class Network:
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
         feval = 0
-        max_feval = 10  # with max_feval = 100 hessian norm becomes NaN
+        max_feval = 5
         while True:
             # 1. interpolate to find a step trial alpha_low <= alpha_j <= alpha_high
             alpha_j = (alpha_low + alpha_high) / float(2)
@@ -522,11 +521,29 @@ class Network:
                 return alpha_j
             feval += 1
 
-    def evaluate_phi_alpha(self, alpha_j, data, lossObject, p, targets):
+    def evaluate_phi_alpha(self, alpha_i, data, lossObject, p, targets):
+        """
+        Computes phi(alpha) = f(x_k + alpha_i * p_k), where
+        - x_k are the current weights of the network
+        - alpha_i is the trial step_size
+        - p_k is the descent direction
+        - f is the function to minimize (i.e the loss)
+
+        :param alpha_i: trial step size
+        :param data: dataset
+        :param lossObject: object to compute the loss and its derivative
+        :param p: descent direction
+        :param targets: target variables of the patterns in the dataset
+        :return:
+            - gradient_alpha = nabla f(x_k + alpha_i * p_k)
+            - loss_alpha     = phi(alpha_i)
+        """
+        # creates a copy of the network, update its weights to get the
+        # hypothetical x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
         temp_network = copy.deepcopy(self)
-        temp_network.update_weights_CM(alpha_j * p)
-        gradient_alpha_j, loss_alpha_j, _ = temp_network.calculate_gradient(data, targets, lossObject)
-        return gradient_alpha_j, loss_alpha_j
+        temp_network.update_weights_CM(alpha_i * p)
+        gradient_alpha, loss_alpha, _ = temp_network.calculate_gradient(data, targets, lossObject)
+        return gradient_alpha, loss_alpha
 
     # end CM-----------------------------------------------------------
 
