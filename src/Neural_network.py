@@ -442,7 +442,7 @@ class Network:
         # phi'(alpha) = \nabla f(x_k + alpha * p_k) * p_k
         alpha_max = 5
         alpha_i = alpha  # alpha_1 > 0
-        alpha_old = 0  # alpha_0
+        alpha_old = 0    # alpha_0
         i = 1
         while True:
             # 1. evaluate phi(alpha_i)
@@ -489,7 +489,9 @@ class Network:
         max_feval = 50
         while True:
             # 1. interpolate to find a step trial alpha_low <= alpha_j <= alpha_high
-            alpha_j = (alpha_low + alpha_high) / float(2)
+            convex = random.uniform(0.1, 0.9)
+            alpha_j = convex * alpha_low + (1 - convex) * alpha_high
+            #alpha_j = (alpha_low + alpha_high) / float(2)
 
             # 2. evaluate phi(alpha_j)
             gradient_alpha_j, loss_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets)
