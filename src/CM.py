@@ -27,7 +27,7 @@ def main():
     arch = [17, 10, 1]
     neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
     network = Network(arch, neuronsType)
-    network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels, lossObject, 200)
+    network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels, lossObject, 100)
     scores = network.predict(training_patterns)
 ### END MONK
 

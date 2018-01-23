@@ -392,7 +392,7 @@ class Network:
             # compute search direction p = -H * gradient
             p = - H.dot(gradient_old)
 
-            theta = 0.9  # contraction factor of alpha
+            theta = 0.5  # contraction factor of alpha
             alpha_0 = 1  # initial step size trial is always 1 for quasi-Newton
             c_1 = 0.01   # scaling factor for Armijo condition
             c_2 = 0.9    # scaling factor for Wolfe condition
@@ -490,18 +490,9 @@ class Network:
         sfgd = 0.01
         while True:
             # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
-            #convex = random.uniform(0.1, 0.9)
-            #alpha_j = convex * alpha_low + (1 - convex) * alpha_high
+            convex = random.uniform(0.1, 0.9)
+            alpha_j = convex * alpha_low + (1 - convex) * alpha_high
             #alpha_j = (alpha_low + alpha_high) / float(2)
-            gradient_alpha_low, phi_alpha_low = self.evaluate_phi_alpha(alpha_low)
-            phi_p_alpha_low = np.dot(gradient_alpha_low, p)
-            
-
-            a = (alpha_low * phi_p_alpha_i) - (alpha_high * phi_p_alpha_low)
-            a /= phi_p_alpha_i - phi_p_alpha_low
-            first = alpha_low * (1 + sfgd)
-            second = min(alpha_high * (1 - sfgd), a)
-            alpha_j = max(first, second)
 
             # 2. evaluate phi(alpha_j)
             gradient_alpha_j, loss_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets)
