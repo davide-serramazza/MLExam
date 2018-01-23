@@ -394,7 +394,7 @@ class Network:
             alpha = 1
             c_1 = 0.01
             c_2 = 0.9
-            #alpha = self.line_search(alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
+            #alpha = self.backtracking_line_search(alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
             alpha = self.armijo_wolfe_line_search(alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
             print "\talpha = ", alpha
 
@@ -423,7 +423,7 @@ class Network:
             x_old = x_new
             gradient_old = gradient_new
 
-    def line_search(self, alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
+    def backtracking_line_search(self, alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
         while True:
             temp_network = copy.deepcopy(self)
             # phi(alpha) = f(x_k + alpha * p_k)
@@ -445,7 +445,7 @@ class Network:
                 print "some error in the algorithm. alpha:", alpha
                 break
 
-            alpha /= theta  # TODO dovrebbe essere /=
+            alpha *= theta
 
         return alpha
 
@@ -472,7 +472,7 @@ class Network:
             phi_p_alpha_i = np.dot(gradient_alpha_i, p)
 
             # 4. if |phi'(alpha_i)| <= - c_2 * phi'(0) (strong Wolfe satisfied?)
-            if abs(phi_p_alpha_i) <= - c_2 * phi_p_0:
+            if abs(phi_p_alpha_i) <= - c_2 * phi_p_0:  # TODO try with c_2 * |phi'(0)| or with frangio's formulae
                 alpha_star = alpha_i
                 break
 
@@ -487,7 +487,7 @@ class Network:
 
             # save previous results and iterate
             alpha_old = alpha_i
-            phi_alpha_old = phi_p_alpha_i
+            phi_alpha_old = phi_alpha_i
             i += 1
 
         return alpha_star
@@ -497,7 +497,7 @@ class Network:
         max_feval = 10  # with max_feval = 100 hessian norm becomes NaN
         while True:
             # 1. interpolate to find a step trial alpha_low <= alpha_j <= alpha_high
-            alpha_j = (alpha_low + alpha_high) / float(2)  # TODO : really interpolate
+            alpha_j = (alpha_low + alpha_high) / float(2)
 
             # 2. evaluate phi(alpha_j)
             gradient_alpha_j, loss_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets)
@@ -505,7 +505,7 @@ class Network:
 
             # 3. if phi(alpha_j) > phi(0) + c_1 * alpha_j * phi'(0) or phi(alpha_j) >= phi(alpha_low)
             # evaluate phi(alpha_low)
-            gradient_alpha_low, loss_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
+            _, loss_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
             phi_alpha_low = loss_alpha_low
             if phi_alpha_j >= phi_0 + c_1 * alpha_j * phi_p_0 or phi_alpha_j >= phi_alpha_low:
                 alpha_high = alpha_j
@@ -513,7 +513,9 @@ class Network:
                 # 4. evaluate phi'(alpha_j)
                 phi_p_alpha_j = np.dot(gradient_alpha_j, p)
                 # 5. if |phi'(alpha_j)| <= - c_2 * phi'(0) (Wolfe satisfied?)
-                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:
+                # if abs(phi_p_alpha_j) <= c_2 * abs(phi_p_0):  # strong wolfe
+                # if phi_p_alpha_j >= c_2 * phi_p_alpha_j:  frangio
+                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:  # book
                     return alpha_j
                 # 6. if phi'(alpha_j)(alpha_high - alpha_low) >= 0
                 if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:

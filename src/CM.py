@@ -23,12 +23,15 @@ def main():
 
     lossObject = SquaredError("tangentH")
 
+### MONK
     arch = [17, 10, 1]
     neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
     network = Network(arch, neuronsType)
-    network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels, lossObject, 50)
-    scores = network.predict(training_patterns)
+    #network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels, lossObject, 50)
+    #scores = network.predict(training_patterns)
+### END MONK
 
+### EXAMPLE
     ##' esempio
     arch = [2, 2, 2]
     neuronsType = [InputNeuron, SigmoidNeuron, SigmoidNeuron]
@@ -40,13 +43,27 @@ def main():
 
     data = [[0.05, 0.1]]
     target = [[0.01, 0.99]]
-    network.forward(pattern=data[0])
-    #print network.predict(data)
+    data = [[0,0],[0.05, 0.05], [0.1,0.1], [0.2, 0.2], [0.25,0.25], [0.3,0.3], [0.35,0.35], [0.4,0.4], [0.45, 0.45],
+            [0.5, 0.5], [0.55,0.55], [0.6, 0.6], [0.65,0.65], [0.7, 0.7], [0.75,0.75], [0.8,0.8],
+            [0.85,0.85], [0.9,0.9], [0.95,0.95], [1,1], [1.05,1.05], [1.1,1.1],
+            [1.2,1.2], [1.3,1.3], [1.4,1.4], [1.5,1.5], [1.8, 1.8],
+            [2,2], [2.2, 2.2]]
+    target = [[np.sin(d[0]), np.cos(d[1])] for d in data]
 
-    #network.trainBFGS(data,target,data,target,lossObject, 100)
+    network.trainBFGS(data,target,data,target,lossObject, 100)
 
-    tmp = network.predict(data)
-    #print tmp
+    predictions = network.predict(data)
+    print "target example:", target
+    print "predictions example:", predictions
+
+    plt.plot([d[0] for d in data], [p[0] for p in predictions], label='sin_prediction')
+    plt.plot([d[1] for d in data], [p[1] for p in predictions], label='cos_prediction')
+    plt.plot([d[0] for d in data], [np.sin(d[0]) for d in data], label='sin')
+    plt.plot([d[1] for d in data], [np.cos(d[1]) for d in data], label='cos')
+    plt.legend(loc='best')
+    plt.show()
+
+### END EXAMPLE
 
 if __name__ == '__main__':
     main()
