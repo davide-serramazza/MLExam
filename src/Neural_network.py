@@ -131,10 +131,16 @@ class Network:
         return gradient_weights, loss_value, misClassification
 
     def get_weights(self):
-        weights = np.asarray([neuron.weights
+        weights = np.array([neuron.weights
                               for layer in self.layers[1:]
                               for neuron in layer.neurons[:-1]])
         return weights
+
+    def get_weights_as_vector(self):
+        weights = self.get_weights()
+        weights = np.concatenate(weights).ravel()
+        return weights
+
 
     def compute_gradient(self, delta_vectors):
         """
@@ -373,6 +379,11 @@ class Network:
 
 
     def trainBFGS (self, data, targets, eval_data, eval_targets, lossObject,epochs):
+        # compute initial gradient
+        gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject)
+        # computing initial Hessian estimate H_0 (identity matrix)
+        H = 0.5 * np.identity(gradient_old.shape[0])
+        x_old = self.get_weights_as_vector()
 
         for epoch in range(epochs):
             print "training epoch...", epoch
@@ -380,13 +391,6 @@ class Network:
             if epoch > 0 and (norm(gradient_old)) < 1e-6:
                 print "break at", epoch
                 break
-
-            if epoch == 0:
-                # compute initial gradient
-                gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject)
-                # computing initial Hessian estimate H_0 (identity matrix)
-                shape = gradient_old.shape[0]
-                H = 0.5 * np.identity(shape)
 
             # compute search direction p = -H * gradient
             p = - H.dot(gradient_old)
@@ -404,14 +408,10 @@ class Network:
 
             # update weights using x_{k+1} = x_{k} + alpha_{k} * p_k
             x_new = self.update_weights_CM(delta)
-            if epoch == 0:
-                x_old = 0*x_new
 
             # compute new gradient
             print "\tloss =", loss, "misclassification =", miss
             gradient_new, loss, miss = self.calculate_gradient(data, targets, lossObject)
-            if epoch == 0:
-                gradient_old = 0*gradient_new
             # compute s_k = x_{k+1} - x_k = x_new - x_old
             s_k = x_new - x_old
             # compute y_k = nabla f_{k+1} - nabla f_k = gradient new - gradient old
