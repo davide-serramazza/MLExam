@@ -457,6 +457,10 @@ class Network:
             # 2. if phi(alpha_i) > phi(0) + c1 * alpha_i * phi_p(0) or [phi(alpha_i) >= phi(alpha_{i-1}) and i > 1]
             phi_0 = loss                       # phi(0) = f(x_k + 0 * p) = f(x_k)
             phi_p_0 = np.dot(gradient_old, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
+
+            if phi_p_0 > 0:
+                Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
+
             if phi_alpha_i > phi_0 + c_1 * alpha_i * phi_p_0 or (i > 1 and phi_alpha_i >= phi_alpha_old):
                 alpha_star = self.zoom(alpha_old, alpha_i, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject)
                 break
