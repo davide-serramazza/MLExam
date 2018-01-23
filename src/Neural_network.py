@@ -325,9 +325,9 @@ class Network:
                 # append to x_k before updating
 
                 # taking only gradient's entry w.r.t. current gradient
-                weigths_len = len(current_neuron_weights)
-                tmp = delta[start:start + weigths_len]
-                start += weigths_len
+                weights_len = len(current_neuron_weights)
+                tmp = delta[start:start + weights_len]
+                start += weights_len
                 # update weigths
                 current_neuron_weights += tmp
 
@@ -362,6 +362,7 @@ class Network:
 
         # rho_k = 1/(y_k^t*s_k)
         rho_k = float(1) / np.dot(s_k, y_k)
+        print "\trho_k =", rho_k
 
         # V_k = I - rho_k * s_k * y_k^t
         tmp = rho_k * np.outer(s_k, y_k)
@@ -373,7 +374,6 @@ class Network:
         # adding rho_k*s_k*s_k^t
         H_new += np.outer(s_k, s_k) * rho_k
         return H_new
-
 
 
     def trainBFGS (self, data, targets, eval_data, eval_targets, lossObject,epochs):
@@ -415,7 +415,6 @@ class Network:
             y_k = gradient_new - gradient_old
             # update matrix H
             H = self.update_matrix(H, s_k, y_k)
-            print "\trho =", np.dot(s_k, y_k)
             print "\tHessian norm =", norm(H)
             # update x_old and gradient_old
             x_old = x_new
@@ -441,7 +440,7 @@ class Network:
     def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
         # phi(alpha) = f(x_k + alpha * p_k)
         # phi'(alpha) = \nabla f(x_k + alpha * p_k) * p_k
-        alpha_max = 2
+        alpha_max = 5
         alpha_i = alpha  # alpha_1 > 0
         alpha_old = 0  # alpha_0
         i = 1
@@ -487,7 +486,7 @@ class Network:
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
         feval = 0
-        max_feval = 5
+        max_feval = 50
         while True:
             # 1. interpolate to find a step trial alpha_low <= alpha_j <= alpha_high
             alpha_j = (alpha_low + alpha_high) / float(2)
