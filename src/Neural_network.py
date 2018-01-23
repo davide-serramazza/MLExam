@@ -385,6 +385,7 @@ class Network:
         for epoch in range(epochs):
             print "training epoch...", epoch
             # stop criterion
+            print "\tnorm(gradient) =", norm(gradient_old)
             if epoch > 0 and (norm(gradient_old)) < 1e-6:
                 print "break at", epoch
                 break
@@ -392,7 +393,7 @@ class Network:
             # compute search direction p = -H * gradient
             p = - H.dot(gradient_old)
 
-            theta = 0.5  # contraction factor of alpha
+            theta = 0.9  # contraction factor of alpha
             alpha_0 = 1  # initial step size trial is always 1 for quasi-Newton
             c_1 = 0.01   # scaling factor for Armijo condition
             c_2 = 0.9    # scaling factor for Wolfe condition
