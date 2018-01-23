@@ -379,9 +379,8 @@ class Network:
 
 
     def trainBFGS (self, data, targets, eval_data, eval_targets, lossObject,epochs):
-        # compute initial gradient
+        # compute initial gradient and initial Hessian approximation H_0
         gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject)
-        # computing initial Hessian estimate H_0 (identity matrix)
         H = np.identity(gradient_old.shape[0])
         x_old = self.get_weights_as_vector()
 
@@ -396,9 +395,9 @@ class Network:
             p = - H.dot(gradient_old)
 
             theta = 0.9  # contraction factor of alpha
-            alpha_0 = 1
-            c_1 = 0.01
-            c_2 = 0.9
+            alpha_0 = 1  # initial step size trial is always 1 for quasi-Newton
+            c_1 = 0.01   # scaling factor for Armijo condition
+            c_2 = 0.9    # scaling factor for Wolfe condition
             #alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
             alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
             print "\talpha = ", alpha
@@ -408,7 +407,6 @@ class Network:
 
             # update weights using x_{k+1} = x_{k} + alpha_{k} * p_k
             x_new = self.update_weights_CM(delta)
-
 
             # compute new gradient
             print "\tloss =", loss, "misclassification =", miss
