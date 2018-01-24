@@ -463,6 +463,7 @@ class Network:
         alpha_max = 10
         alpha_i = alpha  # alpha_1 > 0
         alpha_old = 0    # alpha_0
+        default_alpha = 0.01  # step to take if there was an error in the line search (returned alpha less than 1e-16)
         i = 1
         while True:
             # 1. evaluate phi(alpha_i)
@@ -503,8 +504,8 @@ class Network:
             i += 1
 
         if alpha_star <= 1e-16:
-            print "error, alpha =", alpha_star, "set alpha =", 0.01
-            alpha_star = 0.01
+            print "error, alpha =", alpha_star, "set alpha =", default_alpha
+            alpha_star = default_alpha
 
         return alpha_star
 
