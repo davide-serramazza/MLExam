@@ -400,8 +400,8 @@ class Network:
             p = - H.dot(gradient_old)
 
             theta = 0.9  # contraction factor of alpha
-            alpha_0 = 1  # initial step size trial is always 1 for quasi-Newton
-            c_1 = 0.0001   # scaling factor for Armijo condition TODO try 1e-4
+            alpha_0 = 0.1  # initial step size trial is always 1 for quasi-Newton
+            c_1 = 0.01   # scaling factor for Armijo condition TODO try 1e-4
             c_2 = 0.9    # scaling factor for Wolfe condition
             #alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
             alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
@@ -471,7 +471,7 @@ class Network:
             phi_p_0 = np.dot(gradient_old, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
 
             if not phi_p_0 < 0:
-                Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
+                raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
 
             if phi_alpha_i > phi_0 + c_1 * alpha_i * phi_p_0 or (i > 1 and phi_alpha_i >= phi_alpha_old):
                 alpha_star = self.zoom(alpha_old, alpha_i, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject)
@@ -495,7 +495,6 @@ class Network:
             alpha_i = tmp_alpha if tmp_alpha < alpha_max else alpha_max
 
             # save previous results and iterate
-            # safeguard
             alpha_old = alpha_i
             phi_alpha_old = phi_alpha_i
             i += 1
@@ -503,22 +502,18 @@ class Network:
         if alpha_star <= 1e-16:
             print "error, alpha =", alpha_star, "set alpha =", 0.01
             alpha_star = 0.01
+
         return alpha_star
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
         feval = 0
-        max_feval = 10
-        sfgrd = 0
+        max_feval = 100
+        sfgrd = 0.1
         while True:
             # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
-            #convex = random.uniform(0.1, 0.9)
-            #alpha_j = convex * alpha_low + (1 - convex) * alpha_high
-            #alpha_j = (alpha_low + alpha_high) / float(2)
-
-            # safeguard?? [ alpha_low *(1 + sfgrd), alpha_high * (1 - sfgrd)]
-            alpha_low *= (1 + sfgrd)
-            alpha_high *= (1 - sfgrd)
-            alpha_j = self.interpolate(alpha_high, alpha_low, data, lossObject, p, targets)
+            #alpha_j = self.interpolate(alpha_high, alpha_low, data, lossObject, p, targets)
+            alpha_j = self.safeguarded_interpolation(alpha_high, alpha_low, sfgrd, data, lossObject, p, targets)
+            #alpha_j = select_random_point_between(alpha_low, alpha_high)
 
             # 2. evaluate phi(alpha_j)
             gradient_alpha_j, loss_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets)
@@ -568,6 +563,19 @@ class Network:
         alpha_j = - (phi_p_alpha_low * alpha_high ** 2) / \
                   (2 * (phi_alpha_high - phi_alpha_low - phi_p_alpha_low * alpha_high))
         return alpha_j
+
+    def safeguarded_interpolation(self, alpha_high, alpha_low, sfgrd, data, lossObject, p, targets):
+        gradient_alpha_low, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
+        gradient_alpha_high, phi_alpha_high = self.evaluate_phi_alpha(alpha_high, data, lossObject, p, targets)
+        phi_p_alpha_low = np.dot(gradient_alpha_low, p)
+        phi_p_alpha_high = np.dot(gradient_alpha_high, p)
+
+        a = (alpha_low * phi_p_alpha_high - alpha_high * phi_p_alpha_low) / (phi_p_alpha_high - phi_p_alpha_low)
+        first = alpha_low * (1 + sfgrd)
+        second = min(alpha_high * (1 - sfgrd), a)
+        alpha_j = max(first, second)
+        return alpha_j
+
 
     def evaluate_phi_alpha(self, alpha_i, data, lossObject, p, targets):
         """
@@ -662,3 +670,8 @@ def check_topology(architecture, neurons):
     for i in range(1, len(neurons) - 1):
         if neurons[i].__name__ is InputNeuron.__name__ or neurons[i].__name__ is OutputNeuron.__name__:
             raise Exception("Hidden neurons have incorrect type")
+
+def select_random_point_between(alpha_low, alpha_high):
+    convex = random.uniform(0.1, 0.9)
+    alpha_j = convex * alpha_low + (1 - convex) * alpha_high
+    return alpha_j
