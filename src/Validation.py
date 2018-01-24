@@ -70,6 +70,10 @@ def holdout(frac, train_data):
     negative_set_other = negative_set.head(len_neg_validation)
     training_set = pd.concat([positive_set_partition, negative_set_partition])
     validation_set = pd.concat([positive_set_other, negative_set_other])
+
+    # shuffle training and validation set
+    training_set = training_set.reindex(np.random.permutation(training_set.index))
+    validation_set = validation_set.reindex(np.random.permutation(validation_set.index))
     return training_set, validation_set
 
 
@@ -149,5 +153,5 @@ def grid_search(parameter, loss_obj, tr_patterns,tr_labels,vl_patterns,vl_labels
                             misClass_error_validation_avarage/=( float(n_trials) *len(vl_patterns))
                             print_result(misClass_error_avarage, misClass_error_validation_avarage,
                                          squared_error_avarage, squared_error_validation_avarage,
-                                         arc, bat, lr, mo,reg,
+                                         "trian set",arc, bat, lr, mo,reg,
                                          n_figure)
