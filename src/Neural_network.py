@@ -353,8 +353,12 @@ class Network:
         # getting the gradient as vector
         gradient = self.get_gradient_as_vector(gradient_w_batch)
         gradient = - gradient  # invert sign because of implementation
-        return gradient / len(data), loss_batch / len(data), miss_batch / float(len(data))
 
+        # compute mean values
+        gradient /= len(data)
+        loss_batch = loss_batch * 2 / len(data)  # times 2 because of implementation
+        miss_batch /= float(len(data))
+        return gradient, loss_batch, miss_batch
 
     def update_matrix(self, H_k, s_k, y_k):
         # get dimension
@@ -362,7 +366,6 @@ class Network:
 
         # rho_k = 1/(y_k^t*s_k)
         rho_k = float(1) / np.dot(s_k, y_k)
-        #print "\trho_k =", rho_k
 
         # V_k = I - rho_k * s_k * y_k^t
         tmp = rho_k * np.outer(s_k, y_k)
@@ -389,9 +392,7 @@ class Network:
         print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
         print "---------------------------------------------------------------------------"
         for epoch in range(epochs):
-            #print "training epoch...", epoch
             # stop criterion
-            #print "\tnorm(gradient) =", norm(gradient_old)
             if epoch > 0 and (norm(gradient_old)) < 1e-6:
                 print "break at", epoch
                 break
@@ -399,13 +400,12 @@ class Network:
             # compute search direction p = -H * gradient
             p = - H.dot(gradient_old)
 
-            theta = 0.9  # contraction factor of alpha
-            alpha_0 = 0.1  # initial step size trial is always 1 for quasi-Newton
-            c_1 = 0.01   # scaling factor for Armijo condition TODO try 1e-4
-            c_2 = 0.9    # scaling factor for Wolfe condition
+            theta = 0.9   # contraction factor of alpha
+            alpha_0 = 1   # initial step size trial is always 1 for quasi-Newton TODO: try initial step less than 1
+            c_1 = 0.0001  # scaling factor for Armijo condition TODO try 1e-4
+            c_2 = 0.9     # scaling factor for Wolfe condition
             #alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
-            alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
-            #print "\talpha = ", alpha
+            alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta)
 
             # compute weight update
             delta = p * alpha
@@ -414,7 +414,6 @@ class Network:
             x_new = self.update_weights_CM(delta)
 
             # compute new gradient
-            #print "\tloss =", loss, "misclassification =", miss
             gradient_new, loss, miss = self.calculate_gradient(data, targets, lossObject)
             # append losses
             losses.append(loss)
@@ -426,15 +425,15 @@ class Network:
             y_k = gradient_new - gradient_old
             # update matrix H
             H = self.update_matrix(H, s_k, y_k)
-            #print "\tHessian norm =", norm(H)
 
             # print statistics
-            # epoch, loss, misclassification, norm gradient, norm hessian, rho, alpha
             print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
                   (epoch+1, loss, miss, norm(gradient_new), norm(H), float(1)/np.dot(s_k, y_k), alpha)
+
             # update x_old and gradient_old
             x_old = x_new
             gradient_old = gradient_new
+
         return losses, misses
 
     def backtracking_line_search(self, alpha, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
@@ -454,7 +453,7 @@ class Network:
 
         return alpha
 
-    def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
+    def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta):
         # phi(alpha) = f(x_k + alpha * p_k)
         # phi'(alpha) = \nabla f(x_k + alpha * p_k) * p_k
         alpha_max = 10
@@ -512,8 +511,8 @@ class Network:
         while True:
             # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
             #alpha_j = self.interpolate(alpha_high, alpha_low, data, lossObject, p, targets)
-            alpha_j = self.safeguarded_interpolation(alpha_high, alpha_low, sfgrd, data, lossObject, p, targets)
-            #alpha_j = select_random_point_between(alpha_low, alpha_high)
+            #alpha_j = self.safeguarded_interpolation(alpha_high, alpha_low, sfgrd, data, lossObject, p, targets)
+            alpha_j = select_random_point_between(alpha_low, alpha_high)
 
             # 2. evaluate phi(alpha_j)
             gradient_alpha_j, loss_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets)
