@@ -1,3 +1,13 @@
+# Data Set (v1): ML-CUP17-TR
+# Nov 2017
+# ML-CUP17
+# INFO: micheli@di.unipi.it
+# (C) CIML group - Gallicchio, Micheli 2017
+# 
+# Format:
+# Training set: id,input1,input2,input3,input4,input5,input6,input7,input8,input9,input10,target_x,target_y
+# Blind Test set: id,input1,input2,input3,input4,input5,input6,input7,input8,input9,input10
+
 1,0.061016,0.594533,1.948624,-1.680048,-1.223277,-0.594630,1.173054,0.999880,-0.863105,-1.256089,18.919045,-16.593558
 2,-0.305682,1.270111,1.353715,-0.859186,-1.223277,-0.594630,0.820935,0.656592,-1.281663,-1.600565,20.106895,-15.957886
 3,0.061016,-0.587729,-0.371521,1.413969,0.389144,0.347948,-0.446694,-0.830991,0.691538,1.430820,5.780508,-10.812470
