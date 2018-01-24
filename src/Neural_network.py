@@ -457,7 +457,7 @@ class Network:
     def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
         # phi(alpha) = f(x_k + alpha * p_k)
         # phi'(alpha) = \nabla f(x_k + alpha * p_k) * p_k
-        alpha_max = 5
+        alpha_max = 10
         alpha_i = alpha  # alpha_1 > 0
         alpha_old = 0    # alpha_0
         i = 1
@@ -495,20 +495,35 @@ class Network:
             alpha_i = tmp_alpha if tmp_alpha < alpha_max else alpha_max
 
             # save previous results and iterate
+            # safeguard
             alpha_old = alpha_i
             phi_alpha_old = phi_alpha_i
             i += 1
 
+
+        if alpha_star <= 1e-16:
+            print "error, alpha =", alpha_star, "set alpha =", 0.01
+            alpha_star = 0.01
         return alpha_star
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
         feval = 0
-        max_feval = 50
+        max_feval = 200
+        sfgrd = 0
         while True:
             # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
-            convex = random.uniform(0.1, 0.9)
-            alpha_j = convex * alpha_low + (1 - convex) * alpha_high
+            #convex = random.uniform(0.1, 0.9)
+            #alpha_j = convex * alpha_low + (1 - convex) * alpha_high
             #alpha_j = (alpha_low + alpha_high) / float(2)
+            # [ alpha_low *(1 + sfgrd), alpha_high * (1 - sfgrd)]
+            # 1.1 evaluate phi(alpha_low), phi'(alpha_low), and phi(alpha_high)
+            alpha_low *= (1 + sfgrd)
+            alpha_high *= (1 - sfgrd)
+            gradient_alpha_low, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
+            phi_p_alpha_low = np.dot(gradient_alpha_low, p)
+            _, phi_alpha_high = self.evaluate_phi_alpha(alpha_high, data, lossObject, p, targets)
+            alpha_j = - (phi_p_alpha_low * alpha_high**2) / \
+                      (2 * (phi_alpha_high - phi_alpha_low - phi_p_alpha_low * alpha_high))
 
             # 2. evaluate phi(alpha_j)
             gradient_alpha_j, loss_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets)
