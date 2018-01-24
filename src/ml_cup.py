@@ -2,6 +2,7 @@ import pandas as pd
 from Neural_network import *
 import matplotlib.pyplot as plt
 from Validation import *
+import time
 
 
 def main():
@@ -33,8 +34,10 @@ def main():
     parameter = grid_search_parameter(learning_rate,momentum,batch_size,architecture,neurons,regularization,epochs)
     # create loss
     loss_obj = SquaredError("tangentH")
+    start_time = time.time()
     grid_search(parameter,loss_obj,tr_patterns,tr_targets,vl_patterns,vl_targets,5)
-
+    elapsed_time = time.time() - start_time
+    print elapsed_time
 
 def divide_patterns_labels(partion,feature_col, target_col) :
     patterns = partion[feature_col].values
