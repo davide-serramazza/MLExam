@@ -1,3 +1,4 @@
-.idea/*
+.idea/workspace.xml
+idea/*
 image/*
 src/*.pyc
