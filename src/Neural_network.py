@@ -500,7 +500,6 @@ class Network:
             phi_alpha_old = phi_alpha_i
             i += 1
 
-
         if alpha_star <= 1e-16:
             print "error, alpha =", alpha_star, "set alpha =", 0.01
             alpha_star = 0.01
@@ -508,22 +507,18 @@ class Network:
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
         feval = 0
-        max_feval = 200
+        max_feval = 10
         sfgrd = 0
         while True:
             # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
             #convex = random.uniform(0.1, 0.9)
             #alpha_j = convex * alpha_low + (1 - convex) * alpha_high
             #alpha_j = (alpha_low + alpha_high) / float(2)
-            # [ alpha_low *(1 + sfgrd), alpha_high * (1 - sfgrd)]
-            # 1.1 evaluate phi(alpha_low), phi'(alpha_low), and phi(alpha_high)
+
+            # safeguard?? [ alpha_low *(1 + sfgrd), alpha_high * (1 - sfgrd)]
             alpha_low *= (1 + sfgrd)
             alpha_high *= (1 - sfgrd)
-            gradient_alpha_low, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
-            phi_p_alpha_low = np.dot(gradient_alpha_low, p)
-            _, phi_alpha_high = self.evaluate_phi_alpha(alpha_high, data, lossObject, p, targets)
-            alpha_j = - (phi_p_alpha_low * alpha_high**2) / \
-                      (2 * (phi_alpha_high - phi_alpha_low - phi_p_alpha_low * alpha_high))
+            alpha_j = self.interpolate(alpha_high, alpha_low, data, lossObject, p, targets)
 
             # 2. evaluate phi(alpha_j)
             gradient_alpha_j, loss_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets)
@@ -540,8 +535,8 @@ class Network:
                 phi_p_alpha_j = np.dot(gradient_alpha_j, p)
                 # 5. if |phi'(alpha_j)| <= - c_2 * phi'(0) (Wolfe satisfied?)
                 # if abs(phi_p_alpha_j) <= c_2 * abs(phi_p_0):  # strong wolfe
-                # if phi_p_alpha_j >= c_2 * phi_p_alpha_j:  frangio
-                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:  # book
+                # if phi_p_alpha_j >= c_2 * phi_p_alpha_j:  # wolfe frangio
+                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:  # book: strong wolfe
                     return alpha_j
                 # 6. if phi'(alpha_j)(alpha_high - alpha_low) >= 0
                 if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:
@@ -552,6 +547,27 @@ class Network:
                 print "max feval"
                 return alpha_j
             feval += 1
+
+    def interpolate(self, alpha_high, alpha_low, data, lossObject, p, targets):
+        """
+        find a trials steps alpha_j between alpha_low and alpha_high by quadratic interpolation.
+
+        :param alpha_high: left edge of the interval containing step sizes satisfying the wolfe condition
+        :param alpha_low: right edge of the interval containing step sizes satisfying the wolfe condition
+        :param data: dataset
+        :param lossObject: object used to compute the loss and its derivative
+        :param p: direction of descent
+        :param targets: target variables of the patterns in the dataset
+        :return:
+        """
+        # 1.1 evaluate phi(alpha_low), phi'(alpha_low), and phi(alpha_high)
+        gradient_alpha_low, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
+        phi_p_alpha_low = np.dot(gradient_alpha_low, p)
+        _, phi_alpha_high = self.evaluate_phi_alpha(alpha_high, data, lossObject, p, targets)
+        # 1.2 interpolate
+        alpha_j = - (phi_p_alpha_low * alpha_high ** 2) / \
+                  (2 * (phi_alpha_high - phi_alpha_low - phi_p_alpha_low * alpha_high))
+        return alpha_j
 
     def evaluate_phi_alpha(self, alpha_i, data, lossObject, p, targets):
         """
