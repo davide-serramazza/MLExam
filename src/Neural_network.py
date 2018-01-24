@@ -401,7 +401,7 @@ class Network:
 
             theta = 0.9  # contraction factor of alpha
             alpha_0 = 1  # initial step size trial is always 1 for quasi-Newton
-            c_1 = 0.01   # scaling factor for Armijo condition
+            c_1 = 0.0001   # scaling factor for Armijo condition TODO try 1e-4
             c_2 = 0.9    # scaling factor for Wolfe condition
             #alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
             alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
@@ -470,7 +470,7 @@ class Network:
             phi_0 = loss                       # phi(0) = f(x_k + 0 * p) = f(x_k)
             phi_p_0 = np.dot(gradient_old, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
 
-            if phi_p_0 > 0:
+            if not phi_p_0 < 0:
                 Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
 
             if phi_alpha_i > phi_0 + c_1 * alpha_i * phi_p_0 or (i > 1 and phi_alpha_i >= phi_alpha_old):
