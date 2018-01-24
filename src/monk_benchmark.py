@@ -48,7 +48,7 @@ def decode_patterns(encoding, features, training_set, validation_set):
     return training_patterns, validation_patterns
 
 def main():
-    train_file = "../monk_datasets/monks-2.train"
+    train_file = "../monk_datasets/monks-3.train"
 
     # 1. load dataset
     columns = ['label', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'id']
@@ -73,8 +73,8 @@ def main():
     momentum = [0.4, 0.5, 0.6]
     batch_size = [10]
     learning_rate = [0.15, 0.2, 0.25]
-    regularization = [0]
-    epoch = 2
+    regularization = [0.0025, 0.005, 0.001]
+    epoch =100
     param = grid_search_parameter(learning_rate, momentum, batch_size,
                                   architecture, neurons, regularization, epoch)
 

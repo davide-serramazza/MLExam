@@ -2,8 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="00e470c8-3fd1-49b7-b401-835ef5e88de2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/ml_cup.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lr_0,2-mo_0,6-bat:10-reg0,01-arc_[17,10,1,]MONK3 con regolar.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lr_0,2-mo_0,6-bat:10-reg0,01-arc_[17,10,1,]MONK3.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lr_0,25-mo_0,5-bat:10-reg0-arc_[17,10,1,]MONK1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lr_0,25-mo_0,6-bat:10-reg0-arc_[17,10,1,]MONK3 senza regolarizzazione.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lr_0,25-mo_0,6-bat:10-reg0-arc_[17,10,1,]MONK3.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/CM.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/README.md" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Neural_network.py" afterPath="$PROJECT_DIR$/src/Neural_network.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Validation.py" afterPath="$PROJECT_DIR$/src/Validation.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/final_traning.py" afterPath="$PROJECT_DIR$/src/final_traning.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/loss_functions.py" afterPath="$PROJECT_DIR$/src/loss_functions.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monk_benchmark.py" afterPath="$PROJECT_DIR$/src/monk_benchmark.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/NeuralNetwokTest.py" afterPath="$PROJECT_DIR$/test/NeuralNetwokTest.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -94,8 +108,8 @@
       <file leaf-file-name="Validation.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Validation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
-              <caret line="59" column="0" lean-forward="true" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+            <state relative-caret-position="234">
+              <caret line="69" column="4" lean-forward="true" selection-start-line="69" selection-start-column="4" selection-end-line="69" selection-end-column="4" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -125,9 +139,9 @@
       <list>
         <option value="$PROJECT_DIR$/src/Neural_network.py" />
         <option value="$PROJECT_DIR$/src/monk_benchmark.py" />
-        <option value="$PROJECT_DIR$/src/Validation.py" />
         <option value="$PROJECT_DIR$/src/final_traning.py" />
         <option value="$PROJECT_DIR$/src/ml_cup.py" />
+        <option value="$PROJECT_DIR$/src/Validation.py" />
       </list>
     </option>
   </component>
@@ -363,7 +377,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37237236" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37237236" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -938,8 +952,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Validation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="59" column="0" lean-forward="true" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+        <state relative-caret-position="234">
+          <caret line="69" column="4" lean-forward="true" selection-start-line="69" selection-start-column="4" selection-end-line="69" selection-end-column="4" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
