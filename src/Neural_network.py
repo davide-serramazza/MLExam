@@ -397,33 +397,37 @@ class Network:
                 print "break at", epoch
                 break
 
-            # compute search direction p = -H * gradient
+            # 1. compute search direction p = -H * gradient
             p = - H.dot(gradient_old)
 
+            # 2. line search
             theta = 0.9   # contraction factor of alpha
             alpha_0 = 1   # initial step size trial is always 1 for quasi-Newton TODO: try initial step less than 1
             c_1 = 0.0001  # scaling factor for Armijo condition TODO try 1e-4
             c_2 = 0.9     # scaling factor for Wolfe condition
+
             #alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
             alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta)
 
-            # compute weight update
+            # 3. compute weight update
             delta = p * alpha
 
-            # update weights using x_{k+1} = x_{k} + alpha_{k} * p_k
+            # 4. update weights using x_{k+1} = x_{k} + alpha_{k} * p_k
             x_new = self.update_weights_CM(delta)
 
-            # compute new gradient
+            # 5. compute new gradient
             gradient_new, loss, miss = self.calculate_gradient(data, targets, lossObject)
+
             # append losses
             losses.append(loss)
             misses.append(miss)
 
-            # compute s_k = x_{k+1} - x_k = x_new - x_old
-            s_k = x_new - x_old
+            # 6. compute s_k = x_{k+1} - x_k = x_new - x_old
             # compute y_k = nabla f_{k+1} - nabla f_k = gradient new - gradient old
+            s_k = x_new - x_old
             y_k = gradient_new - gradient_old
-            # update matrix H
+
+            # 7. update matrix H
             H = self.update_matrix(H, s_k, y_k)
 
             # print statistics
@@ -439,7 +443,7 @@ class Network:
     def backtracking_line_search(self, alpha, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
         while True:
             _, phi_alpha = self.evaluate_phi_alpha(alpha, data, lossObject, p, targets)
-            phi_0 = loss  # phi(0) = f(x_k + 0 * p) = f(x_k)
+            phi_0 = loss                       # phi(0) = f(x_k + 0 * p) = f(x_k)
             phi_p_0 = np.dot(gradient_old, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
 
             if phi_alpha <= phi_0 + c_1 * alpha * phi_p_0:
@@ -505,10 +509,10 @@ class Network:
         return alpha_star
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
-        feval = 0
         max_feval = 100
         sfgrd = 0.1
-        while True:
+
+        for i in range(max_feval):
             # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
             #alpha_j = self.interpolate(alpha_high, alpha_low, data, lossObject, p, targets)
             #alpha_j = self.safeguarded_interpolation(alpha_high, alpha_low, sfgrd, data, lossObject, p, targets)
@@ -537,14 +541,12 @@ class Network:
                     alpha_high = alpha_low
                 alpha_low = alpha_j
 
-            if feval >= max_feval:
-                print "max feval"
-                return alpha_j
-            feval += 1
+        print "max zoom iterarions"
+        return alpha_j
 
     def interpolate(self, alpha_high, alpha_low, data, lossObject, p, targets):
         """
-        find a trials steps alpha_j between alpha_low and alpha_high by quadratic interpolation.
+        find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation.
 
         :param alpha_high: left edge of the interval containing step sizes satisfying the wolfe condition
         :param alpha_low: right edge of the interval containing step sizes satisfying the wolfe condition
@@ -564,6 +566,19 @@ class Network:
         return alpha_j
 
     def safeguarded_interpolation(self, alpha_high, alpha_low, sfgrd, data, lossObject, p, targets):
+        """
+        find a trial step size alpha_j between alpha_low and alpha_high by safeguarded quadratic interpolation
+        between function values phi(alpha_low) and phi(alpha_high).
+
+        :param alpha_high:
+        :param alpha_low:
+        :param sfgrd:
+        :param data:
+        :param lossObject:
+        :param p:
+        :param targets:
+        :return:
+        """
         gradient_alpha_low, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
         gradient_alpha_high, phi_alpha_high = self.evaluate_phi_alpha(alpha_high, data, lossObject, p, targets)
         phi_p_alpha_low = np.dot(gradient_alpha_low, p)
@@ -601,7 +616,6 @@ class Network:
         return gradient_alpha, loss_alpha
 
     # end CM-----------------------------------------------------------
-
 
     def predict(self, data):
         # predict target variables
@@ -670,7 +684,14 @@ def check_topology(architecture, neurons):
         if neurons[i].__name__ is InputNeuron.__name__ or neurons[i].__name__ is OutputNeuron.__name__:
             raise Exception("Hidden neurons have incorrect type")
 
+
 def select_random_point_between(alpha_low, alpha_high):
+    """
+    select a trial step size alpha_j between alpha_low and alpha_high randomly.
+    :param alpha_low:
+    :param alpha_high:
+    :return:
+    """
     convex = random.uniform(0.1, 0.9)
     alpha_j = convex * alpha_low + (1 - convex) * alpha_high
     return alpha_j
