@@ -30,7 +30,7 @@ def main():
     neurons = [ [InputNeuron,TanHNeuron,OutputNeuron], [InputNeuron,TanHNeuron, TanHNeuron, OutputNeuron],
                 [InputNeuron, TanHNeuron,TanHNeuron,TanHNeuron, OutputNeuron]]
     regularization = [0.01,0.05]
-    epochs = 300
+    epochs = 50
     parameter = grid_search_parameter(learning_rate,momentum,batch_size,architecture,neurons,regularization,epochs)
     # create loss
     loss_obj = SquaredError("tangentH")

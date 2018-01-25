@@ -440,6 +440,109 @@ class Network:
 
         return losses, misses
 
+    def compute_direction(self,H,gradient,s,y,rho):
+
+        a_list = []
+        q = gradient
+        # first loop
+        for i in range(len(s)- 1, -1 , -1):
+            a = rho [i]*np.dot(s[i],q)
+            a_list.insert(0,a)
+            q -= -a*y[i]
+
+        # da wikipedia prossime due righe
+        if not len(s)==0:
+            H = np.outer(y[0], s[0]) / np.dot(y[0],y[0])
+        r = H.dot(q)
+
+        #second loop
+        for i in range(len(s)):
+            beta = rho[i]*np.dot(y[i],r)
+            r +=  s[i]* (a_list[i]-beta)
+
+        return r
+
+    def update_matrix(self,H,s,y):
+        gamma = np.dot(s,y) / np.dot(y,y)
+        H_new = gamma*np.identity(s)
+        return H_new
+
+
+    def trainLBFGS (self, data, targets, eval_data, eval_targets, lossObject,m,epochs):
+        losses = []  # vector containing the loss of each epoch
+        misses = []  # vector containing the misclassification for each epoch
+        # 1. compute initial gradient and initial Hessian approximation H_0
+        gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject)
+        H = np.identity(gradient_old.shape[0])
+        x_old = self.get_weights_as_vector()
+
+        # set of current s,y,p
+        s_list = []
+        y_list = []
+        rho_list = []
+
+        # append losses
+        losses.append(loss)
+        misses.append(miss)
+        print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
+        print "---------------------------------------------------------------------------"
+        for epoch in range(epochs):
+            # stop criterion
+            if epoch > 0 and (norm(gradient_old)) < 1e-6:
+                print "break at", epoch
+                break
+
+
+
+            # compute p using two loop recursion
+            r= self.compute_direction(H,gradient_old,s_list,y_list,rho_list)
+            p = -r
+
+            # 2. line search
+            theta = 0.9   # contraction factor of alpha
+            alpha_0 = 1   # initial step size trial is always 1 for quasi-Newton TODO: try initial step less than 1
+            c_1 = 0.0001  # scaling factor for Armijo condition TODO try 1e-4
+            c_2 = 0.9     # scaling factor for Wolfe condition
+            alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta)
+            #print "alpha is", alpha
+
+            # updating weights and compute x_k+1 = x_k + a_k*p_k
+            delta = p*alpha
+            x_new = self.update_weights_CM(delta)
+            gradient_new, loss,miss = self.calculate_gradient(data,targets,lossObject)
+
+
+            #print "loss is", loss
+
+            if epoch>(m-1):
+                #discard first element
+                del s_list[0]
+                del y_list[0]
+                del rho_list[0]
+
+            # compute s_k , y_k, p_k
+            s_k = x_new - x_old
+            y_k = gradient_new - gradient_old
+            rho_k = 1/ np.dot(s_k,y_k)
+
+#            H = self.update_matrix()
+
+            #append to vector
+            s_list.append(s_k)
+            y_list.append(y_k)
+            rho_list.append(rho_k)
+
+            # print statistics
+            print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
+                  (epoch+1, loss, miss, norm(gradient_new), norm(H), float(1)/np.dot(s_k, y_k), alpha)
+
+            #udate x_old and gragient_olf
+            x_old = x_new
+            gradient_old = gradient_new
+
+        return losses, misses
+
+
     def backtracking_line_search(self, alpha, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
         while True:
             _, phi_alpha = self.evaluate_phi_alpha(alpha, data, lossObject, p, targets)

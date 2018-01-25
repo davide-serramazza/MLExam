@@ -22,7 +22,7 @@ def main():
     network = Network(architecture,neurons)
     lossObject = SquaredError("tangentH")
 
-    epochs = 1
+    epochs = 50
     learning_rate = 0.2
     batch_size = len(training_patterns)
     momentum = 0.6
