@@ -69,12 +69,12 @@ def main():
 
     # validation: define hyper-parameters to test
     architecture = [[17, 10, 1]]
-    neurons = [[InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron,TanHNeuron] ]
-    momentum = [0.4, 0.5, 0.6]
+    neurons = [[InputNeuron, TanHNeuron, TanHNeuron]] #[[InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron,TanHNeuron] ]
+    momentum = [0.4]  # [0.4, 0.5, 0.6]
     batch_size = [10]
-    learning_rate = [0.15, 0.2, 0.25]
-    regularization = [0.0025, 0.005, 0.001]
-    epoch =100
+    learning_rate = [0.15]  #[0.15, 0.2, 0.25]
+    regularization = [0.001]  # [0.0025, 0.005, 0.001]
+    epoch = 10
     param = grid_search_parameter(learning_rate, momentum, batch_size,
                                   architecture, neurons, regularization, epoch)
 

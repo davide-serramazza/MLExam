@@ -23,26 +23,29 @@ def main():
     te_patterns, te_targets = divide_patterns_labels(test_data,features_col,targets_col)
 
     #create network
-    learning_rate = [0.001 , 0.005, 0.01]
+    learning_rate = [0.01]#[0.001, 0.005, 0.01]
     momentum = [0.0]
     batch_size = [1]
-    architecture = [ [10,10,2], [10,10,5,2], [10,10,5,5,2] ]
-    neurons = [ [InputNeuron,TanHNeuron,OutputNeuron], [InputNeuron,TanHNeuron, TanHNeuron, OutputNeuron],
-                [InputNeuron, TanHNeuron,TanHNeuron,TanHNeuron, OutputNeuron]]
-    regularization = [0.01,0.05]
-    epochs = 300
-    parameter = grid_search_parameter(learning_rate,momentum,batch_size,architecture,neurons,regularization,epochs)
+    architecture = [[10,10,10, 2]] #[ [10,10,2], [10,10,5,2], [10,10,5,5,2] ]
+    neurons = [[InputNeuron, TanHNeuron, TanHNeuron, OutputNeuron]]#[ [InputNeuron,TanHNeuron,OutputNeuron], [InputNeuron,TanHNeuron, TanHNeuron, OutputNeuron],
+                #[InputNeuron, TanHNeuron,TanHNeuron,TanHNeuron, OutputNeuron]]
+    regularization = [0.05]#[0.01,0.05]
+    epochs = 50
+    parameter = grid_search_parameter(learning_rate, momentum, batch_size, architecture, neurons, regularization, epochs)
     # create loss
-    loss_obj = SquaredError("tangentH")
+    loss_obj = EuclideanError()
+
     start_time = time.time()
-    grid_search(parameter,loss_obj,tr_patterns,tr_targets,vl_patterns,vl_targets,5)
+    grid_search(parameter, loss_obj, tr_patterns, tr_targets, vl_patterns, vl_targets, 5, save_in_dir="../image/MLCup/")
     elapsed_time = time.time() - start_time
     print elapsed_time
 
-def divide_patterns_labels(partion,feature_col, target_col) :
+
+def divide_patterns_labels(partion, feature_col, target_col) :
     patterns = partion[feature_col].values
     labels = partion[target_col].values
-    return patterns,labels
+    return patterns, labels
+
 
 def holdout_cup(dataset, frac_tr):
     df = dataset.reindex(np.random.permutation(dataset.index))

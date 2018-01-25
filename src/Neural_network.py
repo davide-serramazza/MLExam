@@ -260,12 +260,12 @@ class Network:
             # current epoch value of misclassification and Squared error
             loss_epoch = 0
             misC_epoch = 0
-            #shuffle data set
-            data_shuffled, targets_shuffled = self.shuffle_dataset(data,targets)
+            # shuffle data set
+            data_shuffled, targets_shuffled = self.shuffle_dataset(data, targets)
             
             for i in range(0, len(data_shuffled), batch_size):
                 # take only batch_size examples
-                #shuffle data set
+                # shuffle data set
                 batch_pattern = data_shuffled[i:i + batch_size]
                 batch_target = targets_shuffled[i:i + batch_size]
                 # gradient_w_batch = sum of gradient_w for the epoch
@@ -283,20 +283,22 @@ class Network:
                 # update neural network weights after a batch of training example
                 # save previous weight update
                 prev_delta = self.update_weights(gradient_w=gradient_w_batch,
-                                            learning_rate=learning_rate,
-                                            prev_delta=prev_delta,
-                                            momentum=momentum,
-                                            regularization=regularization * len(batch_pattern) / len(data))
+                                                 learning_rate=learning_rate,
+                                                 prev_delta=prev_delta,
+                                                 momentum=momentum,
+                                                 regularization=regularization * len(batch_pattern) / len(data))
 
             # append the total loss and misClassification of single epoch
             losses = np.append(losses, loss_epoch)
             misClassification = np.append(misClassification, misC_epoch)
+
             # computing loss and misClassification on validation set then append to list
             squared_error_validation_epoch, misClass_error_validation_epoch = \
                 self.validation_error(eval_data, eval_targets, lossObject)
 
             losses_valdation = np.append(losses_valdation, squared_error_validation_epoch)
-            misClassification_validation = np.append(misClassification_validation,misClass_error_validation_epoch)
+            misClassification_validation = np.append(misClassification_validation, misClass_error_validation_epoch)
+
         return losses, misClassification, losses_valdation,misClassification_validation
 
 #begginning CM part -------------------------------------------------------
@@ -379,7 +381,7 @@ class Network:
         return H_new
 
 
-    def trainBFGS (self, data, targets, eval_data, eval_targets, lossObject,epochs):
+    def trainBFGS(self, data, targets, eval_data, eval_targets, lossObject,epochs):
         losses = []  # vector containing the loss of each epoch
         misses = []  # vector containing the misclassification for each epoch
         # 1. compute initial gradient and initial Hessian approximation H_0
