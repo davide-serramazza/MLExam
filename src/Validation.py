@@ -38,7 +38,7 @@ def print_result(misClass_error, misClass_error_evaluation,
     plt.xlabel("epochs")
     plt.ylabel(lossObject.__class__.__name__)
     s = save_in_dir + "lr_" + transf_value(lr) + "-mo_" + transf_value(mo) + "-bat:" + transf_value(
-        bat) + "-reg" + transf_value(reg) + "-arc_" + tranf_arc(arc)
+        bat) + "-reg_" + transf_value(reg) + "-arc_" + tranf_arc(arc)
     plt.tight_layout()  # minimize overlap of subplots
     plt.savefig(s)
     n_figure += 1  # increment to create a new figure

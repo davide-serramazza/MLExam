@@ -27,10 +27,10 @@ def main():
     momentum = [0.0]
     batch_size = [1]
     architecture = [[10,10,10, 2]] #[ [10,10,2], [10,10,5,2], [10,10,5,5,2] ]
-    neurons = [[InputNeuron, TanHNeuron, TanHNeuron, OutputNeuron]]#[ [InputNeuron,TanHNeuron,OutputNeuron], [InputNeuron,TanHNeuron, TanHNeuron, OutputNeuron],
+    neurons = [[InputNeuron, ReLuNeuron, ReLuNeuron, OutputNeuron]]#[ [InputNeuron,TanHNeuron,OutputNeuron], [InputNeuron,TanHNeuron, TanHNeuron, OutputNeuron],
                 #[InputNeuron, TanHNeuron,TanHNeuron,TanHNeuron, OutputNeuron]]
     regularization = [0.05]#[0.01,0.05]
-    epochs = 50
+    epochs = 1
     parameter = grid_search_parameter(learning_rate, momentum, batch_size, architecture, neurons, regularization, epochs)
     # create loss
     loss_obj = EuclideanError()

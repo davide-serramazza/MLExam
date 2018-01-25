@@ -62,7 +62,7 @@ class SigmoidNeuron(Neuron):
 class ReLuNeuron(Neuron):
 
     def activation_function(self, x):
-        self.output = np.max(0, x)
+        self.output = max(0, x)
         return self.output
 
     def activation_function_derivative(self):
