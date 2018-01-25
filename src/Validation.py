@@ -41,7 +41,6 @@ def print_result(misClass_error, misClass_error_evaluation,
         bat) + "-reg_" + transf_value(reg) + "-arc_" + tranf_arc(arc)
     plt.tight_layout()  # minimize overlap of subplots
     plt.savefig(s)
-    n_figure += 1  # increment to create a new figure
     plt.close()
 
 
@@ -117,6 +116,8 @@ def grid_search(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns,vl_labe
     :param directory where to save results (learning curves)
     :return:
     """
+    total_experiments = len(parameter.regularization) * len(parameter.learning_rate) \
+                        * len(parameter.momentum) * len(parameter.batch_size) * len(parameter.architecture)
     n_figure = 0  # index of figures
     # for every value
     for reg in parameter.regularization:
@@ -124,6 +125,7 @@ def grid_search(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns,vl_labe
             for mo in parameter.momentum:
                 for bat in parameter.batch_size:
                     for arc, neur in zip(parameter.architecture,parameter.neurons):
+                            print n_figure, "out of", total_experiments, "experiments"
                             # initialize lists for saving reslut
                             squared_error_average = np.zeros(parameter.epoch)
                             misClass_error_average = np.zeros(parameter.epoch)
@@ -155,3 +157,4 @@ def grid_search(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns,vl_labe
                             print_result(misClass_error_average, misClass_error_validation_average,
                                          squared_error_average, squared_error_validation_average,
                                          arc, bat, lr, mo, reg, n_figure, "validation set", loss_obj, save_in_dir)
+                            n_figure += 1  # increment to create a new figure

@@ -79,7 +79,7 @@ def main():
                                   architecture, neurons, regularization, epoch)
 
     grid_search(param, lossObject, training_patterns, training_labels,
-                validation_patterns, validation_labels, n_trials=5)
+                validation_patterns, validation_labels, 5, "../image/")
 
 
 if __name__ == "__main__":

@@ -173,14 +173,14 @@ class Network:
         :param regularization: regularization coefficient
         :return: current current weight update (i.e prev_delta for next iteration)
         """
-        deltaW = gradient_w*learning_rate + prev_delta*momentum
+        deltaW = gradient_w * learning_rate + prev_delta * momentum
         # initialize a vector of deltaw`s shape
         lambda_vectors = copy.deepcopy(deltaW)
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
                 # fill vectors with regularization coefficient, 0 in bias`s entry
                 lambda_vectors[i-1][j] = regularization
-                lambda_vectors[i-1][j][-1]=0
+                lambda_vectors[i-1][j][-1] = 0
                 # compute regularization gradient (wrt current weights) = w*regularization_coefficient
                 regularization_term = np.multiply(self.layers[i].neurons[j].weights,lambda_vectors[i-1][j])
                 # add regularization gradient to total weight`s update
@@ -216,7 +216,7 @@ class Network:
         :param loss_obj: loss for computing error (same of traning set)
         :return:
         """
-        #predict eeach validation set pattern
+        # predict each validation set pattern
         scores = self.predict(patterns)
 
         squared_error_epoch = 0

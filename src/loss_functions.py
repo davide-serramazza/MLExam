@@ -49,6 +49,7 @@ class SquaredError:
         # TODO cancel the minus in the bfgs compute_gradient()
         return 2 * (target - output_net)
 
+
 class EuclideanError:
 
     def value(self, target, output_net, weights, regularization=0):
