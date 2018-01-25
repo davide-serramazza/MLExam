@@ -4,6 +4,7 @@ import numpy as np
 from Neural_network import *
 import pandas as pd
 
+
 class grid_search_parameter:
     def __init__(self,learning_rate,momentum,batch_size,architecture,neurons, regularization, epoch):
         self.learning_rate = learning_rate
@@ -145,14 +146,11 @@ def grid_search(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns,vl_labe
                                 squared_error_validation_average += squared_error_validation
                                 misClass_error_validation_average += misClass_error_validation
 
-                            # taking mean
-                            # TODO do not multiply by two for Euclidean Error
-                            squared_error_average /= (float(n_trials) / 2 * len(tr_patterns))
-                            # dividing by n_trials/2 beacuse our implementation of squared error is (target-output)/2
-                            # dividing by len(tr_patterns) beacuse loss return absolute value, not mean
-                            misClass_error_average /= (float(n_trials) * len(tr_patterns))
-                            squared_error_validation_average /= (float(n_trials) / 2 * len(vl_patterns))
-                            misClass_error_validation_average /= (float(n_trials) * len(vl_patterns))
+                            # taking mean error over trials and over patterns
+                            squared_error_average /= float(n_trials) * len(tr_patterns)
+                            misClass_error_average /= float(n_trials) * len(tr_patterns)
+                            squared_error_validation_average /= float(n_trials) * len(vl_patterns)
+                            misClass_error_validation_average /= float(n_trials) * len(vl_patterns)
 
                             print_result(misClass_error_average, misClass_error_validation_average,
                                          squared_error_average, squared_error_validation_average,

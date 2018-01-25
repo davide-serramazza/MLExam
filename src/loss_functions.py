@@ -17,9 +17,9 @@ class SquaredError:
         """
         # data error
         difference = target - output_net
-        data_error = np.sum(np.square(difference)) / 2
+        data_error = np.sum(np.square(difference))
         # regularization error
-        regularization_error = regularization * np.sum(np.square(weights)) / 2
+        regularization_error = regularization * np.sum(np.square(weights))
         return data_error + regularization_error
 
     def misClassification(self, target, output_net):
@@ -47,7 +47,7 @@ class SquaredError:
         """
         # TODO return (output - target) so it is the true gradient and then use "- eta" in update_weights, and also
         # TODO cancel the minus in the bfgs compute_gradient()
-        return target - output_net
+        return 2 * (target - output_net)
 
 class EuclideanError:
 
@@ -55,7 +55,7 @@ class EuclideanError:
         # data error
         data_error = np.linalg.norm(output_net - target)
         # regularization error
-        regularization_error = regularization * np.sum(np.square(weights)) / 2
+        regularization_error = regularization * np.sum(np.square(weights))
         return data_error + regularization_error
 
     def derivative(self, target, output_net):

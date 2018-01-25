@@ -358,7 +358,7 @@ class Network:
 
         # compute mean values
         gradient /= len(data)
-        loss_batch = loss_batch * 2 / len(data)  # times 2 because of implementation
+        loss_batch /= len(data)
         miss_batch /= float(len(data))
         return gradient, loss_batch, miss_batch
 
