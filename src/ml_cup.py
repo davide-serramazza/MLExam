@@ -23,14 +23,14 @@ def main():
     te_patterns, te_targets = divide_patterns_labels(test_data,features_col,targets_col)
 
     #create network
-    learning_rate = [0.01]#[0.001, 0.005, 0.01]
-    momentum = [0.0]
-    batch_size = [1]
-    architecture = [[10,10,10, 2]] #[ [10,10,2], [10,10,5,2], [10,10,5,5,2] ]
-    neurons = [[InputNeuron, ReLuNeuron, ReLuNeuron, OutputNeuron]]#[ [InputNeuron,TanHNeuron,OutputNeuron], [InputNeuron,TanHNeuron, TanHNeuron, OutputNeuron],
+    learning_rate = [0.2]#[0.001, 0.005, 0.01]
+    momentum = [0.8]
+    batch_size = [len(tr_patterns)]
+    architecture = [[10,20,20, 2]] #[ [10,10,2], [10,10,5,2], [10,10,5,5,2] ]
+    neurons = [[InputNeuron, TanHNeuron, TanHNeuron, OutputNeuron]]#[ [InputNeuron,TanHNeuron,OutputNeuron], [InputNeuron,TanHNeuron, TanHNeuron, OutputNeuron],
                 #[InputNeuron, TanHNeuron,TanHNeuron,TanHNeuron, OutputNeuron]]
-    regularization = [0.05]#[0.01,0.05]
-    epochs = 1
+    regularization = [0.001]#[0.01,0.05]
+    epochs = 50
     parameter = grid_search_parameter(learning_rate, momentum, batch_size, architecture, neurons, regularization, epochs)
     # create loss
     loss_obj = EuclideanError()
@@ -41,9 +41,9 @@ def main():
     print elapsed_time
 
 
-def divide_patterns_labels(partion, feature_col, target_col) :
-    patterns = partion[feature_col].values
-    labels = partion[target_col].values
+def divide_patterns_labels(partition, feature_col, target_col):
+    patterns = partition[feature_col].values
+    labels = partition[target_col].values
     return patterns, labels
 
 

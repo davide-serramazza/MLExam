@@ -98,3 +98,13 @@ class OutputNeuron(Neuron):
 
     def activation_function_derivative(self):
         return 1
+
+
+class LinearNeuron(Neuron):
+
+    def activation_function(self, x):
+        self.output = x
+        return self.output
+
+    def activation_function_derivative(self):
+        return 1
