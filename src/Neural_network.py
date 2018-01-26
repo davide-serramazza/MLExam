@@ -380,6 +380,7 @@ class Network:
 
 
     def trainBFGS (self, data, targets, eval_data, eval_targets, lossObject,epochs):
+        m = 10
         losses = []  # vector containing the loss of each epoch
         misses = []  # vector containing the misclassification for each epoch
         # 1. compute initial gradient and initial Hessian approximation H_0
@@ -389,6 +390,9 @@ class Network:
         # append losses
         losses.append(loss)
         misses.append(miss)
+        # lists of y_i and s_i
+        y_list = []
+        s_list = []
         print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
         print "---------------------------------------------------------------------------"
         for epoch in range(epochs):
@@ -398,7 +402,10 @@ class Network:
                 break
 
             # 1. compute search direction p = -H * gradient
-            p = - H.dot(gradient_old)
+            #p = - H.dot(gradient_old)
+            r = self.compute_direction(H, gradient_old, s_list, y_list)
+            p = -r
+
 
             # 2. line search
             theta = 0.9   # contraction factor of alpha
@@ -427,8 +434,16 @@ class Network:
             s_k = x_new - x_old
             y_k = gradient_new - gradient_old
 
+            y_list.append(y_k)
+            s_list.append(s_k)
+            if epoch > m:
+                y_list = y_list[1:]
+                s_list = s_list[1:]
+
             # 7. update matrix H
-            H = self.update_matrix(H, s_k, y_k)
+            #H = self.update_matrix(H, s_k, y_k)
+            gamma = np.dot(s_k, y_k) / norm(y_k)
+            H = gamma * np.identity(s_k.shape[0])
 
             # print statistics
             print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
@@ -439,6 +454,25 @@ class Network:
             gradient_old = gradient_new
 
         return losses, misses
+
+    def compute_direction(self, H, gradient_old, s_list, y_list):
+        q = gradient_old
+        alpha_list = []
+        for i in range(len(y_list) - 1, -1, -1):
+            rho_i = float(1) / np.dot(y_list[i], s_list[i])
+            alpha_i = rho_i * np.dot(s_list[i], q)
+            #alpha_list.append(alpha_i)
+            q -= alpha_i * y_list[i]
+        #if len(s_list) >= 1:
+         #   H = np.outer(y_list[-1], s_list[-1]) / norm(y_list[-1])
+        r = np.dot(H, q)
+        for i in range(len(y_list)):
+            rho_i = float(1) / np.dot(y_list[i], s_list[i])
+            beta = rho_i * np.dot(y_list[i], r)
+            alpha_i = rho_i * np.dot(s_list[i], q)
+            #alpha_i = alpha_list[i]
+            r += s_list[i] * (alpha_i - beta)
+        return r
 
     def backtracking_line_search(self, alpha, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
         while True:
