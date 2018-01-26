@@ -461,16 +461,16 @@ class Network:
         for i in range(len(y_list) - 1, -1, -1):
             rho_i = float(1) / np.dot(y_list[i], s_list[i])
             alpha_i = rho_i * np.dot(s_list[i], q)
-            #alpha_list.append(alpha_i)
+            alpha_list.append(alpha_i)
             q -= alpha_i * y_list[i]
         #if len(s_list) >= 1:
-         #   H = np.outer(y_list[-1], s_list[-1]) / norm(y_list[-1])
+        #    H = np.outer(y_list[0], s_list[0]) / norm(y_list[0])
         r = np.dot(H, q)
         for i in range(len(y_list)):
             rho_i = float(1) / np.dot(y_list[i], s_list[i])
             beta = rho_i * np.dot(y_list[i], r)
-            alpha_i = rho_i * np.dot(s_list[i], q)
-            #alpha_i = alpha_list[i]
+            #alpha_i = rho_i * np.dot(s_list[i], q)
+            alpha_i = alpha_list[i]
             r += s_list[i] * (alpha_i - beta)
         return r
 
