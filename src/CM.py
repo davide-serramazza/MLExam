@@ -23,52 +23,35 @@ def main():
 
     lossObject = SquaredError("tangentH")
 
-### MONK
-    arch = [17, 10, 1]
-    neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
-    network = Network(arch, neuronsType)
-    losses, misses = network.trainBFGS(training_patterns, training_labels, training_patterns, training_labels, lossObject, 100)
-    scores = network.predict(training_patterns)
 
-    plt.subplot(1,2,1)
-    plt.plot(range(len(losses)), losses)
-    plt.xlabel("epoch")
-    plt.ylabel("Mean Squared Error")
-    plt.subplot(1,2,2)
-    plt.plot(range(len(misses)), misses)
-    plt.xlabel("epoch")
-    plt.ylabel("misclassification error")
-    plt.tight_layout()
-    plt.show()
-### END MONK
-
-### EXAMPLE
     ##' esempio
     arch = [2, 2, 2]
     neuronsType = [InputNeuron, SigmoidNeuron, OutputNeuron]
     network = Network(arch, neuronsType)
-    #network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
-    #network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
-    #network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
-    #network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
+    network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
+    network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
+    network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
+    network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
 
-    #data = [[0.05, 0.1]]
-    #target = [[0.01, 0.99]]
-    data = [[i, i] for i in np.linspace(0, 1, 200)]
-    target = [[np.sin(d[0]), np.square(d[1])] for d in data]
+    data = [[0.05, 0.1]]
+    target = [[0.01, 0.99]]
 
-    #network.trainBFGS(data,target,data,target,lossObject, 50)
+   # network.trainBFGS(data,target,data,target,lossObject, 2)
 
     predictions = network.predict(data)
-    print "target example:", target
-    print "predictions example:", predictions
+  #  print predictions
 
-    plt.plot([d[0] for d in data], [p[0] for p in predictions], label='f_prediction')
-    plt.plot([d[1] for d in data], [p[1] for p in predictions], label='g_prediction')
-    plt.plot([d[0] for d in data], [t[0] for t in target], label='f')
-    plt.plot([d[1] for d in data], [t[1] for t in target], label='g')
-    plt.legend(loc='best')
-    #plt.show()
+    network = Network(arch, neuronsType)
+    network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
+    network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
+    network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
+    network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
+    network.trainBFGS(data,target,data,target,lossObject,50)
+    predictions = network.predict(data)
+
+
+   # print predictions
+
 
 ### END EXAMPLE
 
