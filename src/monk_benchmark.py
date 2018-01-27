@@ -31,9 +31,9 @@ def transform_target(l):
     res = []
     for i in l:
         if i==0:
-            res.append(-1)
+            res.append(np.array([-1]))
         else:
-            res.append(1)
+            res.append(np.array([1]))
     return res
 
 def transform_labels(training_set, validation_set):
@@ -69,17 +69,17 @@ def main():
 
     # validation: define hyper-parameters to test
     architecture = [[17, 10, 1]]
-    neurons = [[InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron,TanHNeuron] ]
-    momentum = [0.4, 0.5, 0.6]
+    neurons = [[InputNeuron, TanHNeuron, TanHNeuron]] #[[InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron,TanHNeuron] ]
+    momentum = [0.4]  # [0.4, 0.5, 0.6]
     batch_size = [10]
-    learning_rate = [0.15, 0.2, 0.25]
-    regularization = [0.0025, 0.005, 0.001]
-    epoch =100
+    learning_rate = [0.15]  #[0.15, 0.2, 0.25]
+    regularization = [0.001]  # [0.0025, 0.005, 0.001]
+    epoch = 10
     param = grid_search_parameter(learning_rate, momentum, batch_size,
                                   architecture, neurons, regularization, epoch)
 
     grid_search(param, lossObject, training_patterns, training_labels,
-                validation_patterns, validation_labels, n_trials=5)
+                validation_patterns, validation_labels, 5, "../image/")
 
 
 if __name__ == "__main__":
