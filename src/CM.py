@@ -46,8 +46,10 @@ def main():
     network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
     network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
     network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
-    network.trainLBFGS(data,target,data,target,lossObject,5,50)
+    network.trainBFGS(data,target,data,target,lossObject,50)
     predictions = network.predict(data)
+
+
    # print predictions
 
 

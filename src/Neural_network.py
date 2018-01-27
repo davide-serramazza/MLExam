@@ -463,11 +463,6 @@ class Network:
 
         return r
 
-    def update_matrix(self,H,s,y):
-        gamma = np.dot(s,y) / np.dot(y,y)
-        H_new = gamma*np.identity(s)
-        return H_new
-
 
     def trainLBFGS (self, data, targets, eval_data, eval_targets, lossObject,m,epochs):
 
