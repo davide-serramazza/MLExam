@@ -25,20 +25,22 @@ def main():
     first_partition_patterns, first_partition_labels, test_patterns, test_targets = holdout_cup(x_scaled,y_scaled, 0.9)
     tr_patterns, tr_targets, vl_patterns, vl_targets = holdout_cup(first_partition_patterns,first_partition_labels, 0.9)
 
-    #create network
-    learning_rate = [0.2]
-    momentum = [0.3]
-    batch_size = [10]
-    architecture = [  [10,20,20,2] ]
-    neurons = [ [InputNeuron,TanHNeuron,TanHNeuron,OutputNeuron] ]
-    regularization = [0.05]
-    epochs = 2
+    # create network
+    learning_rate = [0.01] #[0.05, 0.1]
+    momentum = [0.5] #[0.25, 0.5]
+    batch_size = [64]#[10]
+    architecture = [[10,20,20,2]] #[ [10,20,20,2], [10,20,15,10,2]]
+    neurons = [[InputNeuron,TanHNeuron,TanHNeuron,OutputNeuron]]#[[InputNeuron,TanHNeuron,TanHNeuron,OutputNeuron],
+               # [InputNeuron,TanHNeuron,TanHNeuron, TanHNeuron, OutputNeuron]]
+    regularization = [0.01]
+    epochs = 300
     parameter = grid_search_parameter(learning_rate, momentum, batch_size, architecture, neurons, regularization, epochs)
     # create loss
     loss_obj = EuclideanError(normalizer)
 
     start_time = time.time()
-    grid_search(parameter, loss_obj, tr_patterns, tr_targets, vl_patterns, vl_targets, n_trials=5, save_in_dir="../image/")
+    grid_search(parameter, loss_obj, tr_patterns, tr_targets, vl_patterns, vl_targets,
+                n_trials=5, save_in_dir="../image/MLCup")
     elapsed_time = time.time() - start_time
     print "time in grid search:", elapsed_time
 

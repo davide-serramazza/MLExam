@@ -42,7 +42,7 @@ def print_result(misClass_error, misClass_error_evaluation,
     plt.tight_layout()  # minimize overlap of subplots
     plt.savefig(s)
     plt.close()
-    print s[9:], " got MEE " ,squared_error[-1]
+    print s[9:], " got MEE ", squared_error[-1]
 
 
 def holdout(frac, train_data):
