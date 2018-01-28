@@ -4,10 +4,9 @@ from ml_cup import *
 def main():
 
     # read dile train set
-    df = pd.read_csv("../MLCup/ML-CUP17-TR.csv", comment='#', header=None)
+    df = pd.read_csv("../MLCup/ML-CUP17-TR_shuffled.csv", comment='#')
     features_col = ["input1","input2","input3","input4","input5","input6","input7", "input8","input9","input10"]
     targets_col = ["target_x", "target_y"]
-    df.columns = ["id"] + features_col + targets_col
 
     # divide pattern and targets
     pattern,labels = divide_patterns_labels(df,features_col,targets_col)
@@ -27,7 +26,7 @@ def main():
     architecture = [17,10,2]
     neurons = [InputNeuron,TanHNeuron,TanHNeuron]
     network = Network(architecture,neurons)
-    epochs = 1
+    epochs = 2
     learning_rate = 0.2
     batch_size = 1
     momentum = 0.6
