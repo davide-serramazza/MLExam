@@ -144,6 +144,7 @@ def grid_search(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns,vl_labe
                                                   learning_rate=lr, batch_size=bat, momentum=mo, regularization=reg)
 
                                 # append result of single epoch in list previously created
+                                print squared_error_validation_average
                                 squared_error_average += squared_error
                                 misClass_error_average += misClass_error
                                 squared_error_validation_average += squared_error_validation

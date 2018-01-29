@@ -37,6 +37,8 @@ def main():
         data=development_patterns, targets=development_labels, eval_data=test_patterns,eval_targets=test_targets,
         lossObject=lossObject, epochs=epochs, learning_rate=learning_rate, batch_size=batch_size,
         momentum=momentum, regularization=regularization)
+
+    network.dump_weights("final_train_weigths_ml_cup")
     # getting average
     squared_error /= float(len(development_patterns))
     squared_error_test /= float(len(test_patterns))
