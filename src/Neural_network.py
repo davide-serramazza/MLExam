@@ -353,7 +353,6 @@ class Network:
 
         # getting the gradient as vector
         gradient = self.get_gradient_as_vector(gradient_w_batch)
-        gradient = - gradient  # invert sign because of implementation
 
         # compute mean values
         gradient /= len(data)
