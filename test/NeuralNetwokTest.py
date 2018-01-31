@@ -35,6 +35,7 @@ class TestNeuralNetwork(unittest.TestCase):
         self.assert_weights(layers)
         self.assertEqual(loss_value.round(9) / 2, 0.298371109)  # divide the obtained loss by two
 
+
     def test_train(self):
         arch = [2, 2, 2]
         neuronsType = [InputNeuron, SigmoidNeuron, SigmoidNeuron]
@@ -45,6 +46,7 @@ class TestNeuralNetwork(unittest.TestCase):
         target = [[0.01, 0.99]]
         network.train(data=data, targets=target, eval_data=[], eval_targets=[], lossObject=SquaredError("sigmoid"),
                       epochs=1, learning_rate=0.5/2, batch_size=1, momentum=0)
+
 
         layers = network.layers
         self.assert_weights(layers)

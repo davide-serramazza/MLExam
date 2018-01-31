@@ -173,7 +173,7 @@ class Network:
         :param regularization: regularization coefficient
         :return: current current weight update (i.e prev_delta for next iteration)
         """
-        deltaW = gradient_w * learning_rate + prev_delta * momentum
+        deltaW = - learning_rate * gradient_w + momentum * prev_delta
         # initialize a vector of deltaw`s shape
         lambda_vectors = copy.deepcopy(deltaW)
         for i in range(1, len(self.layers)):
@@ -353,7 +353,6 @@ class Network:
 
         # getting the gradient as vector
         gradient = self.get_gradient_as_vector(gradient_w_batch)
-        gradient = - gradient  # invert sign because of implementation
 
         # compute mean values
         gradient /= len(data)

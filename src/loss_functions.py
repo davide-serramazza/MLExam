@@ -47,7 +47,7 @@ class SquaredError:
         """
         # TODO return (output - target) so it is the true gradient and then use "- eta" in update_weights, and also
         # TODO cancel the minus in the bfgs compute_gradient()
-        return 2 * (target - output_net)
+        return 2 * (output_net - target)
 
 
 class EuclideanError:
