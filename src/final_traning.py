@@ -22,23 +22,24 @@ def main():
     network = Network(architecture,neurons)
     lossObject = SquaredError("tangentH")
 
-    epochs = 1
+    epochs = 50
     learning_rate = 0.2
     batch_size = len(training_patterns)
     momentum = 0.6
     regularization = 0.001
 
-    squared_error,misClass_error, squared_error_test,misClass_error_test = network.train(
-        data=training_patterns,targets=training_labels,eval_data=test_patterns,eval_targets=test_labels,
-            lossObject = lossObject,epochs=epochs, learning_rate=learning_rate , batch_size=batch_size , momentum=momentum,
-    regularization=regularization)
-    # getting avarage
-    squared_error /= float(2*len(training_patterns))
-    squared_error_test /= float (2*len(test_patterns))
-    misClass_error /= float (len(training_patterns))
+    squared_error, misClass_error, squared_error_test, misClass_error_test = network.train(
+            data=training_patterns, targets=training_labels, eval_data=test_patterns,eval_targets=test_labels,
+            lossObject=lossObject, epochs=epochs, learning_rate=learning_rate, batch_size=batch_size,
+            momentum=momentum, regularization=regularization)
+    # getting average
+    squared_error /= float(len(training_patterns))
+    squared_error_test /= float(len(test_patterns))
+    misClass_error /= float(len(training_patterns))
     misClass_error_test /= float(len(test_patterns))
-    print_result(misClass_error , misClass_error_test , squared_error , squared_error_test , "test set",
-                 architecture,batch_size, learning_rate,momentum,regularization,1)
+    print_result(misClass_error, misClass_error_test, squared_error, squared_error_test,
+                 architecture, batch_size, learning_rate, momentum, regularization, 1,
+                 "test set", lossObject, "../image/")
     print "accuracy", 1-misClass_error[-1]
     print "accuracy test", 1-misClass_error_test[-1]
     print "squared error", squared_error[-1]

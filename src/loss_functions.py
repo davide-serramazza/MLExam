@@ -17,9 +17,9 @@ class SquaredError:
         """
         # data error
         difference = target - output_net
-        data_error = np.sum(np.square(difference)) / 2
+        data_error = np.sum(np.square(difference))
         # regularization error
-        regularization_error = regularization * np.sum(np.square(weights)) / 2
+        regularization_error = regularization * np.sum(np.square(weights))
         return data_error + regularization_error
 
     def misClassification(self, target, output_net):
@@ -45,4 +45,36 @@ class SquaredError:
         :param output_net: vector containing the neural network output for the training example
         :return: value of the derivative of the error for the training example
         """
-        return target - output_net
+        # TODO return (output - target) so it is the true gradient and then use "- eta" in update_weights, and also
+        # TODO cancel the minus in the bfgs compute_gradient()
+        return 2 * (output_net - target)
+
+
+class EuclideanError:
+    def __init__(self,normalizer=None):
+        self.normalizer = normalizer
+
+    def value(self, target, output_net, weights, regularization=0):
+        #denormalize
+        if self.normalizer != None:
+            den_target = self.normalizer.inverse_transform([target])
+            den_output = self.normalizer.inverse_transform([output_net])
+            target = den_target[0]
+            output_net = den_output[0]
+
+        # data error
+        data_error = np.linalg.norm(output_net - target)
+        # regularization error
+        regularization_error = regularization * np.sum(np.square(weights))
+        return data_error + regularization_error
+
+    def derivative(self, target, output_net):
+        numerator = np.sum(output_net - target)
+        denominator = np.linalg.norm(output_net - target)
+        loss_derivative = float(numerator) / denominator
+        # TODO return true gradient instead
+        return - loss_derivative
+
+    def misClassification(self, target, output_net):
+        # ignore
+        return 0

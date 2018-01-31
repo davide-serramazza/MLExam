@@ -1,3 +1,5 @@
+.idea/workspace.xml
 .idea/*
 image/*
 src/*.pyc
+my_prediction.csv
