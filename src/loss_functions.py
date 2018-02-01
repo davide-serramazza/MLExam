@@ -72,8 +72,7 @@ class EuclideanError:
         numerator = np.sum(output_net - target)
         denominator = np.linalg.norm(output_net - target)
         loss_derivative = float(numerator) / denominator
-        # TODO return true gradient instead
-        return - loss_derivative
+        return loss_derivative
 
     def misClassification(self, target, output_net):
         # ignore

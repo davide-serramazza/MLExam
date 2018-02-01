@@ -32,13 +32,13 @@ def main():
     architecture = [  [10,20,20,2] ]
     neurons = [ [InputNeuron,TanHNeuron,TanHNeuron,OutputNeuron] ]
     regularization = [0.05]
-    epochs = 2
+    epochs = 10
     parameter = grid_search_parameter(learning_rate, momentum, batch_size, architecture, neurons, regularization, epochs)
     # create loss
     loss_obj = EuclideanError(normalizer)
 
     start_time = time.time()
-    grid_search(parameter, loss_obj, tr_patterns, tr_targets, vl_patterns, vl_targets, n_trials=5, save_in_dir="../image/")
+    grid_search(parameter, loss_obj, tr_patterns, tr_targets, vl_patterns, vl_targets, n_trials=1, save_in_dir="../image/")
     elapsed_time = time.time() - start_time
     print "time in grid search:", elapsed_time
 
