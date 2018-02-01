@@ -26,8 +26,6 @@ def main():
     tr_patterns, tr_targets, vl_patterns, vl_targets = holdout_cup(first_partition_patterns
                                                                    ,first_partition_labels, 0.8)
 
-
-    # create network
     architecture = [10,10,2]
     neurons = [InputNeuron,SigmoidNeuron,OutputNeuron]
     network = Network(architecture,neurons)
@@ -43,6 +41,7 @@ def main():
     start_time = time.time()
     grid_search(parameter, loss_obj, tr_patterns, tr_targets, vl_patterns, vl_targets,
                 n_trials=5, save_in_dir="../image/original-")
+
     elapsed_time = time.time() - start_time
     print "time in grid search:", elapsed_time
 
