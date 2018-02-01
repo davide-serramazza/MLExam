@@ -17,20 +17,20 @@ def main():
     y_scaled = normalizer.fit_transform(labels)
 
     # divide in development set and test set
-    development_patterns,development_labels, test_patterns, test_targets = holdout_cup(x_scaled,y_scaled, 0.9)
+    development_patterns,development_labels, test_patterns, test_targets = holdout_cup(pattern,labels, 0.8)
 
     #train model
-    lossObject = EuclideanError(normalizer)
+    lossObject = EuclideanError(normalizer=None)
 
     #specify parameters
-    architecture = [17,10,2]
-    neurons = [InputNeuron,TanHNeuron,TanHNeuron]
+    architecture = [10,10,2]
+    neurons = [InputNeuron,SigmoidNeuron,OutputNeuron]
     network = Network(architecture,neurons)
-    epochs = 2
-    learning_rate = 0.2
-    batch_size = 1
-    momentum = 0.6
-    regularization = 0.001
+    epochs = 100
+    learning_rate = 0.3
+    batch_size = len(development_patterns)
+    momentum = 0.5
+    regularization = 0.01
 
     # train and get result
     squared_error, misClass_error, squared_error_test, misClass_error_test = network.train(

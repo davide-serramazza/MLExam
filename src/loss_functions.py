@@ -64,16 +64,13 @@ class EuclideanError:
 
         # data error
         data_error = np.linalg.norm(output_net - target)
-        # regularization error
+
+    # regularization error
         regularization_error = regularization * np.sum(np.square(weights))
         return data_error + regularization_error
 
     def derivative(self, target, output_net):
-        numerator = np.sum(output_net - target)
-        denominator = np.linalg.norm(output_net - target)
-        loss_derivative = float(numerator) / denominator
-        # TODO return true gradient instead
-        return - loss_derivative
+        return 2 * (output_net - target)
 
     def misClassification(self, target, output_net):
         # ignore
