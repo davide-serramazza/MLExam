@@ -45,8 +45,6 @@ class SquaredError:
         :param output_net: vector containing the neural network output for the training example
         :return: value of the derivative of the error for the training example
         """
-        # TODO return (output - target) so it is the true gradient and then use "- eta" in update_weights, and also
-        # TODO cancel the minus in the bfgs compute_gradient()
         return 2 * (output_net - target)
 
 
@@ -64,15 +62,17 @@ class EuclideanError:
 
         # data error
         data_error = np.linalg.norm(output_net - target)
-        # regularization error
+
+    # regularization error
         regularization_error = regularization * np.sum(np.square(weights))
         return data_error + regularization_error
 
     def derivative(self, target, output_net):
-        numerator = np.sum(output_net - target)
-        denominator = np.linalg.norm(output_net - target)
-        loss_derivative = float(numerator) / denominator
-        return loss_derivative
+        #numerator = np.sum(output_net - target)
+        #denominator = np.linalg.norm(output_net - target)
+        #loss_derivative = float(numerator) / denominator
+        # use derivative of squared error
+        return 2 * (output_net - target)
 
     def misClassification(self, target, output_net):
         # ignore

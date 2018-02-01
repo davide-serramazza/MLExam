@@ -294,7 +294,6 @@ class Network:
             # computing loss and misClassification on validation set then append to list
             squared_error_validation_epoch, misClass_error_validation_epoch = \
                 self.validation_error(eval_data, eval_targets, lossObject)
-
             losses_valdation = np.append(losses_valdation, squared_error_validation_epoch)
             misClassification_validation = np.append(misClassification_validation, misClass_error_validation_epoch)
 
@@ -379,9 +378,12 @@ class Network:
         return H_new
 
 
-    def trainBFGS(self, data, targets, eval_data, eval_targets, lossObject,epochs):
-        losses = []  # vector containing the loss of each epoch
-        misses = []  # vector containing the misclassification for each epoch
+    def trainBFGS(self, data, targets, eval_data, eval_targets,theta,c_1,c_2,lossObject,epochs):
+
+        losses = [] # vector containing the loss of each epoch
+        misses = [] # vector containing the misclassification for each epoch
+        losses_validation = []
+        misses_validation =  []
         # 1. compute initial gradient and initial Hessian approximation H_0
         gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject)
         H = np.identity(gradient_old.shape[0])
@@ -389,6 +391,13 @@ class Network:
         # append losses
         losses.append(loss)
         misses.append(miss)
+        # compute validation error and append it
+        squared_error_validation_epoch, misClass_error_validation_epoch = \
+            self.validation_error(eval_data, eval_targets, lossObject)
+
+        losses_validation.append(squared_error_validation_epoch)
+        misses_validation.append(misClass_error_validation_epoch)
+
         print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
         print "---------------------------------------------------------------------------"
         for epoch in range(epochs):
@@ -397,14 +406,12 @@ class Network:
                 print "break at", epoch
                 break
 
+
             # 1. compute search direction p = -H * gradient
             p = - H.dot(gradient_old)
 
             # 2. line search
-            theta = 0.9   # contraction factor of alpha
             alpha_0 = 1   # initial step size trial is always 1 for quasi-Newton TODO: try initial step less than 1
-            c_1 = 0.0001  # scaling factor for Armijo condition TODO try 1e-4
-            c_2 = 0.9     # scaling factor for Wolfe condition
 
             #alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
             alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta)
@@ -438,7 +445,14 @@ class Network:
             x_old = x_new
             gradient_old = gradient_new
 
-        return losses, misses
+            # compute validation error and append it
+            squared_error_validation_epoch, misClass_error_validation_epoch = \
+                self.validation_error(eval_data, eval_targets, lossObject)
+
+            losses_validation.append(squared_error_validation_epoch)
+            misses_validation.append(misClass_error_validation_epoch)
+
+        return losses, misses, losses_validation, misses_validation
 
     def compute_direction(self,H,gradient,s,y,rho):
 
@@ -446,21 +460,37 @@ class Network:
         q = gradient
         # first loop
         for i in range(len(s)- 1, -1 , -1):
-            a = rho [i]*np.dot(s[i],q)
+            a = rho [i]*np.dot(q,s[i])
             a_list.insert(0,a)
-            q -= -a*y[i]
+            q -= a*y[i]
 
-        # da wikipedia prossime due righe
-        #if not len(s)==0:
-         #   H = np.outer(y[0], s[0]) / np.dot(y[0],y[0])
         r = H.dot(q)
 
         #second loop
         for i in range(len(s)):
-            beta = rho[i]*np.dot(y[i],r)
-            r +=  s[i]* (a_list[i]-beta)
+            beta = rho[i]*np.dot(r,y[i])
+            r += s[i]* (a_list[i]-beta)
 
         return r
+
+    def temp(self,H,gradient,s,y,rho):
+        if len(s) > 0:
+            # build V
+            rho_k = float(1) / np.dot(s[0], y[0])
+            tmp = rho_k * np.outer(s[0], y[0])
+            V_k = np.identity(gradient.shape[0]) - tmp
+
+            print "V ", V_k.dot(gradient)
+
+            m1 = np.transpose(V_k)
+            m2 = m1.dot(H)
+            print "V^tH", m2.dot(gradient)
+            H = m2.dot(V_k)
+            print "prodotto", H.dot(gradient)
+            H += np.outer(s[0],s[0]) * rho_k
+            print "dopo somme", H.dot(gradient)
+
+        return H.dot(gradient)
 
 
     def trainLBFGS (self, data, targets, eval_data, eval_targets, lossObject,m,epochs):
@@ -489,10 +519,10 @@ class Network:
                 break
 
 
-
             # compute p using two loop recursion
             r= self.compute_direction(H,gradient_old,s_list,y_list,rho_list)
             p = -r
+            #print p
 
             # 2. line search
             theta = 0.9   # contraction factor of alpha
@@ -574,7 +604,7 @@ class Network:
             phi_p_0 = np.dot(gradient_old, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
 
             if not phi_p_0 < 0:
-                raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
+                phi_p_0 *= (-1)
 
             if phi_alpha_i > phi_0 + c_1 * alpha_i * phi_p_0 or (i > 1 and phi_alpha_i >= phi_alpha_old):
                 alpha_star = self.zoom(alpha_old, alpha_i, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject)
