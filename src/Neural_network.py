@@ -309,25 +309,30 @@ class Network:
             gradient = np.append(gradient,tmp)
         return gradient
 
-    def update_weights_CM(self, delta):
+    def update_weights_CM(self, delta,regularization):
         """
         update network weights
         :param delta: weight update p_k = - H * nabla f
         :return: x_k+1
         """
+
         start = 0
         # initializing x_old = x_k and x_new = x_{k+1}
         x_new = np.array([])
 
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
+
                 current_neuron_weights = self.layers[i].neurons[j].weights
-                # append to x_k before updating
 
                 # taking only gradient's entry w.r.t. current gradient
                 weights_len = len(current_neuron_weights)
                 tmp = delta[start:start + weights_len]
                 start += weights_len
+                #create "regularization vector"
+                reg = np.zeros(weights_len)
+                reg.fill(regularization)
+                reg[-1]=0
                 # update weigths
                 current_neuron_weights += tmp
 
@@ -378,7 +383,7 @@ class Network:
         return H_new
 
 
-    def trainBFGS(self, data, targets, eval_data, eval_targets,theta,c_1,c_2,lossObject,epochs):
+    def trainBFGS(self, data, targets, eval_data, eval_targets,theta,c_1,c_2,lossObject,epochs,regularization):
 
         losses = [] # vector containing the loss of each epoch
         misses = [] # vector containing the misclassification for each epoch
@@ -420,7 +425,7 @@ class Network:
             delta = p * alpha
 
             # 4. update weights using x_{k+1} = x_{k} + alpha_{k} * p_k
-            x_new = self.update_weights_CM(delta)
+            x_new = self.update_weights_CM(delta,regularization)
 
             # 5. compute new gradient
             gradient_new, loss, miss = self.calculate_gradient(data, targets, lossObject)
@@ -741,7 +746,7 @@ class Network:
         # creates a copy of the network, update its weights to get the
         # hypothetical x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
         temp_network = copy.deepcopy(self)
-        temp_network.update_weights_CM(alpha_i * p)
+        temp_network.update_weights_CM(alpha_i * p,regularization=0.0)
         gradient_alpha, loss_alpha, _ = temp_network.calculate_gradient(data, targets, lossObject)
         return gradient_alpha, loss_alpha
 

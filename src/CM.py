@@ -6,7 +6,7 @@ from Validation_CM import *
 import time
 
 def main():
-    train_file = "../monk_datasets/monks-2.train"
+    train_file = "../monk_datasets/monks-3.train"
 
     # 1. load dataset
     columns = ['label', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'id']
@@ -29,15 +29,16 @@ def main():
 
     lossObject = SquaredError("tangentH")
 
-    theta=[0.7]
+    theta=[0.9]
     c_1=[0.0001,0.001,0.005]
     c_2=[0.9,0.85,0.5]
+    regularizarion = [0.001]
     lossObject=lossObject
-    epochs=30
+    epochs=50
 
-    parameter = grid_search_CM_parameter(c_1,c_2,theta,epochs,arch,neuronsType)
+    parameter = grid_search_CM_parameter(c_1,c_2,theta,regularizarion,epochs,arch,neuronsType)
     start_time = time.time()
-    grid_search_CM(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,5,"../image/monk2/")
+    grid_search_CM(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,5,"../image/monk3-reg/")
     elapsed_time = time.time() - start_time
     print "time in grid search:", elapsed_time
 
