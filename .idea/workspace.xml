@@ -2,16 +2,214 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="00e470c8-3fd1-49b7-b401-835ef5e88de2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Validation_CM.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/final_train_weigths_ml_cup.npy" afterPath="$PROJECT_DIR$/src/final_train_weigths_ml_cup.npy" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/FINAL_model-lr_0,2-mo_0,1-bat:256-reg_0,01-arc_[10,10,2,].png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modello finale" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_1.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_10.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_100.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_101.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_102.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_103.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_104.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_105.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_106.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_107.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_108.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_109.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_11.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_110.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_111.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_112.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_113.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_114.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_115.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_116.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_117.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_118.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_119.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_12.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_120.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_121.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_122.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_123.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_124.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_125.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_126.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_127.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_128.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_129.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_13.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_130.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_131.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_132.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_133.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_134.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_135.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_136.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_137.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_138.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_139.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_14.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_140.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_141.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_142.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_143.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_144.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_145.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_146.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_147.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_148.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_149.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_15.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_150.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_151.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_152.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_153.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_154.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_155.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_156.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_157.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_158.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_159.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_16.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_160.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_161.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_162.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_163.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_164.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_165.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_166.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_167.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_168.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_169.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_17.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_170.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_171.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_172.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_173.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_174.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_175.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_176.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_177.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_178.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_179.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_18.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_180.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_181.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_182.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_183.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_184.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_185.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_186.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_187.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_188.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_189.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_19.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_190.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_191.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_192.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_193.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_194.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_195.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_196.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_197.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_198.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_199.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_2.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_20.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_200.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_21.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_22.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_23.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_24.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_25.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_26.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_27.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_28.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_29.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_3.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_30.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_31.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_32.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_33.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_34.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_35.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_36.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_37.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_38.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_39.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_4.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_40.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_41.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_42.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_43.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_44.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_45.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_46.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_47.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_48.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_49.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_5.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_50.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_51.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_52.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_53.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_54.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_55.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_56.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_57.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_58.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_59.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_6.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_60.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_61.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_62.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_63.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_64.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_65.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_66.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_67.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_68.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_69.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_7.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_70.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_71.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_72.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_73.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_74.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_75.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_76.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_77.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_78.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_79.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_8.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_80.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_81.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_82.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_83.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_84.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_85.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_86.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_87.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_88.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_89.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_9.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_90.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_91.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_92.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_93.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_94.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_95.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_96.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_97.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_98.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weights/weights_final_model_epoch_99.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/CM.py" afterPath="$PROJECT_DIR$/src/CM.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Neural_network.py" afterPath="$PROJECT_DIR$/src/Neural_network.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Validation.py" afterPath="$PROJECT_DIR$/src/Validation.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Validation_CM.py" afterPath="$PROJECT_DIR$/src/Validation_CM.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/final_traning_MLcup.py" afterPath="$PROJECT_DIR$/src/final_traning_MLcup.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/loss_functions.py" afterPath="$PROJECT_DIR$/src/loss_functions.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ml_cup.py" afterPath="$PROJECT_DIR$/src/ml_cup.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monk_benchmark.py" afterPath="$PROJECT_DIR$/src/monk_benchmark.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -25,8 +223,8 @@
       <file leaf-file-name="Neural_network.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5118">
-              <caret line="400" column="13" lean-forward="false" selection-start-line="400" selection-start-column="8" selection-end-line="400" selection-end-column="13" />
+            <state relative-caret-position="278">
+              <caret line="487" column="26" lean-forward="false" selection-start-line="487" selection-start-column="26" selection-end-line="487" selection-end-column="26" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -34,11 +232,43 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="final_traning_MLcup.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CM.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/CM.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="936">
+              <caret line="63" column="35" lean-forward="false" selection-start-line="63" selection-start-column="35" selection-end-line="63" selection-end-column="35" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Validation.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Validation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1337">
+              <caret line="137" column="0" lean-forward="false" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Validation_CM.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Validation_CM.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="226">
+              <caret line="141" column="0" lean-forward="false" selection-start-line="141" selection-start-column="0" selection-end-line="141" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="final_traning_MLcup.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/final_traning_MLcup.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
-              <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="32" selection-end-column="25" />
+            <state relative-caret-position="600">
+              <caret line="46" column="21" lean-forward="true" selection-start-line="46" selection-start-column="21" selection-end-line="46" selection-end-column="21" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -46,11 +276,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ml_cup.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ml_cup.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ml_cup.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
-              <caret line="40" column="45" lean-forward="false" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+            <state relative-caret-position="576">
+              <caret line="33" column="24" lean-forward="false" selection-start-line="33" selection-start-column="24" selection-end-line="33" selection-end-column="24" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -90,6 +320,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>gradient</find>
+      <find>update_we</find>
       <find>print</find>
     </findStrings>
   </component>
@@ -106,14 +337,14 @@
       <list>
         <option value="$PROJECT_DIR$/src/final_traning.py" />
         <option value="$PROJECT_DIR$/test/NeuralNetwokTest.py" />
-        <option value="$PROJECT_DIR$/src/Validation_CM.py" />
-        <option value="$PROJECT_DIR$/src/Neural_network.py" />
         <option value="$PROJECT_DIR$/src/Validation.py" />
-        <option value="$PROJECT_DIR$/src/CM.py" />
         <option value="$PROJECT_DIR$/src/monk_benchmark.py" />
         <option value="$PROJECT_DIR$/src/loss_functions.py" />
-        <option value="$PROJECT_DIR$/src/final_traning_MLcup.py" />
         <option value="$PROJECT_DIR$/src/ml_cup.py" />
+        <option value="$PROJECT_DIR$/src/Validation_CM.py" />
+        <option value="$PROJECT_DIR$/src/Neural_network.py" />
+        <option value="$PROJECT_DIR$/src/CM.py" />
+        <option value="$PROJECT_DIR$/src/final_traning_MLcup.py" />
       </list>
     </option>
   </component>
@@ -353,9 +584,9 @@
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Python.final_traning_MLcup" />
-        <item index="1" class="java.lang.String" itemvalue="Python.monk_benchmark" />
+        <item index="1" class="java.lang.String" itemvalue="Python.CM" />
         <item index="2" class="java.lang.String" itemvalue="Python.ml_cup" />
-        <item index="3" class="java.lang.String" itemvalue="Python.CM" />
+        <item index="3" class="java.lang.String" itemvalue="Python.monk_benchmark" />
         <item index="4" class="java.lang.String" itemvalue="Python tests.Nosetests in NeuralNetwokTest.py" />
       </list>
     </recent_temporary>
@@ -407,7 +638,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="230" y="24" width="2073" height="1443" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -440,7 +670,14 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/Neural_network.py</url>
+          <line>387</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="2" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -778,47 +1015,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/CM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="672">
-          <caret line="31" column="14" lean-forward="false" selection-start-line="31" selection-start-column="14" selection-end-line="31" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Validation_CM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="141" column="33" lean-forward="true" selection-start-line="141" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/monk_benchmark.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="504">
           <caret line="75" column="35" lean-forward="true" selection-start-line="75" selection-start-column="35" selection-end-line="75" selection-end-column="35" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Validation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="870">
-          <caret line="150" column="0" lean-forward="false" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5118">
-          <caret line="400" column="13" lean-forward="false" selection-start-line="400" selection-start-column="8" selection-end-line="400" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -838,10 +1039,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/final_traning_MLcup.py">
+    <entry file="file://$PROJECT_DIR$/src/Validation_CM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="32" selection-end-column="25" />
+        <state relative-caret-position="226">
+          <caret line="141" column="0" lean-forward="false" selection-start-line="141" selection-start-column="0" selection-end-line="141" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Validation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1337">
+          <caret line="137" column="0" lean-forward="false" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="936">
+          <caret line="63" column="35" lean-forward="false" selection-start-line="63" selection-start-column="35" selection-end-line="63" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="278">
+          <caret line="487" column="26" lean-forward="false" selection-start-line="487" selection-start-column="26" selection-end-line="487" selection-end-column="26" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
@@ -850,8 +1077,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ml_cup.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="33" column="24" lean-forward="false" selection-start-line="33" selection-start-column="24" selection-end-line="33" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/final_traning_MLcup.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="600">
-          <caret line="40" column="45" lean-forward="false" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+          <caret line="46" column="21" lean-forward="true" selection-start-line="46" selection-start-column="21" selection-end-line="46" selection-end-column="21" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

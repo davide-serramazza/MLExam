@@ -6,13 +6,14 @@ import pandas as pd
 
 
 class grid_search_CM_parameter:
-    def __init__(self,c_1,c_2,theta,epoch,architecture,neurons):
+    def __init__(self,c_1,c_2,theta,regularization,epoch,architecture,neurons):
         self.c_1 =  c_1
         self.c_2 = c_2
         self.theta = theta
         self.epoch = epoch
         self.architecture = architecture
         self.neurons = neurons
+        self.regularization = regularization
 
 
 def print_result(misClass_error, misClass_error_evaluation,
@@ -123,36 +124,38 @@ def grid_search_CM(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns,vl_l
     for c_1 in parameter.c_1:
         for c_2 in parameter.c_2:
             for theta in parameter.theta:
-                # initialize lists for saving reslut
-                squared_error_average = np.zeros(parameter.epoch+1)
-                misClass_error_average = np.zeros(parameter.epoch+1)
-                squared_error_validation_average = np.zeros(parameter.epoch+1)
-                misClass_error_validation_average = np.zeros(parameter.epoch+1)
-                # n_trials then average
-                for n in range(n_trials):
-                    # buid a new network
-                    network = Network(parameter.architecture, parameter.neurons)
-                    # train
-                    squared_error, misClass_error, \
-                    squared_error_validation, misClass_error_validation = \
-                        network.trainBFGS(data=tr_patterns,targets=tr_labels,eval_data=vl_patterns,eval_targets=vl_labels,
-                                          theta=theta,c_1=c_1,c_2=c_2,lossObject=loss_obj,epochs=parameter.epoch)
+                for reg in parameter.regularization:
+                    # initialize lists for saving reslut
+                    squared_error_average = np.zeros(parameter.epoch+1)
+                    misClass_error_average = np.zeros(parameter.epoch+1)
+                    squared_error_validation_average = np.zeros(parameter.epoch+1)
+                    misClass_error_validation_average = np.zeros(parameter.epoch+1)
+                    # n_trials then average
+                    for n in range(n_trials):
+                        # buid a new network
+                        network = Network(parameter.architecture, parameter.neurons)
+                        # train
+                        squared_error, misClass_error, \
+                        squared_error_validation, misClass_error_validation = \
+                            network.trainBFGS(data=tr_patterns,targets=tr_labels,eval_data=vl_patterns,eval_targets=vl_labels,
+                                              theta=theta,c_1=c_1,c_2=c_2,lossObject=loss_obj,epochs=parameter.epoch,
+                                              regularization=reg)
 
-                    # append result of single epoch in list previously created
-                    print squared_error
-                    squared_error_average += squared_error
-                    misClass_error_average += misClass_error
-                    squared_error_validation_average += squared_error_validation
-                    misClass_error_validation_average += misClass_error_validation
+                        # append result of single epoch in list previously created
+                        print squared_error
+                        squared_error_average += squared_error
+                        misClass_error_average += misClass_error
+                        squared_error_validation_average += squared_error_validation
+                        misClass_error_validation_average += misClass_error_validation
 
 
-            # taking mean error over trials and over patterns
-                squared_error_average /= float(n_trials)
-                misClass_error_average /= float(n_trials)
-                squared_error_validation_average /= float(n_trials) * len(vl_patterns)
-                misClass_error_validation_average /= float(n_trials) * len(vl_patterns)
+                # taking mean error over trials and over patterns
+                    squared_error_average /= float(n_trials)
+                    misClass_error_average /= float(n_trials)
+                    squared_error_validation_average /= float(n_trials) * len(vl_patterns)
+                    misClass_error_validation_average /= float(n_trials) * len(vl_patterns)
 
-                print_result(misClass_error_average, misClass_error_validation_average,
-                             squared_error_average, squared_error_validation_average,
-                             parameter.architecture, c_1, c_2, theta, n_figure, "validation set", loss_obj, save_in_dir)
-                n_figure += 1  # increment to create a new figure
+                    print_result(misClass_error_average, misClass_error_validation_average,
+                                 squared_error_average, squared_error_validation_average,
+                                 parameter.architecture, c_1, c_2, theta, n_figure, "validation set", loss_obj, save_in_dir)
+                    n_figure += 1  # increment to create a new figure

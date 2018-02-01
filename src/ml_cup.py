@@ -28,14 +28,13 @@ def main():
 
 
     # create network
-    architecture = [10,10,2]
-    neurons = [InputNeuron,SigmoidNeuron,OutputNeuron]
-    network = Network(architecture,neurons)
-    epochs = 100
-    learning_rate = 0.3
-    batch_size = len(tr_patterns)
-    momentum = 0.5
-    regularization = 0.01
+    architecture = [ [10,10,5,2] ]
+    neurons = [ [InputNeuron,SigmoidNeuron,SigmoidNeuron,OutputNeuron] ]
+    epochs = 300
+    learning_rate = [0.1]
+    batch_size = [64,128]
+    momentum = [0.1,0.2,0.3]
+    regularization = [0.01]
     parameter = grid_search_parameter(learning_rate, momentum, batch_size, architecture, neurons, regularization, epochs)
     # create loss
     loss_obj = EuclideanError(normalizer=None)
