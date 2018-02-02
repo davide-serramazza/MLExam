@@ -2,6 +2,7 @@ import pandas as pd
 from Neural_network import *
 import matplotlib.pyplot as plt
 from Validation import *
+import time
 
 def decode(data,encoding):
     """
@@ -31,13 +32,24 @@ def transform_target(l):
     res = []
     for i in l:
         if i==0:
-            res.append(-1)
+            res.append(np.array([-1]))
         else:
-            res.append(1)
+            res.append(np.array([1]))
     return res
 
+def transform_labels(training_set, validation_set):
+    training_labels = transform_target(training_set["label"].values)
+    validation_labels = transform_target(validation_set["label"].values)
+    return training_labels, validation_labels
+
+
+def decode_patterns(encoding, features, training_set, validation_set):
+    training_patterns = [decode(pattern, encoding) for pattern in training_set[features].values]
+    validation_patterns = [decode(pattern, encoding) for pattern in validation_set[features].values]
+    return training_patterns, validation_patterns
+
 def main():
-    train_file = "../monk_datasets/monks-2.train"
+    train_file = "../monk_datasets/monks-3.train"
 
     # 1. load dataset
     columns = ['label', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'id']
@@ -58,29 +70,21 @@ def main():
 
     # validation: define hyper-parameters to test
     architecture = [[17, 10, 1]]
-    neurons = [[InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron,TanHNeuron] ]
-    momentum = [0.4, 0.5, 0.6]
+    neurons = [[InputNeuron, TanHNeuron, TanHNeuron]] #[[InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron,TanHNeuron] ]
+    momentum = [0.4]  # [0.4, 0.5, 0.6]
     batch_size = [10]
-    learning_rate = [0.15, 0.2, 0.25]
-    regularization = [0]
-    epoch = 1
+    learning_rate = [0.15]  #[0.15, 0.2, 0.25]
+    regularization = [0.000]  # [0.0025, 0.005, 0.001]
+    epoch = 50
     param = grid_search_parameter(learning_rate, momentum, batch_size,
                                   architecture, neurons, regularization, epoch)
 
+    start_time = time.time()
     grid_search(param, lossObject, training_patterns, training_labels,
-                validation_patterns, validation_labels, n_trials=5)
+                validation_patterns, validation_labels, 5, "../image/")
+    elapsed_time = time.time() - start_time
+    print "time in grid search:", elapsed_time
 
-
-def transform_labels(training_set, validation_set):
-    training_labels = transform_target(training_set["label"].values)
-    validation_labels = transform_target(validation_set["label"].values)
-    return training_labels, validation_labels
-
-
-def decode_patterns(encoding, features, training_set, validation_set):
-    training_patterns = [decode(pattern, encoding) for pattern in training_set[features].values]
-    validation_patterns = [decode(pattern, encoding) for pattern in validation_set[features].values]
-    return training_patterns, validation_patterns
 
 if __name__ == "__main__":
     main()

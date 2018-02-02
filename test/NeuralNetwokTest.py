@@ -29,11 +29,12 @@ class TestNeuralNetwork(unittest.TestCase):
         target = [0.01, 0.99]
         network.forward(data)
         delta_w, loss_value, _ = network.back_propagation(target=target, lossObject=SquaredError("sigmoid"))
-        network.update_weights(delta_w, learning_rate=0.5, prev_delta=np.zeros(delta_w.shape), momentum=0)
+        network.update_weights(delta_w, learning_rate=0.5/2, prev_delta=np.zeros(delta_w.shape), momentum=0)
 
         layers = network.layers
         self.assert_weights(layers)
-        self.assertEqual(loss_value.round(9), 0.298371109)  # oracle up to 9 digits
+        self.assertEqual(loss_value.round(9) / 2, 0.298371109)  # divide the obtained loss by two
+
 
     def test_train(self):
         arch = [2, 2, 2]
@@ -43,7 +44,9 @@ class TestNeuralNetwork(unittest.TestCase):
 
         data = [[0.05, 0.1]]
         target = [[0.01, 0.99]]
-        network.train(data=data, targets=target, vl_data=[], vl_targets=[], lossObject=SquaredError("sigmoid"), epochs=1, learning_rate=0.5, batch_size=1, momentum=0)
+        network.train(data=data, targets=target, eval_data=[], eval_targets=[], lossObject=SquaredError("sigmoid"),
+                      epochs=1, learning_rate=0.5/2, batch_size=1, momentum=0)
+
 
         layers = network.layers
         self.assert_weights(layers)
