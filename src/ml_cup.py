@@ -21,25 +21,25 @@ def main():
     y_scaled = normalizer.fit_transform(labels)
 
     # divide in tr,vl and ts set
-    first_partition_patterns, first_partition_labels, test_patterns, test_targets = holdout_cup(patterns,
-                                                                                                labels, 0.8)
+    first_partition_patterns, first_partition_labels, test_patterns, test_targets = holdout_cup(x_scaled,
+                                                                                                y_scaled, 0.8)
     tr_patterns, tr_targets, vl_patterns, vl_targets = holdout_cup(first_partition_patterns
                                                                    ,first_partition_labels, 0.8)
 
     architecture = [[10,10,2]]
     neurons = [[InputNeuron,SigmoidNeuron,OutputNeuron]]
-    epochs = 1
+    epochs = 100
     learning_rate = [0.2]
     batch_size = [256]
-    momentum = [0.5]
+    momentum = [0.1]
     regularization = [0.01]
     parameter = grid_search_parameter(learning_rate, momentum, batch_size, architecture, neurons, regularization, epochs)
     # create loss
-    loss_obj = EuclideanError(normalizer=None)
+    loss_obj = EuclideanError(normalizer=normalizer)
 
     start_time = time.time()
     grid_search(parameter, loss_obj, tr_patterns, tr_targets, vl_patterns, vl_targets,
-                n_trials=5, save_in_dir="../image/")
+                n_trials=5, save_in_dir="../image/schifazza-")
 
     elapsed_time = time.time() - start_time
     print "time in grid search:", elapsed_time
