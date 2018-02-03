@@ -1,6 +1,4 @@
 import matplotlib.pyplot as plt
-import copy
-import numpy as np
 from Neural_network import *
 import pandas as pd
 

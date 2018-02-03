@@ -2,8 +2,6 @@ import unittest
 
 from src.Neural_network import *
 
-# TODO we may use assertAlmostEqual() if numerical issues arise
-# each test must start with test_
 class TestNeuralNetwork(unittest.TestCase):
     def test_forward(self):
         arch = [2, 2, 2]

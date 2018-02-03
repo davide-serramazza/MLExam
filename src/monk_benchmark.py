@@ -1,6 +1,3 @@
-import pandas as pd
-from Neural_network import *
-import matplotlib.pyplot as plt
 from Validation import *
 import time
 
@@ -68,7 +65,7 @@ def main():
 
     lossObject = SquaredError("tangentH")
 
-    # validation: define hyper-parameters to test
+    # 4. define architecture and hyperparameters
     architecture = [[17, 10, 1]]
     neurons = [[InputNeuron, TanHNeuron, TanHNeuron]] #[[InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron,TanHNeuron] ]
     momentum = [0.4]  # [0.4, 0.5, 0.6]
