@@ -4,3 +4,4 @@ image/*
 src/*.pyc
 my_prediction.csv
 weights/*
+weights_CM/*
