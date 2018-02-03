@@ -56,6 +56,7 @@ def main():
     print "epoch with least error on validation:", argmin_eval + 1
     print "MEE at epoch %d, (TR,VL) = %f, %f" % (argmin_eval + 1, losses_train[argmin_eval], losses_eval[argmin_eval])
 
+
     # plot
     plt.plot(range(1, len(losses_train) + 1), losses_train, '--')
     plt.plot(range(1, len(losses_eval) + 1), losses_eval, '-')
