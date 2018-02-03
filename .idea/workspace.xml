@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="00e470c8-3fd1-49b7-b401-835ef5e88de2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/ML/13306637cgknphmncdzq" afterPath="$PROJECT_DIR$/report/ML/13306637cgknphmncdzq" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/final_traning_MLcup.py" afterPath="$PROJECT_DIR$/src/final_traning_MLcup.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ml_cup.py" afterPath="$PROJECT_DIR$/src/ml_cup.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/final_traning_MLcup.py" afterPath="$PROJECT_DIR$/src/final_traning_MLcup.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,22 +19,53 @@
       <file leaf-file-name="Neural_network.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="9360">
-              <caret line="525" column="0" lean-forward="false" selection-start-line="525" selection-start-column="0" selection-end-line="525" selection-end-column="0" />
+            <state relative-caret-position="8280">
+              <caret line="574" column="0" lean-forward="false" selection-start-line="574" selection-start-column="0" selection-end-line="574" selection-end-column="0" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="blind_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/blind_test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="23" column="87" lean-forward="false" selection-start-line="23" selection-start-column="87" selection-end-line="23" selection-end-column="87" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
+                <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+                <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+                <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+                <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+                <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
               </folding>
             </state>
           </provider>
@@ -45,7 +76,12 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="216">
               <caret line="13" column="23" lean-forward="false" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
-              <folding />
+              <folding>
+                <marker date="1517679027976" expanded="true" signature="47:1089" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="95:691" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="717:780" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="822:1089" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -65,7 +101,11 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="558">
               <caret line="31" column="57" lean-forward="false" selection-start-line="31" selection-start-column="57" selection-end-line="31" selection-end-column="57" />
-              <folding />
+              <folding>
+                <marker date="1517679027984" expanded="true" signature="40:41" ph="..." />
+                <marker date="1517679027984" expanded="true" signature="2753:2882" ph="..." />
+                <marker date="1517679027984" expanded="true" signature="2848:2882" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -73,17 +113,25 @@
       <file leaf-file-name="NeuralNetwokTest.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/NeuralNetwokTest.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="810">
+            <state relative-caret-position="-560">
               <caret line="47" column="54" lean-forward="false" selection-start-line="47" selection-start-column="54" selection-end-line="47" selection-end-column="54" />
-              <folding />
+              <folding>
+                <marker date="1517679027988" expanded="true" signature="220:624" ph="..." />
+                <marker date="1517679027988" expanded="true" signature="654:1298" ph="..." />
+                <marker date="1517679027988" expanded="true" signature="1326:1823" ph="..." />
+                <marker date="1517679027988" expanded="true" signature="1862:2391" ph="..." />
+                <marker date="1517679027988" expanded="true" signature="2428:2734" ph="..." />
+                <marker date="1517679027988" expanded="true" signature="2764:3376" ph="..." />
+                <marker date="1517679027988" expanded="true" signature="3416:4645" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CM.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CM.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/CM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1494">
+            <state relative-caret-position="650">
               <caret line="88" column="0" lean-forward="false" selection-start-line="88" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -92,13 +140,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ml_cup.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ml_cup.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ml_cup.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="33" column="19" lean-forward="false" selection-start-line="33" selection-start-column="19" selection-end-line="33" selection-end-column="19" />
+            <state relative-caret-position="612">
+              <caret line="34" column="13" lean-forward="false" selection-start-line="34" selection-start-column="13" selection-end-line="34" selection-end-column="13" />
               <folding>
-                <element signature="e#0#19#0" expanded="true" />
+                <marker date="1517679027984" expanded="true" signature="2154:2474" ph="..." />
               </folding>
             </state>
           </provider>
@@ -111,6 +159,24 @@
               <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
+                <marker date="1517679027976" expanded="true" signature="142:501" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="244:501" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="710:1821" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="1854:3624" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="1859:2308" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1517679027976" expanded="true" signature="3651:3813" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="3656:3774" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1517679027976" expanded="true" signature="3844:4091" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="3849:3982" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1517679027976" expanded="true" signature="4201:7697" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="4206:4666" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1517679027976" expanded="true" signature="4961:7697" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="5004:7697" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="5046:7697" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="5095:7697" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="5179:7697" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="5773:6850" ph="..." />
+                <marker date="1517679027976" expanded="true" signature="5960:6076" ph="..." />
               </folding>
             </state>
           </provider>
@@ -122,7 +188,7 @@
             <state relative-caret-position="1008">
               <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
               <folding>
-                <element signature="e#0#19#0" expanded="true" />
+                <marker date="1517679027984" expanded="true" signature="2180:2754" ph="..." />
               </folding>
             </state>
           </provider>
@@ -198,11 +264,6 @@
             <path>
               <item name="MLExam" type="b2602c69:ProjectViewProjectNode" />
               <item name="MLExam" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="MLExam" type="b2602c69:ProjectViewProjectNode" />
-              <item name="MLExam" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="MLExam" type="b2602c69:ProjectViewProjectNode" />
@@ -467,13 +528,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="230" y="24" width="1303" height="780" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.120676406" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32582584" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32582584" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24987556" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32961783" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -481,17 +543,28 @@
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32582584" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32961783" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.120676406" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24987556" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39968154" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -524,6 +597,49 @@
           <caret line="162" column="62" lean-forward="false" selection-start-line="162" selection-start-column="62" selection-end-line="162" selection-end-column="62" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
@@ -555,6 +671,49 @@
           <caret line="73" column="34" lean-forward="false" selection-start-line="73" selection-start-column="34" selection-end-line="73" selection-end-column="34" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
@@ -579,6 +738,49 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
@@ -603,6 +805,49 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
@@ -620,6 +865,49 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
@@ -644,6 +932,49 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
@@ -682,6 +1013,49 @@
           <caret line="273" column="17" lean-forward="false" selection-start-line="273" selection-start-column="17" selection-end-line="273" selection-end-column="17" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
@@ -699,6 +1073,49 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
@@ -723,6 +1140,49 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
@@ -747,6 +1207,49 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
@@ -764,6 +1267,49 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
@@ -788,6 +1334,49 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
@@ -833,32 +1422,101 @@
           <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="142:501" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="244:501" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="710:1821" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="1854:3624" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="1859:2308" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="3651:3813" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="3656:3774" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="3844:4091" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="3849:3982" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="4201:7697" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="4206:4666" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="4961:7697" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="5004:7697" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="5046:7697" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="5095:7697" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="5179:7697" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="5773:6850" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="5960:6076" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/NeuralNetwokTest.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
+        <state relative-caret-position="-560">
           <caret line="47" column="54" lean-forward="false" selection-start-line="47" selection-start-column="54" selection-end-line="47" selection-end-column="54" />
-          <folding />
+          <folding>
+            <marker date="1517679027988" expanded="true" signature="220:624" ph="..." />
+            <marker date="1517679027988" expanded="true" signature="654:1298" ph="..." />
+            <marker date="1517679027988" expanded="true" signature="1326:1823" ph="..." />
+            <marker date="1517679027988" expanded="true" signature="1862:2391" ph="..." />
+            <marker date="1517679027988" expanded="true" signature="2428:2734" ph="..." />
+            <marker date="1517679027988" expanded="true" signature="2764:3376" ph="..." />
+            <marker date="1517679027988" expanded="true" signature="3416:4645" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/prova.py" />
     <entry file="file://$PROJECT_DIR$/src/Neural_network.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9360">
-          <caret line="525" column="0" lean-forward="false" selection-start-line="525" selection-start-column="0" selection-end-line="525" selection-end-column="0" />
+        <state relative-caret-position="8280">
+          <caret line="574" column="0" lean-forward="false" selection-start-line="574" selection-start-column="0" selection-end-line="574" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027976" expanded="true" signature="150:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="16579:16598" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23667:24293" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="23687:24271" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24028:24095" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24125:24214" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24408:26650" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24417:24510" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="24760:26474" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25428:25565" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="25798:25917" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26024:26161" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26507:26623" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26750:28535" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26830:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="26843:27120" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27394:27521" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27811:28475" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="27932:28148" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28616:29715" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="28625:29183" ph="&quot;&quot;&quot;find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="29817:30802" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="29826:30203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="30877:31933" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="30886:31521" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="31530:31678" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32036:32299" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32045:32150" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32199:32277" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32346:32930" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32355:32524" ph="&quot;&quot;&quot;Dump neural network weights to file, calls dump_weights() on each layer...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="32971:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="32980:33180" ph="&quot;&quot;&quot;Load weights of a neural network from a file. Raises an exception if the architecture does not match....&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33288:33486" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33317:33399" ph="&quot;...&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33496:33696" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="33734:33873" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33918:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="33923:34179" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1517679027976" expanded="true" signature="34394:34511" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34552:34722" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34780:35052" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="34785:34934" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/CM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1494">
+        <state relative-caret-position="650">
           <caret line="88" column="0" lean-forward="false" selection-start-line="88" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
@@ -870,7 +1528,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="558">
           <caret line="31" column="57" lean-forward="false" selection-start-line="31" selection-start-column="57" selection-end-line="31" selection-end-column="57" />
-          <folding />
+          <folding>
+            <marker date="1517679027984" expanded="true" signature="40:41" ph="..." />
+            <marker date="1517679027984" expanded="true" signature="2753:2882" ph="..." />
+            <marker date="1517679027984" expanded="true" signature="2848:2882" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -886,7 +1548,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
           <caret line="13" column="23" lean-forward="false" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
-          <folding />
+          <folding>
+            <marker date="1517679027976" expanded="true" signature="47:1089" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="95:691" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="717:780" ph="..." />
+            <marker date="1517679027976" expanded="true" signature="822:1089" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -894,9 +1561,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="396">
           <caret line="23" column="87" lean-forward="false" selection-start-line="23" selection-start-column="87" selection-end-line="23" selection-end-column="87" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -905,17 +1569,17 @@
         <state relative-caret-position="1008">
           <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027984" expanded="true" signature="2180:2754" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ml_cup.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="33" column="19" lean-forward="false" selection-start-line="33" selection-start-column="19" selection-end-line="33" selection-end-column="19" />
+        <state relative-caret-position="612">
+          <caret line="34" column="13" lean-forward="false" selection-start-line="34" selection-start-column="13" selection-end-line="34" selection-end-column="13" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <marker date="1517679027984" expanded="true" signature="2154:2474" ph="..." />
           </folding>
         </state>
       </provider>
