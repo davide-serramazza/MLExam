@@ -91,7 +91,7 @@ class Network:
         for input_neuron, x in zip(input_layer.neurons[:-1], pattern):  # exclude bias
             input_neuron.activation_function(x)
 
-    def back_propagation(self, target, lossObject):
+    def back_propagation(self, target, lossObject, regolarization):
         """
         Performs backpropagation.
 
@@ -125,7 +125,7 @@ class Network:
         # 5 report loss and misclassification count
         weights = self.get_weights_as_vector()
 
-        loss_value = lossObject.value(target, output_net, weights)
+        loss_value = lossObject.value(target, output_net, weights, regolarization)
         misClassification = lossObject.misClassification(target, output_net)
 
         return gradient_weights, loss_value, misClassification
@@ -273,7 +273,7 @@ class Network:
                 # train, compute gradient for a batch
                 for pattern, t in zip(batch_pattern, batch_target):
                     self.forward(pattern)
-                    gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject)
+                    gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization)
                     loss_epoch += loss_p
                     misC_epoch += miss_p
                     gradient_w_batch += gradient_w

@@ -32,7 +32,7 @@ def main():
     learning_rate = [0.2]
     batch_size = [256]
     momentum = [0.5]
-    regularization = [0.01]
+    regularization = [0.0]
     parameter = grid_search_parameter(learning_rate, momentum, batch_size, architecture, neurons, regularization, epochs)
     # create loss
     loss_obj = EuclideanError(normalizer=None)
