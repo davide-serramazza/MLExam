@@ -496,10 +496,6 @@ class Network:
         print "---------------------------------------------------------------------------"
 
         for epoch in range(epochs):
-            # stop criterion
-            if epoch > 0 and (norm(gradient_old)) < 1e-6:
-                print "break at", epoch
-                break
 
             # compute p using two loop recursion
             r = self.compute_direction(H, gradient_old, s_list, y_list, rho_list)
@@ -517,7 +513,7 @@ class Network:
             x_new = self.update_weights_CM(delta)
             gradient_new, loss,miss = self.calculate_gradient(data,targets,lossObject)
 
-            if epoch > (m-1):
+            if epoch > m:
                 # discard first element
                 del s_list[0]
                 del y_list[0]
@@ -541,6 +537,11 @@ class Network:
             x_old = x_new
             gradient_old = gradient_new
 
+            # stop criterion
+            if (norm(gradient_old)) < 1e-6:
+                print "break at", epoch
+                break
+
         return losses, misses
 
     def backtracking_line_search(self, alpha, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
@@ -560,35 +561,33 @@ class Network:
 
         return alpha
 
-    def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta):
+    def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, gradient, loss, lossObject, p, targets, theta):
         # phi(alpha) = f(x_k + alpha * p_k)
-        # phi'(alpha) = \nabla f(x_k + alpha * p_k) * p_k
+        phi_0 = loss  # phi(0) = f(x_k + 0 * p) = f(x_k)
+        phi_p_0 = np.dot(gradient, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
+
+        if not phi_p_0 < 0:
+            raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
+
         alpha_max = 10
         alpha_i = alpha  # alpha_1 > 0
-        alpha_old = 0    # alpha_0
-        default_alpha = 0.01  # step to take if there was an error in the line search (returned alpha less than 1e-16)
+        alpha_old = 0    # alpha_0 = 0
+        default_alpha = 0.001  # step to take if there was an error in the line search (returned alpha less than 1e-16)
         i = 1
         while True:
             # 1. evaluate phi(alpha_i)
-            gradient_alpha_i, loss_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets)
-            phi_alpha_i = loss_alpha_i
+            gradient_alpha_i, phi_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets)
 
             # 2. if phi(alpha_i) > phi(0) + c1 * alpha_i * phi_p(0) or [phi(alpha_i) >= phi(alpha_{i-1}) and i > 1]
-            phi_0 = loss                       # phi(0) = f(x_k + 0 * p) = f(x_k)
-            phi_p_0 = np.dot(gradient_old, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
-
-            if not phi_p_0 < 0:
-                raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
-
             if phi_alpha_i > phi_0 + c_1 * alpha_i * phi_p_0 or (i > 1 and phi_alpha_i >= phi_alpha_old):
                 alpha_star = self.zoom(alpha_old, alpha_i, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject)
                 break
 
-            # 3. evaluate phi'(alpha_i)
+            # 3. evaluate phi'(alpha_i) = \nabla f(x_k + alpha * p_k) * p_k
             phi_p_alpha_i = np.dot(gradient_alpha_i, p)
 
             # 4. if |phi'(alpha_i)| <= - c_2 * phi'(0) (strong Wolfe satisfied?)
-            if abs(phi_p_alpha_i) <= - c_2 * phi_p_0:  # TODO try with c_2 * |phi'(0)| or with frangioni formulae
+            if abs(phi_p_alpha_i) <= - c_2 * phi_p_0:
                 alpha_star = alpha_i
                 break
 
@@ -597,14 +596,14 @@ class Network:
                 alpha_star = self.zoom(alpha_i, alpha_old, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject)
                 break
 
-            # 6. choose alpha_{i+1} in (alpha_i, alpha_max)
-            tmp_alpha = alpha_i / theta
-            alpha_i = tmp_alpha if tmp_alpha < alpha_max else alpha_max
-
             # save previous results and iterate
             alpha_old = alpha_i
             phi_alpha_old = phi_alpha_i
             i += 1
+
+            # 6. choose alpha_{i+1} in (alpha_i, alpha_max)
+            tmp_alpha = alpha_i / theta
+            alpha_i = tmp_alpha if tmp_alpha < alpha_max else alpha_max
 
         if alpha_star <= 1e-16:
             print "error, alpha =", alpha_star, "set alpha =", default_alpha
@@ -613,7 +612,8 @@ class Network:
         return alpha_star
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
-        max_feval = 100
+        max_feval = 1000
+
         sfgrd = 0.01
 
         for i in range(max_feval):
@@ -623,14 +623,13 @@ class Network:
             alpha_j = select_random_point_between(alpha_low, alpha_high)
 
             # 2. evaluate phi(alpha_j)
-            gradient_alpha_j, loss_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets)
-            phi_alpha_j = loss_alpha_j
+            gradient_alpha_j, phi_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets)
+
+            # evaluate phi(alpha_low)
+            _, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
 
             # 3. if phi(alpha_j) > phi(0) + c_1 * alpha_j * phi'(0) or phi(alpha_j) >= phi(alpha_low)
-            # evaluate phi(alpha_low)
-            _, loss_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
-            phi_alpha_low = loss_alpha_low
-            if phi_alpha_j >= phi_0 + c_1 * alpha_j * phi_p_0 or phi_alpha_j >= phi_alpha_low:
+            if phi_alpha_j > phi_0 + c_1 * alpha_j * phi_p_0 or phi_alpha_j >= phi_alpha_low:
                 alpha_high = alpha_j
             else:
                 # 4. evaluate phi'(alpha_j)
@@ -638,7 +637,7 @@ class Network:
                 # 5. if |phi'(alpha_j)| <= - c_2 * phi'(0) (Wolfe satisfied?)
                 # if abs(phi_p_alpha_j) <= c_2 * abs(phi_p_0):  # strong wolfe
                 # if phi_p_alpha_j >= c_2 * phi_p_alpha_j:  # wolfe frangio
-                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:  # book: strong wolfe
+                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:  # book algorithm: strong wolfe
                     return alpha_j
                 # 6. if phi'(alpha_j)(alpha_high - alpha_low) >= 0
                 if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:

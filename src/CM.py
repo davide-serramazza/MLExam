@@ -26,7 +26,7 @@ def main():
 
     ##' esempio
     arch = [2, 2, 2]
-    neuronsType = [InputNeuron, SigmoidNeuron, OutputNeuron]
+    neuronsType = [InputNeuron, TanHNeuron, OutputNeuron]
     network = Network(arch, neuronsType)
     network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
     network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
@@ -37,24 +37,15 @@ def main():
     target = [[0.01, 0.99]]
 
     print "\nBFGS\n"
-    network.trainBFGS(data,target,data,target,lossObject, 20)
-
-    predictions = network.predict(data)
-  #  print predictions
+    network.trainBFGS(data, target, [],[],lossObject, 10)
 
     network = Network(arch, neuronsType)
     network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
     network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
     network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
     network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
-    #network.trainBFGS(data,target,data,target,lossObject,50)
     print "\nLBFGS\n"
-    network.trainLBFGS(data, target, data, target, lossObject, m=30, epochs=20)
-    predictions = network.predict(data)
-
-
-   # print predictions
-
+    network.trainLBFGS(data, target, [], [], lossObject, m=1, epochs=10)
 
 ### END EXAMPLE
 

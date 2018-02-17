@@ -111,5 +111,25 @@ class TestNeuralNetwork(unittest.TestCase):
         self.assertEqual(11, network.forward([5])[0])
         self.assertEqual(7, network.forward([3])[0])
 
+    def test_little_training(self):
+        network = Network([2,1], [InputNeuron, OutputNeuron])
+        network.layers[1].neurons[0].weights = np.array([0.5,0.2,0.3])
+        data = [[2,2]]
+        target = [[4]]
+        self.assertEqual(network.predict(data)[0][0], 1.7)
+        loss, _, _, _ = network.train(data, target, [], [], SquaredError("sigmoid"), 1, 0.01, 1, 0, 0)
+        self.assertEqual(np.round(loss[0], 2), 5.29)
+        self.assertEqual(np.round(network.predict(data)[0][0], 3), 2.114)
+
+    def test_little_bfgs_training(self):
+        # AAA assumes that the interpolation takes the middle value between alpha_low and alpha_high
+        network = Network([2, 1], [InputNeuron, OutputNeuron])
+        network.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
+        data = [[2, 2]]
+        target = [[4]]
+        loss, _ = network.trainBFGS(data, target, [], [], SquaredError("sigmoid"), 1)
+        self.assertEqual(np.round(loss[1], 8), 0.08265625)
+        self.assertEqual(network.predict(data)[0][0], 4.2875)
+
 if __name__ == '__main__':
     unittest.main()
