@@ -34,7 +34,7 @@ def main():
 
     network = Network(arch, neuronsType)
     print "\nLBFGS\n"
-    network.trainLBFGS(training_patterns, training_labels, [], [], lossObject, m=10, epochs=100)
+    network.trainLBFGS(training_patterns, training_labels, [], [], lossObject, m=10, epochs=50)
 
 ### END EXAMPLE
 

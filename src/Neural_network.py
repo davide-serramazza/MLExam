@@ -467,7 +467,7 @@ class Network:
             a = rho_list[i] * np.dot(s_list[i], q)
             a_list.insert(0, a)
             q = q - a * y_list[i]
-            #q -= (a * y_list[i])  TODO in this way it crashes (isn't it the same fu@*#!/g thing?
+            #q -= (a * y_list[i])  #TODO in this way it crashes (isn't it the same fu@*#!/g thing?)
 
         r = H.dot(q)
 
@@ -475,8 +475,8 @@ class Network:
         # for i = k-m, ..., k-1
         for i in range(len(s_list)):
             beta = rho_list[i] * np.dot(y_list[i], r)
-            #r += s_list[i] * (a_list[i] - beta)
-            r = r + s_list[i] * (a_list[i] - beta)
+            r += s_list[i] * (a_list[i] - beta)
+            #r = r + s_list[i] * (a_list[i] - beta)
 
         return r
 
