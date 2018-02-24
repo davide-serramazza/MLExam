@@ -395,10 +395,6 @@ class Network:
         print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
         print "---------------------------------------------------------------------------"
         for epoch in range(epochs):
-            # stop criterion
-            if epoch > 0 and (norm(gradient_old)) < 1e-6:
-                print "break at", epoch
-                break
 
             # 1. compute search direction p = -H * gradient
             p = - H.dot(gradient_old)
@@ -440,6 +436,11 @@ class Network:
             print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
                   (epoch+1, loss, miss, norm(gradient_new), norm(H), float(1)/np.dot(s_k, y_k), alpha)
 
+            # stop criterion
+            if epoch > 0 and (norm(gradient_old)) < 1e-6:
+                print "break at", epoch
+                break
+
             # update x_old and gradient_old
             x_old = x_new
             gradient_old = gradient_new
@@ -459,18 +460,23 @@ class Network:
         """
         a_list = []
         q = gradient
+        qq = gradient
         # first loop
         for i in range(len(s_list) - 1, -1, -1):
+        # for i = k-1, ..., k-m
             a = rho_list[i] * np.dot(s_list[i], q)
             a_list.insert(0, a)
-            q -= - a * y_list[i]
+            q = q - a * y_list[i]
+            #q -= (a * y_list[i])  TODO in this way it crashes (isn't it the same fu@*#!/g thing?
 
         r = H.dot(q)
 
         # second loop
+        # for i = k-m, ..., k-1
         for i in range(len(s_list)):
             beta = rho_list[i] * np.dot(y_list[i], r)
-            r += s_list[i] * (a_list[i] - beta)
+            #r += s_list[i] * (a_list[i] - beta)
+            r = r + s_list[i] * (a_list[i] - beta)
 
         return r
 
@@ -497,7 +503,7 @@ class Network:
 
         for epoch in range(epochs):
 
-            # compute p using two loop recursion
+            # compute p = - H_k * \nabla f_k using two loop recursion
             r = self.compute_direction(H, gradient_old, s_list, y_list, rho_list)
             p = -r
 
@@ -507,11 +513,10 @@ class Network:
             c_1 = 0.0001  # scaling factor for Armijo condition TODO try 1e-4
             c_2 = 0.9     # scaling factor for Wolfe condition
             alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta)
-
             # updating weights and compute x_k+1 = x_k + a_k*p_k
-            delta = p*alpha
+            delta = alpha * p
             x_new = self.update_weights_CM(delta)
-            gradient_new, loss,miss = self.calculate_gradient(data,targets,lossObject)
+            gradient_new, loss, miss = self.calculate_gradient(data,targets,lossObject)
 
             if epoch > m:
                 # discard first element
@@ -531,16 +536,16 @@ class Network:
 
             # print statistics
             print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
-                  (epoch+1, loss, miss, norm(gradient_new), norm(H), float(1)/np.dot(s_k, y_k), alpha)
-
-            # update x_old and gradient_old
-            x_old = x_new
-            gradient_old = gradient_new
+                  (epoch+1, loss, miss, norm(gradient_new), norm(H), rho_k, alpha)
 
             # stop criterion
             if (norm(gradient_old)) < 1e-6:
                 print "break at", epoch
                 break
+
+            # update x_old and gradient_old
+            x_old = x_new
+            gradient_old = gradient_new
 
         return losses, misses
 
@@ -612,7 +617,7 @@ class Network:
         return alpha_star
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
-        max_feval = 1000
+        max_feval = 100
 
         sfgrd = 0.01
 

@@ -25,27 +25,16 @@ def main():
 
 
     ##' esempio
-    arch = [2, 2, 2]
-    neuronsType = [InputNeuron, TanHNeuron, OutputNeuron]
+    arch = [17, 10, 1]
+    neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
     network = Network(arch, neuronsType)
-    network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
-    network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
-    network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
-    network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
-
-    data = [[0.05, 0.1]]
-    target = [[0.01, 0.99]]
 
     print "\nBFGS\n"
-    network.trainBFGS(data, target, [],[],lossObject, 10)
+    network.trainBFGS(training_patterns, training_labels, [],[],lossObject, 30)
 
     network = Network(arch, neuronsType)
-    network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
-    network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
-    network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
-    network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
     print "\nLBFGS\n"
-    network.trainLBFGS(data, target, [], [], lossObject, m=1, epochs=10)
+    network.trainLBFGS(training_patterns, training_labels, [], [], lossObject, m=10, epochs=100)
 
 ### END EXAMPLE
 

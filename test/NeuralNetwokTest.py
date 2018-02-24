@@ -125,8 +125,9 @@ class TestNeuralNetwork(unittest.TestCase):
         # AAA assumes that the interpolation takes the middle value between alpha_low and alpha_high
         network = Network([2, 1], [InputNeuron, OutputNeuron])
         network.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
-        data = [[2, 2]]
+        data = [[2,2]]
         target = [[4]]
+        print "BFGS..."
         loss, _ = network.trainBFGS(data, target, [], [], SquaredError("sigmoid"), 1)
         self.assertEqual(np.round(loss[1], 8), 0.08265625)
         self.assertEqual(network.predict(data)[0][0], 4.2875)
