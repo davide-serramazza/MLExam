@@ -33,7 +33,8 @@ class TestNeuralNetwork(unittest.TestCase):
 
         layers = network.layers
         self.assert_weights(layers)
-        self.assertEqual(loss_value.round(9)/2, 0.298371109)  # oracle up to 9 digits
+        self.assertEqual(loss_value.round(9) / 2, 0.298371109)  # divide the obtained loss by two
+
 
     def test_train(self):
         arch = [2, 2, 2]
@@ -43,7 +44,9 @@ class TestNeuralNetwork(unittest.TestCase):
 
         data = [[0.05, 0.1]]
         target = [[0.01, 0.99]]
-        network.train(data=data, targets=target, eval_data=[], eval_targets=[], lossObject=SquaredError("sigmoid"), epochs=1, learning_rate=0.5/2, batch_size=1, momentum=0)
+        network.train(data=data, targets=target, eval_data=[], eval_targets=[], lossObject=SquaredError("sigmoid"),
+                      epochs=1, learning_rate=0.5/2, batch_size=1, momentum=0)
+
 
         layers = network.layers
         self.assert_weights(layers)
@@ -127,7 +130,7 @@ class TestNeuralNetwork(unittest.TestCase):
         network.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
         data = [[2,2]]
         target = [[4]]
-        loss, _ = network.trainBFGS(data, target, [], [], SquaredError("sigmoid"), 1)
+        loss, _, _, _ = network.trainBFGS(data, target, [], [], 0.9, 0.0001, 0.9, SquaredError("sigmoid"), 1, 0)
         self.assertEqual(np.round(loss[1], 8), 0.08265625)
         self.assertEqual(network.predict(data)[0][0], 4.2875)
 
@@ -137,7 +140,7 @@ class TestNeuralNetwork(unittest.TestCase):
         network.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
         data = [[2,2], [1,1], [3,2], [2,4]]
         target = [[4], [2], [5], [6]]
-        loss, _ = network.trainBFGS(data, target, [], [], SquaredError("sigmoid"), 5)
+        loss, _, _, _ = network.trainBFGS(data, target, [], [],0.9, 0.0001, 0.9, SquaredError("sigmoid"), 5, 0)
 
         network2 = Network([2, 1], [InputNeuron, OutputNeuron])
         network2.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])

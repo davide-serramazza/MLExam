@@ -1,81 +1,72 @@
 import pandas as pd
 from ml_cup import *
+import time
 
 def main():
 
-    # read dile train set
-    df = pd.read_csv("../MLCup/ML-CUP17-TR.csv", comment='#', header=None)
+    # read file train set
+    df = pd.read_csv("../MLCup/ML-CUP17-TR_shuffled.csv", comment='#')
     features_col = ["input1","input2","input3","input4","input5","input6","input7", "input8","input9","input10"]
     targets_col = ["target_x", "target_y"]
-    df.columns = ["id"] + features_col + targets_col
 
     # divide pattern and targets
-    pattern,labels = divide_patterns_labels(df,features_col,targets_col)
-
-    # normalization objects used to normalize features (only the features!)
-    normalizer = MinMaxScaler(feature_range=(-1, 1))
-    x_scaled = normalizer.fit_transform(pattern)
-    y_scaled = normalizer.fit_transform(labels)
+    patterns,labels = divide_patterns_labels(df,features_col,targets_col)
 
     # divide in development set and test set
-    development_patterns,development_labels, test_patterns, test_targets = holdout_cup(x_scaled,y_scaled, 0.9)
+    development_patterns, development_labels, test_patterns, test_targets = holdout_cup(patterns,labels, 0.8)
 
-    #train model
-    lossObject = EuclideanError(normalizer)
+    lossObject = EuclideanError(normalizer=None)
 
-    #specify parameters
-    architecture = [17,10,2]
-    neurons = [InputNeuron,TanHNeuron,TanHNeuron]
+    # specify parameters
+    architecture = [10, 10, 2]
+    neurons = [InputNeuron,SigmoidNeuron, OutputNeuron]
     network = Network(architecture,neurons)
-    epochs = 1
+    #with open("../weights/w_prova.csv", "r") as in_file:
+    #    network.load_weights(in_file)
+    epochs = 200
     learning_rate = 0.2
-    batch_size = 1
-    momentum = 0.6
-    regularization = 0.001
+    batch_size = 256
+    momentum = 0.1
+    regularization = 0.01
 
     # train and get result
-    squared_error, misClass_error, squared_error_test, misClass_error_test = network.train(
-        data=development_patterns, targets=development_labels, eval_data=test_patterns,eval_targets=test_targets,
-        lossObject=lossObject, epochs=epochs, learning_rate=learning_rate, batch_size=batch_size,
-        momentum=momentum, regularization=regularization)
+    losses_train = []
+    losses_eval = []
+    for e in range(epochs):
+        error_train_epoch, _, error_evaluation_epoch, _ = network.train(
+            data=development_patterns, targets=development_labels, eval_data=test_patterns, eval_targets=test_targets,
+            lossObject=lossObject, epochs=1, learning_rate=learning_rate, batch_size=batch_size,
+            momentum=momentum, regularization=regularization)
+
+        losses_train.append(error_train_epoch)
+        losses_eval.append(error_evaluation_epoch)
+
+        with open("../weights/weights_final_model_epoch_%d.csv" % (e+1), "w") as out_file:
+            network.dump_weights(out_file)
+
     # getting average
-    squared_error /= float(len(development_patterns))
-    squared_error_test /= float(len(test_patterns))
-    misClass_error /= float(len(development_patterns))
-    misClass_error_test /= float(len(test_patterns))
-    print_result(misClass_error, misClass_error_test, squared_error, squared_error_test,
-                 architecture, batch_size, learning_rate, momentum, regularization, 1,
-                 "test set", lossObject, "../image/")
-    print "accuracy", 1-misClass_error[-1]
-    print "accuracy test", 1-misClass_error_test[-1]
-    print "squared error", squared_error[-1]
-    print "squared error test", squared_error_test[-1]
+    losses_train = np.array(losses_train) / float(len(development_patterns))
+    losses_eval = np.array(losses_eval) / float(len(test_patterns))
 
+    print "loss train:"
+    print losses_train
+    print "loss validation:"
+    print losses_eval
+    argmin_eval = np.argmin(losses_eval)
+    print "epoch with least error on validation:", argmin_eval + 1
+    print "MEE at epoch %d, (TR,VL) = %f, %f" % (argmin_eval + 1, losses_train[argmin_eval], losses_eval[argmin_eval])
 
-    #open blind test
-    dataset = pd.read_csv("../MLCup/ML-CUP17-TS.csv", comment='#', header=None)
-    features_col = ["input1","input2","input3","input4","input5","input6","input7", "input8","input9","input10"]
-    dataset.columns = ["id"] + features_col
-    blind_dataset = dataset[features_col].values
-
-    # make prediction
-    prediction = network.predict(blind_dataset)
-    print "prediction", prediction[0]
-
-    #open another file
-    file = open('../my_prediction.csv', 'w+')
-    file.write("#Davide Italo Serramazza, Carlo Alessi\n#Lupari bianchi\n#ML-CUP2017\n03/02/2017\n")
-
-    # filll it
-    for i in range(0,len(prediction)):
-        string = str(i+1)
-
-        for j in prediction[i]:
-            string += "," + str(j)
-
-        file.write(string+"\n")
-
-
+    # plot
+    plt.plot(range(1, len(losses_train) + 1), losses_train, '--')
+    plt.plot(range(1, len(losses_eval) + 1), losses_eval, '-')
+    plt.legend(['training set', "validation set"])
+    plt.xlabel("epochs")
+    plt.ylabel(lossObject.__class__.__name__)
+    s = "../image/MLCup/FINAL_model-" + "lr_" + transf_value(learning_rate) + \
+        "-mo_" + transf_value(momentum) + "-bat:" + transf_value(batch_size) + \
+        "-reg_" + transf_value(regularization) + "-arc_" + tranf_arc(architecture)
+    plt.tight_layout()  # minimize overlap of subplots
+    plt.savefig(s)
 
 if __name__ == '__main__':
     main()
