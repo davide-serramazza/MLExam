@@ -73,13 +73,13 @@ def main():
     momentum = [0.4]  # [0.4, 0.5, 0.6]
     batch_size = [10]
     learning_rate = [0.15]  #[0.15, 0.2, 0.25]
-    regularization = [0.001]  # [0.0025, 0.005, 0.001]
-    epoch = 30
+    regularization = [0.05]  # [0.0025, 0.005, 0.001]
+    epoch = 50
     param = grid_search_parameter(learning_rate, momentum, batch_size,
                                   architecture, neurons, regularization, epoch)
 
     grid_search(param, lossObject, training_patterns, training_labels,
-                validation_patterns, validation_labels, 5, "../image/")
+                validation_patterns, validation_labels, 5, "../image/aa-reg")
 
 
 if __name__ == "__main__":

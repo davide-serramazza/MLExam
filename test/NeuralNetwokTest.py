@@ -28,7 +28,7 @@ class TestNeuralNetwork(unittest.TestCase):
         data = [0.05, 0.1]
         target = [0.01, 0.99]
         network.forward(data)
-        delta_w, loss_value, _ = network.back_propagation(target=target, lossObject=SquaredError("sigmoid"))
+        delta_w, loss_value, _ = network.back_propagation(target=target, lossObject=SquaredError("sigmoid"), regolarization=0)
         network.update_weights(delta_w, learning_rate=0.5/2, prev_delta=np.zeros(delta_w.shape), momentum=0)
 
         layers = network.layers
@@ -144,7 +144,7 @@ class TestNeuralNetwork(unittest.TestCase):
 
         network2 = Network([2, 1], [InputNeuron, OutputNeuron])
         network2.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
-        loss_2, _ = network2.trainLBFGS(data, target, [], [], SquaredError("sigmoid"), m=10, epochs=5)
+        loss_2, _ = network2.trainLBFGS(data, target, [], [], SquaredError("sigmoid"), m=10, epochs=5, regularization=0)
         print loss
         print loss_2
 

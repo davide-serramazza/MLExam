@@ -91,7 +91,7 @@ class Network:
         for input_neuron, x in zip(input_layer.neurons[:-1], pattern):  # exclude bias
             input_neuron.activation_function(x)
 
-    def back_propagation(self, target, lossObject):
+    def back_propagation(self, target, lossObject, regolarization):
         """
         Performs backpropagation.
 
@@ -125,7 +125,7 @@ class Network:
         # 5 report loss and misclassification count
         weights = self.get_weights_as_vector()
 
-        loss_value = lossObject.value(target, output_net, weights)
+        loss_value = lossObject.value(target, output_net, weights, regolarization)
         misClassification = lossObject.misClassification(target, output_net)
 
         return gradient_weights, loss_value, misClassification
@@ -273,7 +273,7 @@ class Network:
                 # train, compute gradient for a batch
                 for pattern, t in zip(batch_pattern, batch_target):
                     self.forward(pattern)
-                    gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject)
+                    gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization)
                     loss_epoch += loss_p
                     misC_epoch += miss_p
                     gradient_w_batch += gradient_w
@@ -340,7 +340,7 @@ class Network:
                 x_new = np.append(x_new, current_neuron_weights)
         return x_new
 
-    def calculate_gradient(self, data, targets, lossObject):
+    def calculate_gradient(self, data, targets, lossObject, regularization):
         # create empty vector, gradient_w_old = sum of gradient_w for the epoch
         gradient_w_batch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
                                      for i in range(1, len(self.architecture))])
@@ -349,7 +349,7 @@ class Network:
         for pattern, t in zip(data, targets):
             # calculate derivative for every patten, then append to gradient_w_batch
             self.forward(pattern)
-            gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject)
+            gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization)
 
             gradient_w_batch += gradient_w
             loss_batch += loss_p
@@ -390,7 +390,7 @@ class Network:
         losses_validation = []
         misses_validation =  []
         # 1. compute initial gradient and initial Hessian approximation H_0
-        gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject)
+        gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
         H = np.identity(gradient_old.shape[0])
         x_old = self.get_weights_as_vector()
         # append losses
@@ -416,7 +416,7 @@ class Network:
             alpha_0 = 1   # initial step size trial is always 1 for quasi-Newton TODO: try initial step less than 1
 
             #alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
-            alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta)
+            alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta, regularization)
 
             # 3. compute weight update
             delta = p * alpha
@@ -425,7 +425,7 @@ class Network:
             x_new = self.update_weights_CM(delta,regularization)
 
             # 5. compute new gradient
-            gradient_new, loss, miss = self.calculate_gradient(data, targets, lossObject)
+            gradient_new, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
 
             # append losses
             losses.append(loss)
@@ -491,12 +491,12 @@ class Network:
 
         return r
 
-    def trainLBFGS(self, data, targets, eval_data, eval_targets, lossObject,m,epochs):
+    def trainLBFGS(self, data, targets, eval_data, eval_targets, lossObject,m,epochs, regularization):
         losses = []  # vector containing the loss of each epoch
         misses = []  # vector containing the misclassification for each epoch
 
         # 1. compute initial gradient and initial Hessian approximation H_0
-        gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject)
+        gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
         H = np.identity(gradient_old.shape[0])
         x_old = self.get_weights_as_vector()
 
@@ -521,11 +521,11 @@ class Network:
             alpha_0 = 1   # initial step size trial is always 1 for quasi-Newton TODO: try initial step less than 1
             c_1 = 0.0001  # scaling factor for Armijo condition TODO try 1e-4
             c_2 = 0.9     # scaling factor for Wolfe condition
-            alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta)
+            alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta, regularization)
             # updating weights and compute x_k+1 = x_k + a_k*p_k
             delta = alpha * p
             x_new = self.update_weights_CM(delta, regularization=0)
-            gradient_new, loss, miss = self.calculate_gradient(data,targets,lossObject)
+            gradient_new, loss, miss = self.calculate_gradient(data,targets,lossObject, regularization)
             losses.append(loss)
             misses.append(miss)
 
@@ -577,7 +577,7 @@ class Network:
 
         return alpha
 
-    def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, gradient, loss, lossObject, p, targets, theta):
+    def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, gradient, loss, lossObject, p, targets, theta, regularization):
         # phi(alpha) = f(x_k + alpha * p_k)
         phi_0 = loss  # phi(0) = f(x_k + 0 * p) = f(x_k)
         phi_p_0 = np.dot(gradient, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
@@ -592,11 +592,11 @@ class Network:
         i = 1
         while True:
             # 1. evaluate phi(alpha_i)
-            gradient_alpha_i, phi_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets)
+            gradient_alpha_i, phi_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets, regularization)
 
             # 2. if phi(alpha_i) > phi(0) + c1 * alpha_i * phi_p(0) or [phi(alpha_i) >= phi(alpha_{i-1}) and i > 1]
             if phi_alpha_i > phi_0 + c_1 * alpha_i * phi_p_0 or (i > 1 and phi_alpha_i >= phi_alpha_old):
-                alpha_star = self.zoom(alpha_old, alpha_i, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject)
+                alpha_star = self.zoom(alpha_old, alpha_i, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization)
                 break
 
             # 3. evaluate phi'(alpha_i) = \nabla f(x_k + alpha * p_k) * p_k
@@ -609,7 +609,7 @@ class Network:
 
             # 5. if phi'(alpha_i) >= 0 (if the derivative is positive)
             if phi_p_alpha_i >= 0:
-                alpha_star = self.zoom(alpha_i, alpha_old, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject)
+                alpha_star = self.zoom(alpha_i, alpha_old, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization)
                 break
 
             # save previous results and iterate
@@ -627,7 +627,7 @@ class Network:
 
         return alpha_star
 
-    def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
+    def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization):
         max_feval = 100
 
         sfgrd = 0.01
@@ -639,10 +639,10 @@ class Network:
             alpha_j = select_random_point_between(alpha_low, alpha_high)
 
             # 2. evaluate phi(alpha_j)
-            gradient_alpha_j, phi_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets)
+            gradient_alpha_j, phi_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets, regularization)
 
             # evaluate phi(alpha_low)
-            _, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
+            _, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets, regularization)
 
             # 3. if phi(alpha_j) > phi(0) + c_1 * alpha_j * phi'(0) or phi(alpha_j) >= phi(alpha_low)
             if phi_alpha_j > phi_0 + c_1 * alpha_j * phi_p_0 or phi_alpha_j >= phi_alpha_low:
@@ -710,7 +710,7 @@ class Network:
         return alpha_j
 
 
-    def evaluate_phi_alpha(self, alpha_i, data, lossObject, p, targets):
+    def evaluate_phi_alpha(self, alpha_i, data, lossObject, p, targets, regularization):
         """
         Computes phi(alpha) = f(x_k + alpha_i * p_k), where
         - x_k are the current weights of the network
@@ -731,7 +731,7 @@ class Network:
         # hypothetical x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
         temp_network = copy.deepcopy(self)
         temp_network.update_weights_CM(alpha_i * p,regularization=0.0)
-        gradient_alpha, loss_alpha, _ = temp_network.calculate_gradient(data, targets, lossObject)
+        gradient_alpha, loss_alpha, _ = temp_network.calculate_gradient(data, targets, lossObject, regularization)
         return gradient_alpha, loss_alpha
 
     # end CM-----------------------------------------------------------
