@@ -2,8 +2,6 @@ import unittest
 
 from src.Neural_network import *
 
-# TODO we may use assertAlmostEqual() if numerical issues arise
-# each test must start with test_
 class TestNeuralNetwork(unittest.TestCase):
     def test_forward(self):
         arch = [2, 2, 2]
@@ -28,8 +26,8 @@ class TestNeuralNetwork(unittest.TestCase):
         data = [0.05, 0.1]
         target = [0.01, 0.99]
         network.forward(data)
-        delta_w, loss_value, _ = network.back_propagation(target=target, lossObject=SquaredError("sigmoid"), regolarization=0)
-        network.update_weights(delta_w, learning_rate=0.5/2, prev_delta=np.zeros(delta_w.shape), momentum=0)
+        delta_w, loss_value, _ = network.back_propagation(target=target, lossObject=SquaredError("sigmoid"), regularization=0)
+        network.update_weights(delta_w, learning_rate=0.5/2, prev_delta=np.zeros(delta_w.shape), momentum=0, regularization=0)
 
         layers = network.layers
         self.assert_weights(layers)
@@ -45,7 +43,7 @@ class TestNeuralNetwork(unittest.TestCase):
         data = [[0.05, 0.1]]
         target = [[0.01, 0.99]]
         network.train(data=data, targets=target, eval_data=[], eval_targets=[], lossObject=SquaredError("sigmoid"),
-                      epochs=1, learning_rate=0.5/2, batch_size=1, momentum=0)
+                      epochs=1, learning_rate=0.5/2, batch_size=1, momentum=0, regularization=0)
 
 
         layers = network.layers

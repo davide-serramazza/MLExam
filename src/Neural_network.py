@@ -91,7 +91,7 @@ class Network:
         for input_neuron, x in zip(input_layer.neurons[:-1], pattern):  # exclude bias
             input_neuron.activation_function(x)
 
-    def back_propagation(self, target, lossObject, regolarization):
+    def back_propagation(self, target, lossObject, regularization):
         """
         Performs backpropagation.
 
@@ -125,7 +125,7 @@ class Network:
         # 5 report loss and misclassification count
         weights = self.get_weights_as_vector()
 
-        loss_value = lossObject.value(target, output_net, weights, regolarization)
+        loss_value = lossObject.value(target, output_net, weights, regularization)
         misClassification = lossObject.misClassification(target, output_net)
 
         return gradient_weights, loss_value, misClassification
@@ -160,7 +160,7 @@ class Network:
 
         return np.asarray(gradient_w)
 
-    def update_weights(self, gradient_w, learning_rate, prev_delta, momentum, regularization=0):
+    def update_weights(self, gradient_w, learning_rate, prev_delta, momentum, regularization):
         """
         update weights as
             DeltaW_{ji} = gradient_w * learning_rate - regularization*w_{ji} + momentum*prevg (old gradient)
@@ -184,7 +184,7 @@ class Network:
                 # compute regularization gradient (wrt current weights) = w*regularization_coefficient
                 regularization_term = np.multiply(self.layers[i].neurons[j].weights,lambda_vectors[i-1][j])
                 # add regularization gradient to total weight`s update
-                deltaW[i-1][j] = deltaW[i-1][j] - regularization_term
+                deltaW[i-1][j] = deltaW[i-1][j] - regularization_term # TODO maybe multiply lambda by eta
                 # update weights
                 self.layers[i].neurons[j].weights = self.layers[i].neurons[j].weights + deltaW[i-1][j]
         return deltaW
@@ -229,7 +229,7 @@ class Network:
         return squared_error_epoch, misClass_error_epoch
 
     def train(self, data, targets, eval_data, eval_targets, lossObject, epochs, learning_rate, batch_size, momentum,
-              regularization=0):
+              regularization):
         """
         Performs the training of the neural network.
 
@@ -385,24 +385,23 @@ class Network:
 
     def trainBFGS(self, data, targets, eval_data, eval_targets,theta,c_1,c_2,lossObject,epochs,regularization):
 
-        losses = [] # vector containing the loss of each epoch
-        misses = [] # vector containing the misclassification for each epoch
-        losses_validation = []
-        misses_validation =  []
+        losses = np.array([]) # vector containing the loss of each epoch
+        misses = np.array([]) # vector containing the misclassification for each epoch
+        losses_validation = np.array([])
+        misses_validation =  np.array([])
         # 1. compute initial gradient and initial Hessian approximation H_0
         gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
         H = np.identity(gradient_old.shape[0])
         x_old = self.get_weights_as_vector()
         # append losses
-        losses.append(loss)
-        misses.append(miss)
-
+        losses = np.append(losses,loss)
+        misses = np.append(misses,miss)
         # compute validation error and append it
         squared_error_validation_epoch, misClass_error_validation_epoch = \
             self.validation_error(eval_data, eval_targets, lossObject)
 
-        losses_validation.append(squared_error_validation_epoch)
-        misses_validation.append(misClass_error_validation_epoch)
+        losses_validation = np.append(losses_validation,squared_error_validation_epoch)
+        misses_validation= np.append(misses_validation,misClass_error_validation_epoch)
 
         print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
         print "---------------------------------------------------------------------------"
@@ -428,8 +427,8 @@ class Network:
             gradient_new, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
 
             # append losses
-            losses.append(loss)
-            misses.append(miss)
+            losses = np.append(losses,loss)
+            misses = np.append(misses,miss)
 
             # 6. compute s_k = x_{k+1} - x_k = x_new - x_old
             # compute y_k = nabla f_{k+1} - nabla f_k = gradient new - gradient old
@@ -456,8 +455,8 @@ class Network:
             squared_error_validation_epoch, misClass_error_validation_epoch = \
                 self.validation_error(eval_data, eval_targets, lossObject)
 
-            losses_validation.append(squared_error_validation_epoch)
-            misses_validation.append(misClass_error_validation_epoch)
+            losses_validation = np.append(losses_validation,squared_error_validation_epoch)
+            misses_validation = np.append(misses_validation,misClass_error_validation_epoch)
 
         return losses, misses, losses_validation, misses_validation
 
@@ -730,7 +729,7 @@ class Network:
         # creates a copy of the network, update its weights to get the
         # hypothetical x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
         temp_network = copy.deepcopy(self)
-        temp_network.update_weights_CM(alpha_i * p,regularization=0.0)
+        temp_network.update_weights_CM(alpha_i * p,regularization)
         gradient_alpha, loss_alpha, _ = temp_network.calculate_gradient(data, targets, lossObject, regularization)
         return gradient_alpha, loss_alpha
 

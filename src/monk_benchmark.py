@@ -1,7 +1,5 @@
-import pandas as pd
-from Neural_network import *
-import matplotlib.pyplot as plt
 from Validation import *
+import time
 
 def decode(data,encoding):
     """
@@ -67,7 +65,7 @@ def main():
 
     lossObject = SquaredError("tangentH")
 
-    # validation: define hyper-parameters to test
+    # 4. define architecture and hyperparameters
     architecture = [[17, 10, 1]]
     neurons = [[InputNeuron, TanHNeuron, TanHNeuron]] #[[InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron,TanHNeuron] ]
     momentum = [0.4]  # [0.4, 0.5, 0.6]
@@ -78,8 +76,11 @@ def main():
     param = grid_search_parameter(learning_rate, momentum, batch_size,
                                   architecture, neurons, regularization, epoch)
 
+    start_time = time.time()
     grid_search(param, lossObject, training_patterns, training_labels,
-                validation_patterns, validation_labels, 5, "../image/aa-reg")
+                validation_patterns, validation_labels, 5, "../image/")
+    elapsed_time = time.time() - start_time
+    print "time in grid search:", elapsed_time
 
 
 if __name__ == "__main__":

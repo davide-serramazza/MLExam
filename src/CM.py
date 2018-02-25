@@ -1,7 +1,4 @@
-import pandas as pd
-from Validation import  *
 from monk_benchmark import *
-from Neural_network import *
 from Validation_CM import *
 import time
 
@@ -23,10 +20,9 @@ def main():
     training_patterns, validation_patterns = decode_patterns(encoding, features, training_set, validation_set)
     training_labels, validation_labels = transform_labels(training_set, validation_set)
 
+    # 4. define architecture and hyper parameter
     arch = [17,10,1]
     neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
-    network = Network(arch, neuronsType)
-
     lossObject = SquaredError("tangentH")
 
     #theta=[0.9]
@@ -61,10 +57,7 @@ def main():
     network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
     network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
     network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
-    network.trainLBFGS(data, target, [], [], SquaredError("sigmoid"), m=10, epochs=5, regularization=0)
-
-
-### END EXAMPLE
+    network.trainLBFGS(data, target, [], [], SquaredError("sigmoid"), m=10, epochs=20, regularization=0)
 
 if __name__ == '__main__':
     main()
