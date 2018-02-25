@@ -184,9 +184,9 @@ class Network:
                 # compute regularization gradient (wrt current weights) = w*regularization_coefficient
                 regularization_term = np.multiply(self.layers[i].neurons[j].weights,lambda_vectors[i-1][j])
                 # add regularization gradient to total weight`s update
-                deltaW[i-1][j] -= regularization_term
+                deltaW[i-1][j] = deltaW[i-1][j] - regularization_term
                 # update weights
-                self.layers[i].neurons[j].weights += deltaW[i-1][j]
+                self.layers[i].neurons[j].weights = self.layers[i].neurons[j].weights + deltaW[i-1][j]
         return deltaW
 
     def compute_delta_hidden_layer(self, delta_next_layer, currentLayerIndex):
@@ -375,7 +375,7 @@ class Network:
         tmp = np.dot(V_k.T, H_k)
         H_new = np.dot(tmp, V_k)
         # adding rho_k*s_k*s_k^t
-        H_new += np.outer(s_k, s_k) * rho_k
+        H_new = H_new + np.outer(s_k, s_k) * rho_k
         return H_new
 
 
@@ -475,7 +475,7 @@ class Network:
         # for i = k-m, ..., k-1
         for i in range(len(s_list)):
             beta = rho_list[i] * np.dot(y_list[i], r)
-            r += s_list[i] * (a_list[i] - beta)
+            r = r + s_list[i] * (a_list[i] - beta)
             #r = r + s_list[i] * (a_list[i] - beta)
 
         return r
@@ -517,6 +517,8 @@ class Network:
             delta = alpha * p
             x_new = self.update_weights_CM(delta)
             gradient_new, loss, miss = self.calculate_gradient(data,targets,lossObject)
+            losses.append(loss)
+            misses.append(miss)
 
             if epoch > m:
                 # discard first element
