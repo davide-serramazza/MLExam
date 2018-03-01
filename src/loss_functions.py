@@ -2,6 +2,7 @@ import numpy as np
 
 
 class SquaredError:
+
     def __init__(self, t):
         self.type = t
 
@@ -49,12 +50,14 @@ class SquaredError:
 
 
 class EuclideanError:
+
     def __init__(self,normalizer=None):
         self.normalizer = normalizer
 
     def value(self, target, output_net, weights, regularization=0):
-        #denormalize
+
         if self.normalizer != None:
+            #denormalize
             den_target = self.normalizer.inverse_transform([target])
             den_output = self.normalizer.inverse_transform([output_net])
             target = den_target[0]
@@ -63,15 +66,12 @@ class EuclideanError:
         # data error
         data_error = np.linalg.norm(output_net - target)
 
-    # regularization error
+        # regularization error
         regularization_error = regularization * np.sum(np.square(weights))
         return data_error + regularization_error
 
     def derivative(self, target, output_net):
-        #numerator = np.sum(output_net - target)
-        #denominator = np.linalg.norm(output_net - target)
-        #loss_derivative = float(numerator) / denominator
-        # use derivative of squared error
+        # return derivative of MSE
         return 2 * (output_net - target)
 
     def misClassification(self, target, output_net):

@@ -1,6 +1,4 @@
 import matplotlib.pyplot as plt
-import copy
-import numpy as np
 from Neural_network import *
 import pandas as pd
 
@@ -142,7 +140,6 @@ def grid_search_CM(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns,vl_l
                                               regularization=reg)
 
                         # append result of single epoch in list previously created
-                        print squared_error
                         squared_error_average += squared_error
                         misClass_error_average += misClass_error
                         squared_error_validation_average += squared_error_validation
