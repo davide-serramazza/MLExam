@@ -733,11 +733,13 @@ class Network:
             - gradient_alpha = nabla f(x_k + alpha_i * p_k)
             - loss_alpha     = phi(alpha_i)
         """
-        # creates a copy of the network, update its weights to get the
-        # hypothetical x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
-        temp_network = copy.deepcopy(self)
-        temp_network.update_weights_CM(alpha_i * p,regularization)
-        gradient_alpha, loss_alpha, _ = temp_network.calculate_gradient(data, targets, lossObject, regularization)
+        # creates a copy of weights
+        actual_weights = copy.deepcopy(self.layers)
+        # compute x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
+        self.update_weights_CM(alpha_i * p,regularization)
+        gradient_alpha, loss_alpha, _ = self.calculate_gradient(data, targets, lossObject, regularization)
+        # restore original weights
+        self.layers = actual_weights
         return gradient_alpha, loss_alpha
 
     # end CM-----------------------------------------------------------
