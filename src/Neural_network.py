@@ -490,7 +490,9 @@ class Network:
 
         return r
 
-    def trainLBFGS(self, data, targets, eval_data, eval_targets, lossObject,m,epochs, regularization):
+    def trainLBFGS(self, data, targets, eval_data, eval_targets, lossObject,theta,c_1,c_2,alpha_0
+                   ,m,epochs, regularization):
+
         losses = []  # vector containing the loss of each epoch
         misses = []  # vector containing the misclassification for each epoch
 
@@ -516,10 +518,6 @@ class Network:
             p = -r
 
             # 2. line search
-            theta = 0.9   # contraction factor of alpha
-            alpha_0 = 1   # initial step size trial is always 1 for quasi-Newton TODO: try initial step less than 1
-            c_1 = 0.0001  # scaling factor for Armijo condition TODO try 1e-4
-            c_2 = 0.9     # scaling factor for Wolfe condition
             alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta, regularization)
             # updating weights and compute x_k+1 = x_k + a_k*p_k
             delta = alpha * p
