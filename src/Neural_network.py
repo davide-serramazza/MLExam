@@ -498,7 +498,6 @@ class Network:
 
         # 1. compute initial gradient and initial Hessian approximation H_0
         gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
-        H = np.identity(gradient_old.shape[0])
         x_old = self.get_weights_as_vector()
 
         # set of current s,y,p lists
@@ -513,11 +512,21 @@ class Network:
         print "---------------------------------------------------------------------------"
 
         for epoch in range(epochs):
-            # compute p = - H_k * \nabla f_k using two loop recursion
+
+            # calculate central matrix {H_k}^0
+            if epoch==0:
+                H = np.identity(gradient_old.shape[0])
+            else:
+                num = np.dot(s_list[-1],y_list[-1])
+                den = np.dot(y_list[-1],y_list[-1])
+                gamma = num/den
+                H = gamma* np.identity(gradient_old.shape[0])
+
+        # compute p = - H_k * \nabla f_k using two loop recursion
             r = self.compute_direction(H, gradient_old, s_list, y_list, rho_list)
             p = -r
 
-            # 2. line search
+            # line search
             alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta, regularization)
             # updating weights and compute x_k+1 = x_k + a_k*p_k
             delta = alpha * p
