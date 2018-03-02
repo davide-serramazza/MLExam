@@ -568,11 +568,6 @@ class Network:
             print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
                   (epoch+1, loss, miss, norm(gradient_new), norm(H), rho_k, alpha)
 
-            # stop criterion
-            if (norm(gradient_old)) < 1e-6:
-                print "break at", epoch
-                break
-
             # update x_old and gradient_old
             x_old = x_new
             gradient_old = gradient_new
@@ -583,6 +578,11 @@ class Network:
 
             losses_validation = np.append(losses_validation,squared_error_validation_epoch)
             misses_validation = np.append(misses_validation,misClass_error_validation_epoch)
+
+            # stop criterion
+            if (norm(gradient_old)) < 1e-6:
+                print "break at", epoch
+                break
 
         return losses, misses,losses_validation,misses_validation
 

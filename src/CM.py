@@ -25,9 +25,6 @@ def main():
     neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
 
     network = Network(arch, neuronsType)
-    #network.trainLBFGS(training_patterns,training_labels,validation_patterns,validation_labels,lossObject,m=10,
-                       #epochs=50,regularization=0.0,theta=0.9,c_1=0.0001,c_2=0.9,alpha_0=1)
-    #define grid search parameter
     c_1 = [0.0001]
     c_2 = [0.9]
     theta = [0.9]
