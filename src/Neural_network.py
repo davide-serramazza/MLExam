@@ -460,6 +460,7 @@ class Network:
 
         return losses, misses, losses_validation, misses_validation
 
+
     def compute_direction(self, H, gradient, s_list, y_list, rho_list):
         """
         computes direction with two-loops recursion
@@ -493,24 +494,34 @@ class Network:
     def trainLBFGS(self, data, targets, eval_data, eval_targets, lossObject,theta,c_1,c_2,alpha_0
                    ,m,epochs, regularization):
 
-        losses = []  # vector containing the loss of each epoch
-        misses = []  # vector containing the misclassification for each epoch
+        losses = np.array([]) # vector containing the loss of each epoch
+        misses = np.array([]) # vector containing the misclassification for each epoch
+        losses_validation = np.array([])
+        misses_validation = np.array([])
 
         # 1. compute initial gradient and initial Hessian approximation H_0
         gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
         x_old = self.get_weights_as_vector()
+
+        # append losses
+        losses = np.append(losses,loss)
+        misses = np.append(misses,miss)
+        # compute validation error and append it
+        squared_error_validation_epoch, misClass_error_validation_epoch = \
+            self.validation_error(eval_data, eval_targets, lossObject)
+
+        losses_validation = np.append(losses_validation,squared_error_validation_epoch)
+        misses_validation= np.append(misses_validation,misClass_error_validation_epoch)
 
         # set of current s,y,p lists
         s_list = []
         y_list = []
         rho_list = []
 
-        # append losses
-        losses.append(loss)
-        misses.append(miss)
         print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
         print "---------------------------------------------------------------------------"
 
+        # main loop
         for epoch in range(epochs):
 
             # calculate central matrix {H_k}^0
@@ -532,10 +543,12 @@ class Network:
             delta = alpha * p
             x_new = self.update_weights_CM(delta, regularization=0)
             gradient_new, loss, miss = self.calculate_gradient(data,targets,lossObject, regularization)
-            losses.append(loss)
-            misses.append(miss)
 
-            if epoch > m:
+            # append losses
+            losses = np.append(losses,loss)
+            misses = np.append(misses,miss)
+
+            if epoch > (m-1):
                 # discard first element
                 del s_list[0]
                 del y_list[0]
@@ -564,7 +577,15 @@ class Network:
             x_old = x_new
             gradient_old = gradient_new
 
-        return losses, misses
+            # compute validation error and append it
+            squared_error_validation_epoch, misClass_error_validation_epoch = \
+                self.validation_error(eval_data, eval_targets, lossObject)
+
+            losses_validation = np.append(losses_validation,squared_error_validation_epoch)
+            misses_validation = np.append(misses_validation,misClass_error_validation_epoch)
+
+        return losses, misses,losses_validation,misses_validation
+
 
     def backtracking_line_search(self, alpha, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
         while True:
