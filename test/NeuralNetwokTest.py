@@ -133,18 +133,25 @@ class TestNeuralNetwork(unittest.TestCase):
         self.assertEqual(network.predict(data)[0][0], 4.2875)
 
     def test_bfgs_equal_lbfgs_if_m_is_big(self):
-        # AAA assumes that the interpolation takes the middle value between alpha_low and alpha_high
-        network = Network([2, 1], [InputNeuron, OutputNeuron])
-        network.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
-        data = [[2,2], [1,1], [3,2], [2,4]]
+        data = [[2, 2], [1, 1], [3, 2], [2, 4]]
         target = [[4], [2], [5], [6]]
-        loss, _, _, _ = network.trainBFGS(data, target, [], [],0.9, 0.0001, 0.9, SquaredError("sigmoid"), 5, 0)
+        arch = [2, 1]
+        neurons = [InputNeuron, OutputNeuron]
 
-        network2 = Network([2, 1], [InputNeuron, OutputNeuron])
-        network2.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
-        loss_2, _ = network2.trainLBFGS(data, target, [], [], SquaredError("sigmoid"), m=10, epochs=5, regularization=0)
-        print loss
-        print loss_2
+        network_bfgs = Network(arch, neurons)
+        network_lbfgs = Network(arch, neurons)
+
+        network_bfgs.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
+        network_lbfgs.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
+
+        loss_bfgs, _, _, _ = network_bfgs.trainBFGS(data, target, [], [], theta=0.9, c_1=0.0001, c_2=0.9,
+                                                    lossObject=SquaredError("sigmoid"), epochs=5, regularization=0)
+        loss_lbfgs, _, _, _ = network_lbfgs.trainLBFGS(data, target, [], [], SquaredError("sigmoid"),
+                                                       m=10, epochs=5, regularization=0, theta=0.9,
+                                                       c_1=0.0001, c_2=0.9, alpha_0=1)
+        # TODO this two should be the same
+        print loss_bfgs
+        print loss_lbfgs
 
 
 

@@ -28,14 +28,14 @@ def main():
     c_1 = [0.0001]
     c_2 = [0.9]
     theta = [0.9]
-    reguralization = [0.0]
+    reguralization = [0.01]
     m = [10]
     epochs = 50
     lossObject = SquaredError("tangentH")
     parameter = grid_search_CM_parameter(c_1,c_2,theta,reguralization,m,epochs,arch,neuronsType)
     # perform grid search
     grid_search_CM(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,
-                   n_trials=1,save_in_dir="../temp/")
+                   n_trials=1,save_in_dir="../temp/reg-")
 
 
 if __name__ == '__main__':
