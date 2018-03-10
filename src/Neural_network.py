@@ -121,6 +121,7 @@ class Network:
 
         # 4. compute network weights update
         gradient_weights = self.compute_gradient(np.asarray(delta_vectors))
+        # TODO add here regularization gradient 2 * lambda * w_ji
 
         # 5 report loss and misclassification count
         weights = self.get_weights_as_vector()
@@ -309,7 +310,7 @@ class Network:
             gradient = np.append(gradient,tmp)
         return gradient
 
-    def update_weights_CM(self, delta,regularization):
+    def update_weights_CM(self, delta, regularization):
         """
         update network weights
         :param delta: weight update p_k = - H * nabla f
@@ -329,12 +330,12 @@ class Network:
                 weights_len = len(current_neuron_weights)
                 tmp = delta[start:start + weights_len]
                 start += weights_len
-                #create "regularization vector"
+                # create "regularization vector"
                 reg = np.zeros(weights_len)
                 reg.fill(regularization)
-                reg[-1]=0
-                # update weigths
-                current_neuron_weights += tmp
+                reg[-1] = 0
+                # update weights
+                current_neuron_weights += tmp - 2 * np.multiply(reg, current_neuron_weights)
 
                 # append to x_{k+1} after updating
                 x_new = np.append(x_new, current_neuron_weights)
@@ -421,7 +422,8 @@ class Network:
             delta = p * alpha
 
             # 4. update weights using x_{k+1} = x_{k} + alpha_{k} * p_k
-            x_new = self.update_weights_CM(delta,regularization)
+            # TODO delete alpha*regularization once backprop computes also regularization gradient
+            x_new = self.update_weights_CM(delta, alpha * regularization)
 
             # 5. compute new gradient
             gradient_new, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
@@ -525,7 +527,7 @@ class Network:
         for epoch in range(epochs):
 
             # calculate central matrix {H_k}^0
-            if epoch==0:
+            if True:#epoch==0: # TODO uncomment when unit test for bfgs==lbfgs
                 H = np.identity(gradient_old.shape[0])
             else:
                 num = np.dot(s_list[-1],y_list[-1])
@@ -541,7 +543,8 @@ class Network:
             alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta, regularization)
             # updating weights and compute x_k+1 = x_k + a_k*p_k
             delta = alpha * p
-            x_new = self.update_weights_CM(delta, regularization=0)
+            # TODO delete alpha*regularization once backprop computes also regularization gradient
+            x_new = self.update_weights_CM(delta, alpha * regularization)
             gradient_new, loss, miss = self.calculate_gradient(data,targets,lossObject, regularization)
 
             # append losses
@@ -655,7 +658,7 @@ class Network:
         return alpha_star
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization):
-        max_feval = 100
+        max_feval = 300
 
         sfgrd = 0.01
 
@@ -757,7 +760,8 @@ class Network:
         # creates a copy of weights
         actual_weights = copy.deepcopy(self.layers)
         # compute x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
-        self.update_weights_CM(alpha_i * p,regularization)
+        # TODO delete alpha*regularization once backprop computes also regularization gradient
+        self.update_weights_CM(alpha_i * p, alpha_i * regularization)
         gradient_alpha, loss_alpha, _ = self.calculate_gradient(data, targets, lossObject, regularization)
         # restore original weights
         self.layers = actual_weights
