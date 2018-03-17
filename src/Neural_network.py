@@ -280,7 +280,7 @@ class Network:
                                                  learning_rate=learning_rate,
                                                  prev_delta=prev_delta,
                                                  momentum=momentum)
-        
+
             # append the total loss and misClassification of single epoch
             losses = np.append(losses, loss_epoch)
             misClassification = np.append(misClassification, misC_epoch)
@@ -303,36 +303,25 @@ class Network:
             gradient = np.append(gradient,tmp)
         return gradient
 
-    def update_weights_CM(self, delta, regularization):
+    def update_weights_CM(self, delta):
         """
         update network weights
         :param delta: weight update p_k = - H * nabla f
         :return: x_k+1
         """
-
         start = 0
-        # initializing x_old = x_k and x_new = x_{k+1}
-        x_new = np.array([])
 
-        for i in range(1, len(self.layers)):
-            for j in range(len(self.layers[i].neurons) - 1):
-
-                current_neuron_weights = self.layers[i].neurons[j].weights
+        for layer in self.layers[1:]:  # exclude input layer
+            for neuron in layer.neurons[:-1]:  # exclude bias neuron
+                current_neuron_weights = neuron.weights
 
                 # taking only gradient's entry w.r.t. current gradient
                 weights_len = len(current_neuron_weights)
                 tmp = delta[start:start + weights_len]
                 start += weights_len
-                # create "regularization vector"
-                reg = np.zeros(weights_len)
-                reg.fill(regularization)
-                reg[-1] = 0
                 # update weights
-                current_neuron_weights += tmp - 2 * np.multiply(reg, current_neuron_weights)
-
-                # append to x_{k+1} after updating
-                x_new = np.append(x_new, current_neuron_weights)
-        return x_new
+                current_neuron_weights += tmp
+        return self.get_weights_as_vector()
 
     def calculate_gradient(self, data, targets, lossObject, regularization):
         # create empty vector, gradient_w_old = sum of gradient_w for the epoch
@@ -353,9 +342,9 @@ class Network:
         gradient = self.get_gradient_as_vector(gradient_w_batch)
 
         # compute mean values
-        gradient /= len(data)
-        loss_batch /= len(data)
-        miss_batch /= float(len(data))
+        gradient /= 1.0 * len(data)
+        loss_batch /= 1.0 * len(data)
+        miss_batch /= 1.0 * len(data)
         return gradient, loss_batch, miss_batch
 
     def update_matrix(self, H_k, s_k, y_k):
@@ -415,8 +404,7 @@ class Network:
             delta = p * alpha
 
             # 4. update weights using x_{k+1} = x_{k} + alpha_{k} * p_k
-            # TODO delete alpha*regularization once backprop computes also regularization gradient
-            x_new = self.update_weights_CM(delta, alpha * regularization)
+            x_new = self.update_weights_CM(delta)
 
             # 5. compute new gradient
             gradient_new, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
@@ -520,15 +508,15 @@ class Network:
         for epoch in range(epochs):
 
             # calculate central matrix {H_k}^0
-            if True:#epoch==0: # TODO uncomment when unit test for bfgs==lbfgs
+            if epoch == 0:
                 H = np.identity(gradient_old.shape[0])
             else:
                 num = np.dot(s_list[-1],y_list[-1])
                 den = np.dot(y_list[-1],y_list[-1])
                 gamma = num/den
-                H = gamma* np.identity(gradient_old.shape[0])
+                H = gamma * np.identity(gradient_old.shape[0])
 
-        # compute p = - H_k * \nabla f_k using two loop recursion
+            # compute p = - H_k * \nabla f_k using two loop recursion
             r = self.compute_direction(H, gradient_old, s_list, y_list, rho_list)
             p = -r
 
@@ -536,8 +524,7 @@ class Network:
             alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta, regularization)
             # updating weights and compute x_k+1 = x_k + a_k*p_k
             delta = alpha * p
-            # TODO delete alpha*regularization once backprop computes also regularization gradient
-            x_new = self.update_weights_CM(delta, alpha * regularization)
+            x_new = self.update_weights_CM(delta)
             gradient_new, loss, miss = self.calculate_gradient(data,targets,lossObject, regularization)
 
             # append losses
@@ -651,14 +638,14 @@ class Network:
         return alpha_star
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization):
-        max_feval = 300
+        max_feval = 100
 
         sfgrd = 0.01
 
         for i in range(max_feval):
             # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
             #alpha_j = self.interpolate(alpha_high, alpha_low, data, lossObject, p, targets)
-            #alpha_j = self.safeguarded_interpolation(alpha_high, alpha_low, sfgrd, data, lossObject, p, targets)
+            #alpha_j = self.safeguarded_interpolation(alpha_high, alpha_low, sfgrd, data, lossObject, p, targets, regularization)
             alpha_j = select_random_point_between(alpha_low, alpha_high)
 
             # 2. evaluate phi(alpha_j)
@@ -675,8 +662,8 @@ class Network:
                 phi_p_alpha_j = np.dot(gradient_alpha_j, p)
                 # 5. if |phi'(alpha_j)| <= - c_2 * phi'(0) (Wolfe satisfied?)
                 # if abs(phi_p_alpha_j) <= c_2 * abs(phi_p_0):  # strong wolfe
-                # if phi_p_alpha_j >= c_2 * phi_p_alpha_j:  # wolfe frangio
-                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:  # book algorithm: strong wolfe
+                if phi_p_alpha_j >= c_2 * phi_p_alpha_j:  # wolfe frangio
+                #if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:  # book algorithm: strong wolfe
                     return alpha_j
                 # 6. if phi'(alpha_j)(alpha_high - alpha_low) >= 0
                 if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:
@@ -707,7 +694,7 @@ class Network:
                   (2 * (phi_alpha_high - phi_alpha_low - phi_p_alpha_low * alpha_high))
         return alpha_j
 
-    def safeguarded_interpolation(self, alpha_high, alpha_low, sfgrd, data, lossObject, p, targets):
+    def safeguarded_interpolation(self, alpha_high, alpha_low, sfgrd, data, lossObject, p, targets, reg):
         """
         find a trial step size alpha_j between alpha_low and alpha_high by safeguarded quadratic interpolation
         between function values phi(alpha_low) and phi(alpha_high).
@@ -721,8 +708,8 @@ class Network:
         :param targets:
         :return:
         """
-        gradient_alpha_low, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
-        gradient_alpha_high, phi_alpha_high = self.evaluate_phi_alpha(alpha_high, data, lossObject, p, targets)
+        gradient_alpha_low, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets, reg)
+        gradient_alpha_high, phi_alpha_high = self.evaluate_phi_alpha(alpha_high, data, lossObject, p, targets, reg)
         phi_p_alpha_low = np.dot(gradient_alpha_low, p)
         phi_p_alpha_high = np.dot(gradient_alpha_high, p)
 
@@ -753,8 +740,7 @@ class Network:
         # creates a copy of weights
         actual_weights = copy.deepcopy(self.layers)
         # compute x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
-        # TODO delete alpha*regularization once backprop computes also regularization gradient
-        self.update_weights_CM(alpha_i * p, alpha_i * regularization)
+        self.update_weights_CM(alpha_i * p)
         gradient_alpha, loss_alpha, _ = self.calculate_gradient(data, targets, lossObject, regularization)
         # restore original weights
         self.layers = actual_weights
@@ -837,7 +823,7 @@ def select_random_point_between(alpha_low, alpha_high):
     :param alpha_high:
     :return:
     """
-    #convex = random.uniform(0.1, 0.9)
+    #convex = random.uniform(0.01, 0.99)
     convex = 0.5
     alpha_j = convex * alpha_low + (1 - convex) * alpha_high
     return alpha_j

@@ -17,7 +17,7 @@ class grid_search_CM_parameter:
 
 
 def print_result(misClass_error, misClass_error_evaluation,
-                 squared_error, squared_error_evaluation, arc,c_1,c_2,theta, n_figure,
+                 squared_error, squared_error_evaluation, arc,c_1,c_2,theta, reg, m, n_figure,
                  eval_string, lossObject, save_in_dir):
     # get accuracy
     accuracy = 1 - misClass_error
@@ -38,7 +38,8 @@ def print_result(misClass_error, misClass_error_evaluation,
     plt.xlabel("epochs")
     plt.ylabel(lossObject.__class__.__name__)
     s = save_in_dir + "c1_" + transf_value(c_1) + "-c2:" + transf_value(
-        c_2) + "-theta_" + transf_value(theta) + "-arc_" + tranf_arc(arc)
+        c_2) + "-theta_" + transf_value(theta) + "-reg_" + transf_value(reg) + "-m_" + str(m) +\
+        "-arc_" + tranf_arc(arc)
     plt.tight_layout()  # minimize overlap of subplots
     plt.savefig(s)
     plt.close()
@@ -165,5 +166,6 @@ def grid_search_CM(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns,vl_l
 
                         print_result(misClass_error_average, misClass_error_validation_average,
                                      squared_error_average, squared_error_validation_average,
-                                     parameter.architecture, c_1, c_2, theta, n_figure, "validation set", loss_obj, save_in_dir)
+                                     parameter.architecture, c_1, c_2, theta,
+                                     reg, m, n_figure, "validation set", loss_obj, save_in_dir)
                         n_figure += 1  # increment to create a new figure
