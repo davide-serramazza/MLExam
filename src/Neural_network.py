@@ -121,7 +121,12 @@ class Network:
 
         # 4. compute network weights update
         gradient_weights = self.compute_gradient(np.asarray(delta_vectors))
-        # TODO add here regularization gradient 2 * lambda * w_ji
+
+        # add regularization gradient 2 * lambda * w_{ji}
+        for grad_layer, layer in zip(gradient_weights, self.layers[1:]):  # exclude input layer
+            for grad_neuron, neuron in zip(grad_layer, layer.neurons[:-1]):  # exclude bias neuron
+                reg_component_vector = 2 * regularization * neuron.weights[:-1]
+                grad_neuron[:-1] += reg_component_vector
 
         # 5 report loss and misclassification count
         weights = self.get_weights_as_vector()
@@ -161,34 +166,23 @@ class Network:
 
         return np.asarray(gradient_w)
 
-    def update_weights(self, gradient_w, learning_rate, prev_delta, momentum, regularization):
+    def update_weights(self, gradient_w, learning_rate, prev_delta, momentum):
         """
         update weights as
-            DeltaW_{ji} = gradient_w * learning_rate - regularization*w_{ji} + momentum*prevg (old gradient)
+            DeltaW_{ji} = - learning_rate * gradient_w + momentum * prevg (old gradient)
             w_{ji}+= DeltaW_{ji}
 
         :param gradient_w: gradient error on data wrt neural network`s weights
         :param learning_rate: learning rate
         :param prev_delta: previous delta for momentum
         :param momentum: percentage of prev_delta
-        :param regularization: regularization coefficient
         :return: current current weight update (i.e prev_delta for next iteration)
         """
-        deltaW = - learning_rate * gradient_w + momentum * prev_delta
-        # initialize a vector of deltaw`s shape
-        lambda_vectors = copy.deepcopy(deltaW)
+        delta_w = - learning_rate * gradient_w + momentum * prev_delta
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
-                # fill vectors with regularization coefficient, 0 in bias`s entry
-                lambda_vectors[i-1][j] = regularization
-                lambda_vectors[i-1][j][-1] = 0
-                # compute regularization gradient (wrt current weights) = w*regularization_coefficient
-                regularization_term = np.multiply(self.layers[i].neurons[j].weights,lambda_vectors[i-1][j])
-                # add regularization gradient to total weight`s update
-                deltaW[i-1][j] = deltaW[i-1][j] - regularization_term # TODO maybe multiply lambda by eta
-                # update weights
-                self.layers[i].neurons[j].weights = self.layers[i].neurons[j].weights + deltaW[i-1][j]
-        return deltaW
+                self.layers[i].neurons[j].weights = self.layers[i].neurons[j].weights + delta_w[i-1][j]
+        return delta_w
 
     def compute_delta_hidden_layer(self, delta_next_layer, currentLayerIndex):
         # delta_layer vector
@@ -274,7 +268,7 @@ class Network:
                 # train, compute gradient for a batch
                 for pattern, t in zip(batch_pattern, batch_target):
                     self.forward(pattern)
-                    gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization)
+                    gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization * len(batch_pattern) / len(data))
                     loss_epoch += loss_p
                     misC_epoch += miss_p
                     gradient_w_batch += gradient_w
@@ -285,9 +279,8 @@ class Network:
                 prev_delta = self.update_weights(gradient_w=gradient_w_batch,
                                                  learning_rate=learning_rate,
                                                  prev_delta=prev_delta,
-                                                 momentum=momentum,
-                                                 regularization=regularization * len(batch_pattern) / len(data))
-
+                                                 momentum=momentum)
+        
             # append the total loss and misClassification of single epoch
             losses = np.append(losses, loss_epoch)
             misClassification = np.append(misClassification, misC_epoch)

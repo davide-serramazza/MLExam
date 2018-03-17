@@ -1,5 +1,5 @@
 import unittest
-
+import matplotlib.pyplot as plt
 from src.Neural_network import *
 
 class TestNeuralNetwork(unittest.TestCase):
@@ -27,7 +27,7 @@ class TestNeuralNetwork(unittest.TestCase):
         target = [0.01, 0.99]
         network.forward(data)
         delta_w, loss_value, _ = network.back_propagation(target=target, lossObject=SquaredError("sigmoid"), regularization=0)
-        network.update_weights(delta_w, learning_rate=0.5/2, prev_delta=np.zeros(delta_w.shape), momentum=0, regularization=0)
+        network.update_weights(delta_w, learning_rate=0.5/2, prev_delta=np.zeros(delta_w.shape), momentum=0)
 
         layers = network.layers
         self.assert_weights(layers)
@@ -42,12 +42,10 @@ class TestNeuralNetwork(unittest.TestCase):
 
         data = [[0.05, 0.1]]
         target = [[0.01, 0.99]]
-        network.train(data=data, targets=target, eval_data=[], eval_targets=[], lossObject=SquaredError("sigmoid"),
+        tr_l, _, _, _ = network.train(data=data, targets=target, eval_data=[], eval_targets=[], lossObject=SquaredError("sigmoid"),
                       epochs=1, learning_rate=0.5/2, batch_size=1, momentum=0, regularization=0)
 
-
-        layers = network.layers
-        self.assert_weights(layers)
+        self.assert_weights(network.layers)
 
     def assert_weights(self, layers):
         np.testing.assert_array_equal(layers[1].neurons[0].weights, [0.14978071613276281, 0.19956143226552567, 0.34561432265525649])
