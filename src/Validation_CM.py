@@ -4,7 +4,7 @@ import pandas as pd
 
 
 class grid_search_CM_parameter:
-    def __init__(self,c_1,c_2,theta,regularization,epoch,architecture,neurons):
+    def __init__(self,c_1,c_2,theta,regularization,m,epoch,architecture,neurons):
         self.c_1 =  c_1
         self.c_2 = c_2
         self.theta = theta
@@ -12,10 +12,12 @@ class grid_search_CM_parameter:
         self.architecture = architecture
         self.neurons = neurons
         self.regularization = regularization
+        # number of vector used to define central matrix H
+        self.m = m
 
 
 def print_result(misClass_error, misClass_error_evaluation,
-                 squared_error, squared_error_evaluation, arc,c_1,c_2,theta, n_figure,
+                 squared_error, squared_error_evaluation, arc,c_1,c_2,theta, reg, m, n_figure,
                  eval_string, lossObject, save_in_dir):
     # get accuracy
     accuracy = 1 - misClass_error
@@ -36,7 +38,8 @@ def print_result(misClass_error, misClass_error_evaluation,
     plt.xlabel("epochs")
     plt.ylabel(lossObject.__class__.__name__)
     s = save_in_dir + "c1_" + transf_value(c_1) + "-c2:" + transf_value(
-        c_2) + "-theta_" + transf_value(theta) + "-arc_" + tranf_arc(arc)
+        c_2) + "-theta_" + transf_value(theta) + "-reg_" + transf_value(reg) + "-m_" + str(m) +\
+        "-arc_" + tranf_arc(arc)
     plt.tight_layout()  # minimize overlap of subplots
     plt.savefig(s)
     plt.close()
@@ -123,36 +126,46 @@ def grid_search_CM(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns,vl_l
         for c_2 in parameter.c_2:
             for theta in parameter.theta:
                 for reg in parameter.regularization:
-                    # initialize lists for saving reslut
-                    squared_error_average = np.zeros(parameter.epoch+1)
-                    misClass_error_average = np.zeros(parameter.epoch+1)
-                    squared_error_validation_average = np.zeros(parameter.epoch+1)
-                    misClass_error_validation_average = np.zeros(parameter.epoch+1)
-                    # n_trials then average
-                    for n in range(n_trials):
-                        # buid a new network
-                        network = Network(parameter.architecture, parameter.neurons)
-                        # train
-                        squared_error, misClass_error, \
-                        squared_error_validation, misClass_error_validation = \
-                            network.trainBFGS(data=tr_patterns,targets=tr_labels,eval_data=vl_patterns,eval_targets=vl_labels,
-                                              theta=theta,c_1=c_1,c_2=c_2,lossObject=loss_obj,epochs=parameter.epoch,
-                                              regularization=reg)
+                    for m in parameter.m:
+                        # initialize lists for saving reslut
+                        squared_error_average = np.zeros(parameter.epoch+1)
+                        misClass_error_average = np.zeros(parameter.epoch+1)
+                        squared_error_validation_average = np.zeros(parameter.epoch+1)
+                        misClass_error_validation_average = np.zeros(parameter.epoch+1)
+                        # n_trials then average
+                        for n in range(n_trials):
+                            # buid a new network
+                            network = Network(parameter.architecture, parameter.neurons)
+                            # train
+                            squared_error, misClass_error, \
+                            squared_error_validation, misClass_error_validation = \
+                                network.trainLBFGS(data=tr_patterns,targets=tr_labels,eval_data=vl_patterns,eval_targets=vl_labels,
+                                                   lossObject=loss_obj,theta=theta,c_1=c_1,c_2=c_2,alpha_0=1,
+                                                   m=m,epochs=parameter.epoch,regularization=reg)
 
-                        # append result of single epoch in list previously created
-                        squared_error_average += squared_error
-                        misClass_error_average += misClass_error
-                        squared_error_validation_average += squared_error_validation
-                        misClass_error_validation_average += misClass_error_validation
+                            # eventually pad vector
+                            diff = squared_error_average.shape[0] - squared_error.shape[0]
+
+                            squared_error = np.pad(squared_error,(0,diff),'constant',constant_values=(0.0,0.0))
+                            misClass_error = np.pad(misClass_error,(0,diff),'constant',constant_values=(0.0,0.0))
+                            squared_error_validation = np.pad(squared_error_validation,(0,diff),'constant',constant_values=(0.0,0.0))
+                            misClass_error_validation = np.pad(misClass_error_validation,(0,diff),'constant',constant_values=(0.0,0.0))
+
+                            # append result of single epoch in list previously created
+                            squared_error_average += squared_error
+                            misClass_error_average += misClass_error
+                            squared_error_validation_average += squared_error_validation
+                            misClass_error_validation_average += misClass_error_validation
 
 
-                # taking mean error over trials and over patterns
-                    squared_error_average /= float(n_trials)
-                    misClass_error_average /= float(n_trials)
-                    squared_error_validation_average /= float(n_trials) * len(vl_patterns)
-                    misClass_error_validation_average /= float(n_trials) * len(vl_patterns)
+                    # taking mean error over trials and over patterns
+                        squared_error_average /= float(n_trials)
+                        misClass_error_average /= float(n_trials)
+                        squared_error_validation_average /= float(n_trials) * len(vl_patterns)
+                        misClass_error_validation_average /= float(n_trials) * len(vl_patterns)
 
-                    print_result(misClass_error_average, misClass_error_validation_average,
-                                 squared_error_average, squared_error_validation_average,
-                                 parameter.architecture, c_1, c_2, theta, n_figure, "validation set", loss_obj, save_in_dir)
-                    n_figure += 1  # increment to create a new figure
+                        print_result(misClass_error_average, misClass_error_validation_average,
+                                     squared_error_average, squared_error_validation_average,
+                                     parameter.architecture, c_1, c_2, theta,
+                                     reg, m, n_figure, "validation set", loss_obj, save_in_dir)
+                        n_figure += 1  # increment to create a new figure
