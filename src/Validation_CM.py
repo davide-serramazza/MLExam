@@ -145,11 +145,12 @@ def grid_search_CM(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns,vl_l
 
                             # eventually pad vector
                             diff = squared_error_average.shape[0] - squared_error.shape[0]
+                            squared_error = np.pad(squared_error,(0,diff),'constant',constant_values=(squared_error[-1]))
+                            misClass_error = np.pad(misClass_error,(0,diff),'constant',constant_values=(misClass_error[-1]))
 
-                            squared_error = np.pad(squared_error,(0,diff),'constant',constant_values=(0.0,0.0))
-                            misClass_error = np.pad(misClass_error,(0,diff),'constant',constant_values=(0.0,0.0))
-                            squared_error_validation = np.pad(squared_error_validation,(0,diff),'constant',constant_values=(0.0,0.0))
-                            misClass_error_validation = np.pad(misClass_error_validation,(0,diff),'constant',constant_values=(0.0,0.0))
+                            diff = squared_error_validation_average.shape[0] - squared_error_validation.shape[0]
+                            squared_error_validation = np.pad(squared_error_validation,(0,diff),'constant',constant_values=(squared_error_validation[-1]))
+                            misClass_error_validation = np.pad(misClass_error_validation,(0,diff),'constant',constant_values=(misClass_error_validation[-1]))
 
                             # append result of single epoch in list previously created
                             squared_error_average += squared_error
