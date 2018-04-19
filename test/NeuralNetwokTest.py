@@ -1,5 +1,5 @@
 import unittest
-
+import matplotlib.pyplot as plt
 from src.Neural_network import *
 
 class TestNeuralNetwork(unittest.TestCase):
@@ -27,7 +27,7 @@ class TestNeuralNetwork(unittest.TestCase):
         target = [0.01, 0.99]
         network.forward(data)
         delta_w, loss_value, _ = network.back_propagation(target=target, lossObject=SquaredError("sigmoid"), regularization=0)
-        network.update_weights(delta_w, learning_rate=0.5/2, prev_delta=np.zeros(delta_w.shape), momentum=0, regularization=0)
+        network.update_weights(delta_w, learning_rate=0.5/2, prev_delta=np.zeros(delta_w.shape), momentum=0)
 
         layers = network.layers
         self.assert_weights(layers)
@@ -42,12 +42,10 @@ class TestNeuralNetwork(unittest.TestCase):
 
         data = [[0.05, 0.1]]
         target = [[0.01, 0.99]]
-        network.train(data=data, targets=target, eval_data=[], eval_targets=[], lossObject=SquaredError("sigmoid"),
+        tr_l, _, _, _ = network.train(data=data, targets=target, eval_data=[], eval_targets=[], lossObject=SquaredError("sigmoid"),
                       epochs=1, learning_rate=0.5/2, batch_size=1, momentum=0, regularization=0)
 
-
-        layers = network.layers
-        self.assert_weights(layers)
+        self.assert_weights(network.layers)
 
     def assert_weights(self, layers):
         np.testing.assert_array_equal(layers[1].neurons[0].weights, [0.14978071613276281, 0.19956143226552567, 0.34561432265525649])
@@ -133,18 +131,25 @@ class TestNeuralNetwork(unittest.TestCase):
         self.assertEqual(network.predict(data)[0][0], 4.2875)
 
     def test_bfgs_equal_lbfgs_if_m_is_big(self):
-        # AAA assumes that the interpolation takes the middle value between alpha_low and alpha_high
-        network = Network([2, 1], [InputNeuron, OutputNeuron])
-        network.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
-        data = [[2,2], [1,1], [3,2], [2,4]]
+        data = [[2, 2], [1, 1], [3, 2], [2, 4]]
         target = [[4], [2], [5], [6]]
-        loss, _, _, _ = network.trainBFGS(data, target, [], [],0.9, 0.0001, 0.9, SquaredError("sigmoid"), 5, 0)
+        arch = [2, 1]
+        neurons = [InputNeuron, OutputNeuron]
 
-        network2 = Network([2, 1], [InputNeuron, OutputNeuron])
-        network2.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
-        loss_2, _ = network2.trainLBFGS(data, target, [], [], SquaredError("sigmoid"), m=10, epochs=5, regularization=0)
-        print loss
-        print loss_2
+        network_bfgs = Network(arch, neurons)
+        network_lbfgs = Network(arch, neurons)
+
+        network_bfgs.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
+        network_lbfgs.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
+
+        loss_bfgs, _, _, _ = network_bfgs.trainBFGS(data, target, [], [], theta=0.9, c_1=0.0001, c_2=0.9,
+                                                    lossObject=SquaredError("sigmoid"), epochs=5, regularization=0)
+        loss_lbfgs, _, _, _ = network_lbfgs.trainLBFGS(data, target, [], [], SquaredError("sigmoid"),
+                                                       m=10, epochs=5, regularization=0, theta=0.9,
+                                                       c_1=0.0001, c_2=0.9, alpha_0=1)
+        # TODO this two should be the same
+        print loss_bfgs
+        print loss_lbfgs
 
 
 

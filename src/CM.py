@@ -23,41 +23,26 @@ def main():
     # 4. define architecture and hyper parameter
     arch = [17,10,1]
     neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
+
+    network = Network(arch, neuronsType)
+    c_1 = [0.0001]
+    c_2 = [0.9]
+    theta = [0.9]
+    reguralization = [0.0]
+    m = [50]
+    epochs = 100
     lossObject = SquaredError("tangentH")
+    parameter = grid_search_CM_parameter(c_1,c_2,theta,reguralization,m,epochs,arch,neuronsType)
+    # perform grid search
+    grid_search_CM(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,
+                   n_trials=3,save_in_dir="../temp/new-")
 
-    #theta=[0.9]
-    #c_1=[0.0001,0.001,0.005]
-    #c_2=[0.9,0.85,0.5]
-    #regularizarion = [0.001]
-    lossObject=lossObject
-    epochs=50
-
-    #parameter = grid_search_CM_parameter(c_1,c_2,theta,regularizarion,epochs,arch,neuronsType)
-    start_time = time.time()
-    #grid_search_CM(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,5,"../image/monk3-reg/")
-    elapsed_time = time.time() - start_time
-    print "time in grid search:", elapsed_time
-
-    ##' esempio
-    arch = [2, 2, 2]
-    neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
-    data = [[0.05, 0.1]]
-    target = [[0.01, 0.99]]
-
-    print "\nBFGS\n"
-    network = Network(arch, neuronsType)
-    network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
-    network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
-    network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
-    network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
-    network.trainBFGS(data, target, [], [], 0.9, 0.0001, 0.9, SquaredError("sigmoid"), 5, 0)
-
-    network = Network(arch, neuronsType)
-    network.layers[1].neurons[0].weights = np.asarray([0.15, 0.2, 0.35])
-    network.layers[1].neurons[1].weights = np.asarray([0.25, 0.3, 0.35])
-    network.layers[2].neurons[0].weights = np.asarray([0.4, 0.45, 0.6])
-    network.layers[2].neurons[1].weights = np.asarray([0.5, 0.55, 0.6])
-    network.trainLBFGS(data, target, [], [], SquaredError("sigmoid"), m=10, epochs=20, regularization=0)
+    # try BFGS
+    #tr_l, tr_ac, vl_l, vl_ac = network.trainBFGS(training_patterns, training_labels, validation_patterns, validation_labels,
+    #                  theta=0.9, c_1=0.0001, c_2=0.9, lossObject=lossObject, regularization=0.01, epochs=10)
+    #plt.plot(range(len(tr_l)), tr_l, "r", label="TR error")
+    #plt.plot(range(len(vl_l)), vl_l, "b", label="VL error")
+    #plt.show()
 
 if __name__ == '__main__':
     main()
