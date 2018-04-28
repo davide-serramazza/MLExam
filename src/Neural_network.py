@@ -823,7 +823,7 @@ def select_random_point_between(alpha_low, alpha_high):
     :param alpha_high:
     :return:
     """
-    #convex = random.uniform(0.01, 0.99)
-    convex = 0.5
+    convex = random.uniform(0.1, 0.9)
+    #convex = 0.5
     alpha_j = convex * alpha_low + (1 - convex) * alpha_high
     return alpha_j
