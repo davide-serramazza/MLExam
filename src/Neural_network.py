@@ -501,8 +501,8 @@ class Network:
         y_list = []
         rho_list = []
 
-        print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
-        print "---------------------------------------------------------------------------"
+        print "\nepoch\t\tMSE\t\tmisclass\tnorm(g)\t\tnorm(h)\t\trho\t\talpha"
+        print "---------------------------------------------------" * 2
 
         # main loop
         for epoch in range(epochs):
@@ -548,7 +548,7 @@ class Network:
             rho_list.append(rho_k)
 
             # print statistics
-            print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
+            print "%d\t\t%f\t%f\t%f\t%f\t%f\t%f" % \
                   (epoch+1, loss, miss, norm(gradient_new), norm(H), rho_k, alpha)
 
             # update x_old and gradient_old
@@ -595,7 +595,7 @@ class Network:
         if not phi_p_0 < 0:
             raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
 
-        alpha_max = 10
+        alpha_max = 500
         alpha_i = alpha  # alpha_1 > 0
         alpha_old = 0    # alpha_0 = 0
         default_alpha = 0.001  # step to take if there was an error in the line search (returned alpha less than 1e-16)

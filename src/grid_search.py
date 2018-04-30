@@ -64,7 +64,8 @@ def grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, 
         raise Exception("grid search parameters of class %s instead of GridSearchLBFGSParams", type(parameter))
 
     total_experiments = len(parameter.c_1) * len(parameter.c_2) \
-                        * len(parameter.theta) * len(parameter.regularization) * len(parameter.m)
+                        * len(parameter.theta) * len(parameter.regularization) \
+                        * len(parameter.m) * len(parameter.architecture)
     print "BEGIN GRID SEARCH L-BFGS: %d experiments" % total_experiments
 
     n_figure = 0  # index of figures
@@ -74,55 +75,56 @@ def grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, 
             for theta in parameter.theta:
                 for reg in parameter.regularization:
                     for m in parameter.m:
-                        print n_figure, "out of", total_experiments, "experiments"
-                        # initialize lists for saving reslut
-                        squared_error_average = np.zeros(parameter.epoch + 1)
-                        misClass_error_average = np.zeros(parameter.epoch + 1)
-                        squared_error_validation_average = np.zeros(parameter.epoch + 1)
-                        misClass_error_validation_average = np.zeros(parameter.epoch + 1)
-                        # n_trials then average
-                        for n in range(n_trials):
-                            # buid a new network
-                            network = Network(parameter.architecture, parameter.neurons)
-                            # train
-                            squared_error, misClass_error, \
-                            squared_error_validation, misClass_error_validation = \
-                                network.trainLBFGS(data=tr_patterns, targets=tr_labels, eval_data=vl_patterns,
-                                                   eval_targets=vl_labels,
-                                                   lossObject=loss_obj, theta=theta, c_1=c_1, c_2=c_2, alpha_0=1,
-                                                   m=m, epochs=parameter.epoch, regularization=reg)
+                        for arc, neur in zip(parameter.architecture, parameter.neurons):
+                            print n_figure, "out of", total_experiments, "experiments"
+                            # initialize lists for saving reslut
+                            squared_error_average = np.zeros(parameter.epoch + 1)
+                            misClass_error_average = np.zeros(parameter.epoch + 1)
+                            squared_error_validation_average = np.zeros(parameter.epoch + 1)
+                            misClass_error_validation_average = np.zeros(parameter.epoch + 1)
+                            # n_trials then average
+                            for n in range(n_trials):
+                                # buid a new network
+                                network = Network(arc, neur)
+                                # train
+                                squared_error, misClass_error, \
+                                squared_error_validation, misClass_error_validation = \
+                                    network.trainLBFGS(data=tr_patterns, targets=tr_labels, eval_data=vl_patterns,
+                                                       eval_targets=vl_labels,
+                                                       lossObject=loss_obj, theta=theta, c_1=c_1, c_2=c_2, alpha_0=1,
+                                                       m=m, epochs=parameter.epoch, regularization=reg)
 
-                            # eventually pad vector
-                            diff = squared_error_average.shape[0] - squared_error.shape[0]
-                            squared_error = np.pad(squared_error, (0, diff), 'constant',
-                                                   constant_values=(squared_error[-1]))
-                            misClass_error = np.pad(misClass_error, (0, diff), 'constant',
-                                                    constant_values=(misClass_error[-1]))
+                                # eventually pad vector
+                                diff = squared_error_average.shape[0] - squared_error.shape[0]
+                                squared_error = np.pad(squared_error, (0, diff), 'constant',
+                                                       constant_values=(squared_error[-1]))
+                                misClass_error = np.pad(misClass_error, (0, diff), 'constant',
+                                                        constant_values=(misClass_error[-1]))
 
-                            diff = squared_error_validation_average.shape[0] - squared_error_validation.shape[0]
-                            squared_error_validation = np.pad(squared_error_validation, (0, diff), 'constant',
-                                                              constant_values=(squared_error_validation[-1]))
-                            misClass_error_validation = np.pad(misClass_error_validation, (0, diff), 'constant',
-                                                               constant_values=(misClass_error_validation[-1]))
+                                diff = squared_error_validation_average.shape[0] - squared_error_validation.shape[0]
+                                squared_error_validation = np.pad(squared_error_validation, (0, diff), 'constant',
+                                                                  constant_values=(squared_error_validation[-1]))
+                                misClass_error_validation = np.pad(misClass_error_validation, (0, diff), 'constant',
+                                                                   constant_values=(misClass_error_validation[-1]))
 
-                            # append result of single epoch in list previously created
-                            squared_error_average += squared_error
-                            misClass_error_average += misClass_error
-                            squared_error_validation_average += squared_error_validation
-                            misClass_error_validation_average += misClass_error_validation
+                                # append result of single epoch in list previously created
+                                squared_error_average += squared_error
+                                misClass_error_average += misClass_error
+                                squared_error_validation_average += squared_error_validation
+                                misClass_error_validation_average += misClass_error_validation
 
 
-                            # taking mean error over trials and over patterns
-                        squared_error_average /= float(n_trials)
-                        misClass_error_average /= float(n_trials)
-                        squared_error_validation_average /= float(n_trials) * len(vl_patterns)
-                        misClass_error_validation_average /= float(n_trials) * len(vl_patterns)
+                                # taking mean error over trials and over patterns
+                            squared_error_average /= float(n_trials)
+                            misClass_error_average /= float(n_trials)
+                            squared_error_validation_average /= float(n_trials) * len(vl_patterns)
+                            misClass_error_validation_average /= float(n_trials) * len(vl_patterns)
 
-                        print_result_LBFGS(misClass_error_average, misClass_error_validation_average,
-                                           squared_error_average, squared_error_validation_average,
-                                           parameter.architecture, c_1, c_2, theta,
-                                           reg, m, n_figure, "validation set", loss_obj, save_in_dir)
-                        n_figure += 1  # increment to create a new figure
+                            print_result_LBFGS(misClass_error_average, misClass_error_validation_average,
+                                               squared_error_average, squared_error_validation_average,
+                                               arc, c_1, c_2, theta,
+                                               reg, m, n_figure, "validation set", loss_obj, save_in_dir)
+                            n_figure += 1  # increment to create a new figure
 
 
 def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, vl_labels, n_trials, save_in_dir):
