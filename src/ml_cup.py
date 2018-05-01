@@ -1,6 +1,9 @@
 from sklearn.preprocessing import *
 import time
-from Validation_CM import *
+from Validation import *
+from grid_search import GridSearchBFGSParams, grid_search_BFGS
+from utils import *
+from Neural_network import *
 
 
 def main():
@@ -26,42 +29,22 @@ def main():
     # 5. define architecture and hyperparameters
     architecture = [10,10,2]
     neurons = [InputNeuron,SigmoidNeuron,OutputNeuron]
-    epochs = 200
+    epochs = 50
     theta=[0.9]
     c_1=[0.0001]
     c_2=[0.9]
     regularization = [0.01]
-    parameter = grid_search_CM_parameter(c_1,c_2,theta,regularization,epochs,architecture,neurons)
+    parameter = GridSearchBFGSParams(c_1,c_2,theta,regularization,epochs,architecture,neurons)
 
     loss_obj = EuclideanError(normalizer=None)
 
     # 6. train
     start_time = time.time()
-    grid_search_CM(parameter, loss_obj, tr_patterns, tr_targets, vl_patterns, vl_targets,
-                   n_trials=1, save_in_dir="../image/MLCup_CM/")
+    grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_targets, vl_patterns, vl_targets,
+                   n_trials=1, save_in_dir="../grid_search_results/bfgs/cup/")
 
     elapsed_time = time.time() - start_time
     print "time in grid search:", elapsed_time
-
-
-def divide_patterns_labels(partition, feature_col, target_col):
-    patterns = partition[feature_col].values
-    labels = partition[target_col].values
-    return patterns, labels
-
-
-def holdout_cup(patterns, labels, frac_tr):
-
-    # calculate size
-    len_partion = int(frac_tr * len(patterns))
-
-    #divide train set
-    first_partition_patterns = patterns[:len_partion]
-    first_partition_labels = labels[:len_partion]
-    second_partition_pattens = patterns[len_partion:]
-    second_partition_labels = labels[len_partion:]
-    return first_partition_patterns, first_partition_labels, second_partition_pattens, second_partition_labels
-
 
 if __name__ == "__main__":
     main()
