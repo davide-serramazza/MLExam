@@ -122,14 +122,14 @@ def lbfgs_all_grid_search():
     print "\nLBFGS-MONK1\n"
     #lbfgs_training_monk(train_file=monk1_train_file, grid_search_param=param_lbfgs_m1, save_dir=lbfgs_dir + monk1)
     print "\nLBFGS-MONK2\n"
-    lbfgs_training_monk(train_file=monk2_train_file, grid_search_param=param_lbfgs, save_dir=lbfgs_dir + monk2)
+    #lbfgs_training_monk(train_file=monk2_train_file, grid_search_param=param_lbfgs, save_dir=lbfgs_dir + monk2)
     print "\nLBFGS-MONK3\n"
     #lbfgs_training_monk(train_file=monk3_train_file, grid_search_param=param_lbfgs_reg, save_dir=lbfgs_dir + monk3)
     print "\nLBFGS-CUP\n"
     tr_patterns, tr_targets, vl_patterns, vl_targets = read_cup_data()
-    #grid_search_LBFGS(param_lbfgs_cup, EuclideanError(), tr_patterns, tr_targets,
-    #                  vl_patterns, vl_targets,
-    #                  n_trials=5, save_in_dir=lbfgs_dir + cup)
+    grid_search_LBFGS(param_lbfgs_cup, EuclideanError(), tr_patterns, tr_targets,
+                      vl_patterns, vl_targets,
+                      n_trials=5, save_in_dir=lbfgs_dir + cup)
 
 
 if __name__ == '__main__':
@@ -151,7 +151,7 @@ if __name__ == '__main__':
     #### LBFGS ####
     c_1_monk1 = [0.0001, 0.001, 0.01] # for the monk c_1 = 0.001 is fine, frangio usa c_1=0.01, il libro dice c_1=0.0001
     c_1_monk23 = [0.0001, 0.001]  # crashed monk2 because alpha=100
-    c_1_cup = [0.001] # also did one grid search with c_1=0.0001
+    c_1_cup = [0.01] # also did one grid search with c_1=0.0001
 
     c_2 = [0.9]
     m_monk = [1, 10, 20, 30, 40, 50]
