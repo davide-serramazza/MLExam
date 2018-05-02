@@ -501,8 +501,8 @@ class Network:
         y_list = []
         rho_list = []
 
-        print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
-        print "---------------------------------------------------------------------------"
+        print "\nepoch\t\tMSE\t\tmisclass\tnorm(g)\t\tnorm(h)\t\trho\t\talpha"
+        print "---------------------------------------------------" * 2
 
         # main loop
         for epoch in range(epochs):
@@ -548,7 +548,7 @@ class Network:
             rho_list.append(rho_k)
 
             # print statistics
-            print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
+            print "%d\t\t%f\t%f\t%f\t%f\t%f\t%f" % \
                   (epoch+1, loss, miss, norm(gradient_new), norm(H), rho_k, alpha)
 
             # update x_old and gradient_old
@@ -595,7 +595,7 @@ class Network:
         if not phi_p_0 < 0:
             raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
 
-        alpha_max = 10
+        alpha_max = 500
         alpha_i = alpha  # alpha_1 > 0
         alpha_old = 0    # alpha_0 = 0
         default_alpha = 0.001  # step to take if there was an error in the line search (returned alpha less than 1e-16)
@@ -638,7 +638,7 @@ class Network:
         return alpha_star
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization):
-        max_feval = 100
+        max_feval = 50
 
         sfgrd = 0.01
 
@@ -823,7 +823,7 @@ def select_random_point_between(alpha_low, alpha_high):
     :param alpha_high:
     :return:
     """
-    #convex = random.uniform(0.01, 0.99)
-    convex = 0.5
+    convex = random.uniform(0.1, 0.9)
+    #convex = 0.5
     alpha_j = convex * alpha_low + (1 - convex) * alpha_high
     return alpha_j
