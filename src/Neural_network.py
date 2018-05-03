@@ -582,58 +582,75 @@ class Network:
         return alpha
 
     def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, gradient, loss, lossObject, p, targets, theta):
+
+        max_feval = 50
         norm_p = norm(p)
-        # phi(alpha) = f(x_k + alpha * p_k)
+
         phi_0 = loss  # phi(0) = f(x_k + 0 * p) = f(x_k)
         phi_p_0 = np.dot(gradient, p/norm_p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
 
         if not phi_p_0 < 0:
             raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
 
-        alpha_max = 10
         alpha_i = alpha  # alpha_1 > 0
-        alpha_old = 0    # alpha_0 = 0
-        default_alpha = 0.001  # step to take if there was an error in the line search (returned alpha less than 1e-16)
         i = 1
-        while True:
-            # 1. evaluate phi(alpha_i)
+        while i<max_feval:
+
+            #evaluete phi(alpha) and phi'(alpha) = \nabla phi*p_k
             gradient_alpha_i, phi_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets)
+            phi_prime_alpha_i = np.dot(gradient_alpha_i, p/norm_p)
 
-            # 2. if phi(alpha_i) > phi(0) + c1 * alpha_i * phi_p(0) or [phi(alpha_i) >= phi(alpha_{i-1}) and i > 1]
-            if phi_alpha_i > phi_0 + c_1 * alpha_i * phi_p_0 or (i > 1 and phi_alpha_i >= phi_alpha_old):
-                alpha_star = self.zoom(alpha_old, alpha_i, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject)
+            #if armijo wolfe is satisfied
+            if (phi_alpha_i <= phi_0 + c_1*alpha_i*phi_p_0) and (abs(phi_prime_alpha_i) <= -c_2*phi_p_0):
+                return alpha_i
+
+            # if phi'(alpha)> 0 the interval [0,alpha_i] contains wanted element
+            if phi_prime_alpha_i >=0:
                 break
 
-            # 3. evaluate phi'(alpha_i) = \nabla f(x_k + alpha * p_k) * p_k
-            phi_p_alpha_i = np.dot(gradient_alpha_i, p/norm_p)
+            # if none of the previous condition hold, increase alpha
+            alpha_i = alpha_i / theta
+            i = i+1
 
-            # 4. if |phi'(alpha_i)| <= - c_2 * phi'(0) (strong Wolfe satisfied?)
-            if abs(phi_p_alpha_i) <= - c_2 * phi_p_0:
-                alpha_star = alpha_i
-                break
+        #zoom phase
+        alpha_low = 0
+        alpha_high = alpha_i
 
-            # 5. if phi'(alpha_i) >= 0 (if the derivative is positive)
-            if phi_p_alpha_i >= 0:
-                alpha_star = self.zoom(alpha_i, alpha_old, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject)
-                break
+        while i<max_feval:
 
-            # save previous results and iterate
-            alpha_old = alpha_i
-            phi_alpha_old = phi_alpha_i
-            i += 1
+            #compute bisection
+            alpha_i = (alpha_low + alpha_high) /2.
 
-            # 6. choose alpha_{i+1} in (alpha_i, alpha_max)
-            tmp_alpha = alpha_i / theta
-            alpha_i = tmp_alpha if tmp_alpha < alpha_max else alpha_max
+            #evaluete phi(alpha) and phi'(alpha) = \nabla phi*p_k
+            gradient_alpha_i, phi_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets)
+            phi_prime_alpha_i = np.dot(gradient_alpha_i, p/norm_p)
 
-        if alpha_star <= 1e-16:
-            print "error, alpha =", alpha_star, "set alpha =", default_alpha
-            alpha_star = default_alpha
+            #if armijo wolfe is satisfied
+            if (phi_alpha_i <= phi_0 + c_1*alpha_i*phi_p_0) or (abs(phi_prime_alpha_i) <= -c_2*phi_p_0):
+                return alpha_i
 
-        return alpha_star
+            #decide how to shrink interval
+            if phi_prime_alpha_i <0:
+                alpha_low = alpha_i
+            else:
+                alpha_high = alpha_i
+
+            i = i+1
+
+        return alpha_i
+
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
-        max_feval = 100
+
+        grad , phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
+        d_primo = np.dot(grad,p)
+        tmp = d_primo*(alpha_high-alpha_low)
+        if (tmp>0):
+            print "errore"
+        if (phi_alpha_low > phi_0 +c_1*alpha_low*phi_p_0):
+            print "errore"
+
+        max_feval = 20
         norm_p=norm(p)
         sfgrd = 0.01
 
