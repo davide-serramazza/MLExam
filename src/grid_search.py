@@ -7,13 +7,12 @@ class GridSearchSGDParams:
     """
     specifies the hyperparameters to tune in SGD grid search
     """
-    def __init__(self, learning_rate, momentum, batch_size, architecture, neurons, regularization, epoch):
+    def __init__(self, learning_rate, momentum, batch_size, architecture, neurons, epoch):
         self.learning_rate = learning_rate
         self.momentum = momentum
         self.batch_size = batch_size
         self.architecture = architecture
         self.neurons = neurons
-        self.regularization = regularization
         self.epoch = epoch
 
 
@@ -92,7 +91,7 @@ def grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, 
                                     network.trainLBFGS(data=tr_patterns, targets=tr_labels, eval_data=vl_patterns,
                                                        eval_targets=vl_labels,
                                                        lossObject=loss_obj, theta=theta, c_1=c_1, c_2=c_2, alpha_0=1,
-                                                       m=m, epochs=parameter.epoch, regularization=reg)
+                                                       m=m, epochs=parameter.epoch)
 
                                 # eventually pad vector
                                 diff = squared_error_average.shape[0] - squared_error.shape[0]
