@@ -91,7 +91,7 @@ class Network:
         for input_neuron, x in zip(input_layer.neurons[:-1], pattern):  # exclude bias
             input_neuron.activation_function(x)
 
-    def back_propagation(self, target, lossObject):
+    def back_propagation(self, target, lossObject,regularization):
         """
         Performs backpropagation.
 
@@ -125,7 +125,7 @@ class Network:
         # 5 report loss and misclassification count
         weights = self.get_weights_as_vector()
 
-        loss_value = lossObject.value(target, output_net, weights)
+        loss_value = lossObject.value(target, output_net, weights ,regularization)
         misClassification = lossObject.misClassification(target, output_net)
 
         return gradient_weights, loss_value, misClassification
@@ -212,7 +212,7 @@ class Network:
         misClass_error_epoch = 0
         # add errors
         for i in range(len(scores)):
-            squared_error_epoch += loss_obj.value(targets[i],scores[i],[ [], [] ])
+            squared_error_epoch += loss_obj.value(targets[i],scores[i],[ [], [] ], 0)
             misClass_error_epoch += loss_obj.misClassification (targets[i],scores[i])
         # return sum of a single validation epoch
         return squared_error_epoch, misClass_error_epoch
@@ -326,7 +326,7 @@ class Network:
         for pattern, t in zip(data, targets):
             # calculate derivative for every patten, then append to gradient_w_batch
             self.forward(pattern)
-            gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject)
+            gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject,regularization)
 
             gradient_w_batch += gradient_w
             loss_batch += loss_p

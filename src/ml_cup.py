@@ -31,9 +31,9 @@ def main():
     neurons = [[InputNeuron,SigmoidNeuron,OutputNeuron]]
     epochs = 100
     theta=[0.9, 0.7 ,0.5]
-    c_1=[0.0001]
+    c_1=[0.001]
     c_2=[ 0.8]
-    regularization = [0.05]
+    regularization = [0.01]
     m = [20,30,50]
     parameter = GridSearchLBFGSParams(c_1,c_2,theta,regularization,m,epochs,architecture,neurons)
 
@@ -42,7 +42,7 @@ def main():
     # 6. train
     start_time = time.time()
     grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_targets, vl_patterns, vl_targets,
-                   n_trials=3, save_in_dir="../grid_search_results/bfgs_back/cup/")
+                   n_trials=3, save_in_dir="../grid_search_results/bfgs/cup/")
 
     elapsed_time = time.time() - start_time
     print "time in grid search:", elapsed_time

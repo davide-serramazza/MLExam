@@ -54,7 +54,7 @@ class EuclideanError:
     def __init__(self,normalizer=None):
         self.normalizer = normalizer
 
-    def value(self, target, output_net, weights, regularization=0):
+    def value(self, target, output_net, weights, regularization):
 
         if self.normalizer != None:
             #denormalize
@@ -67,7 +67,7 @@ class EuclideanError:
         data_error = np.linalg.norm(output_net - target)
 
         # regularization error
-        regularization_error = regularization * np.sum(np.square(weights))
+        regularization_error = regularization * np.linalg.norm(weights)
         return data_error + regularization_error
 
     def derivative(self, target, output_net):
