@@ -338,6 +338,8 @@ class Network:
             for n in l.neurons:
                 if not (isinstance(n,BiasNeuron) or isinstance(n,InputNeuron)) :
                     tmp = 2*regularization*n.weights
+                    #exclude bias from regulariaztion
+                    tmp[-1] = 0.0
                     reg_term = np.append(reg_term,tmp)
 
 
