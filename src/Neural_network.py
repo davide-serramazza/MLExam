@@ -679,7 +679,7 @@ class Network:
             _, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
 
             # 3. if phi(alpha_j) > phi(0) + c_1 * alpha_j * phi'(0) or phi(alpha_j) >= phi(alpha_low)
-            if phi_alpha_j > phi_0 + c_1 * alpha_j * phi_p_0 or phi_alpha_j >= phi_alpha_low:
+            if phi_alpha_j > phi_0 + c_1 * alpha_j * phi_p_0 and phi_alpha_j >= phi_alpha_low:
                 alpha_high = alpha_j
             else:
                 # 4. evaluate phi'(alpha_j)
