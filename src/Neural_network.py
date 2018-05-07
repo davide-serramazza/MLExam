@@ -638,7 +638,7 @@ class Network:
             phi_prime_alpha_i = np.dot(gradient_alpha_i, p/norm_p)
 
             #if armijo wolfe is satisfied
-            if (phi_alpha_i <= phi_0 + c_1*alpha_i*phi_p_0) or (abs(phi_prime_alpha_i) <= -c_2*phi_p_0):
+            if (phi_alpha_i <= phi_0 + c_1*alpha_i*phi_p_0) and (abs(phi_prime_alpha_i) <= -c_2*phi_p_0):
                 return alpha_i
 
             #decide how to shrink interval
