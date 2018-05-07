@@ -23,10 +23,9 @@ def main():
     training_labels, validation_labels = transform_labels(training_set, validation_set)
 
     # 4. define architecture and hyper parameter
-    arch = [17,10,1]
-    neuronsType = [InputNeuron, TanHNeuron, TanHNeuron]
+    arch = [[17,10,1]]
+    neuronsType = [[InputNeuron, TanHNeuron, TanHNeuron]]
 
-    network = Network(arch, neuronsType)
     c_1 = [0.0001]
     c_2 = [0.9]
     theta = [0.9]
