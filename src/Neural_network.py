@@ -363,7 +363,7 @@ class Network:
             raise Exception ("rho_k < 0")
 
         # V_k = I - rho_k * s_k * y_k^t
-        tmp = rho_k * np.outer(s_k, y_k)
+        tmp = rho_k * np.outer (y_k, s_k)
         V_k = np.identity(shape) - tmp
 
         # H_{k+1} = V_k^t * H_k * V_k - rho_k * s_k * s_k^t
@@ -420,6 +420,9 @@ class Network:
             # append losses
             losses = np.append(losses,loss)
             misses = np.append(misses,miss)
+
+            if losses[-1] > losses[-2]:
+                raise Exception ("foo incremented")
 
             # 6. compute s_k = x_{k+1} - x_k = x_new - x_old
             # compute y_k = nabla f_{k+1} - nabla f_k = gradient new - gradient old

@@ -26,8 +26,8 @@ def main():
     arch = [[17,10,1]]
     neuronsType = [[InputNeuron, TanHNeuron, TanHNeuron]]
 
-    c_1 = [0.0001]
-    c_2 = [0.9]
+    c_1 = [0.0000001]
+    c_2 = [0.9999]
     theta = [0.9]
     reguralization = [0.001]
     m = [50]
