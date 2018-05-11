@@ -598,108 +598,84 @@ class Network:
 
         return alpha
 
-    def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, gradient, loss, lossObject, p, targets, theta,regularization):
+    def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, gradient_0, loss, lossObject, p, targets, theta,regularization):
 
-        max_feval = 50
-        norm_p = norm(p)
+        # get normalized p
+        np = p/norm(p)
 
-        phi_0 = loss  # phi(0) = f(x_k + 0 * p) = f(x_k)
-        phi_p_0 = np.dot(gradient, p/norm_p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
+        
 
-        if not phi_p_0 < 0:
-            raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
+        #get alpha_0 , phi(alpha_0) , phi'(alpha_0)
+        alpha_0 = 0
+        phi_0 = loss
+        phi_p_0 = gradient_0.dot(np)
 
-        alpha_i = alpha  # alpha_1 > 0
+        #get alpha_i , phi(alpha_i) , phi'(alpha_i)
+        alpha_i = 1
+        gradient_i , phi_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets, regularization)
+        phi_p_alpha_i = gradient_i.dot(np)
+
+        #main loop
         i = 1
-        while i<max_feval:
+        max_feval = 100
+        while i < max_feval:
 
-            #evaluete phi(alpha) and phi'(alpha) = \nabla phi*p_k
-            gradient_alpha_i, phi_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets,regularization)
-            phi_prime_alpha_i = np.dot(gradient_alpha_i, p/norm_p)
-
-            #if armijo wolfe is satisfied
-            if (phi_alpha_i <= phi_0 + c_1*alpha_i*phi_p_0) and (abs(phi_prime_alpha_i) <= -c_2*phi_p_0):
+            #armijo and wolfe satisfied
+            if phi_alpha_i < phi_0 +c_1*alpha_i*phi_p_0 and abs(phi_p_alpha_i) <= -c_2*phi_p_0:
                 return alpha_i
 
-            # if phi'(alpha)> 0 the interval [0,alpha_i] contains wanted element
-            if phi_prime_alpha_i >=0:
-                break
 
-            # if none of the previous condition hold, increase alpha
+            if phi_alpha_i > phi_0 +c_1*alpha_i*phi_p_0 or ( i>1 and phi_alpha_i >= phi_0):
+                return self.zoom(alpha,alpha_i,p,phi_0,phi_p_0,c_1,c_1,data,targets,lossObject,regularization)
+
+            if abs(phi_p_alpha_i) <= -c_2*phi_p_0:
+                print "wolfe"
+                return alpha_i
+
+            if phi_p_alpha_i >= 0:
+                return self.zoom(alpha_i,alpha,p,phi_0,phi_p_0,c_1,c_1,data,targets,lossObject, regularization)
+
             alpha_i = alpha_i / theta
-            i = i+1
-
-        #zoom phase
-        alpha_low = 0
-        alpha_high = alpha_i
-
-        while i<max_feval:
-
-            #compute bisection
-            alpha_i = (alpha_low + alpha_high) /2.
-
-            #evaluete phi(alpha) and phi'(alpha) = \nabla phi*p_k
-            gradient_alpha_i, phi_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets,regularization)
-            phi_prime_alpha_i = np.dot(gradient_alpha_i, p/norm_p)
-
-            #if armijo wolfe is satisfied
-            if (phi_alpha_i <= phi_0 + c_1*alpha_i*phi_p_0) and (abs(phi_prime_alpha_i) <= -c_2*phi_p_0):
-                return alpha_i
-
-            #decide how to shrink interval
-            if phi_prime_alpha_i <0:
-                alpha_low = alpha_i
-            else:
-                alpha_high = alpha_i
 
             i = i+1
+
 
         return alpha_i
 
 
-    def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject):
+    def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization):
 
-        grad , phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
-        d_primo = np.dot(grad,p)
-        tmp = d_primo*(alpha_high-alpha_low)
-        if (tmp>0):
-            print "errore"
-        if (phi_alpha_low > phi_0 +c_1*alpha_low*phi_p_0):
-            print "errore"
+        np = p/norm(p)
 
-        max_feval = 20
-        norm_p=norm(p)
-        sfgrd = 0.01
+        #bisection
+        alpha_j = (alpha_high+alpha_low)/2.
 
-        for i in range(max_feval):
-            # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
-            #alpha_j = self.interpolate(alpha_high, alpha_low, data, lossObject, p, targets)
-            #alpha_j = self.safeguarded_interpolation(alpha_high, alpha_low, sfgrd, data, lossObject, p, targets, regularization)
-            alpha_j = select_random_point_between(alpha_low, alpha_high)
+        #evaluate alpha_j
+        gradient_j , phi_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets, regularization)
 
-            # 2. evaluate phi(alpha_j)
-            gradient_alpha_j, phi_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets)
+        #main loop
+        max_feval = 100
+        i = 1
+        while i<max_feval:
 
-            # evaluate phi(alpha_low)
-            _, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
-
-            # 3. if phi(alpha_j) > phi(0) + c_1 * alpha_j * phi'(0) or phi(alpha_j) >= phi(alpha_low)
-            if phi_alpha_j > phi_0 + c_1 * alpha_j * phi_p_0 and phi_alpha_j >= phi_alpha_low:
+            if phi_alpha_j > phi_0 +c_1*alpha_j*phi_p_0 or phi_alpha_j >= alpha_low:
                 alpha_high = alpha_j
+
             else:
-                # 4. evaluate phi'(alpha_j)
-                phi_p_alpha_j = np.dot(gradient_alpha_j, p/norm_p)
-                # 5. if |phi'(alpha_j)| <= - c_2 * phi'(0) (Wolfe satisfied?)
-                # if abs(phi_p_alpha_j) <= c_2 * abs(phi_p_0):  # strong wolfe
-                if abs(phi_p_alpha_j) <= -c_2 * phi_p_alpha_j:  # wolfe frangio
-                #if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:  # book algorithm: strong wolfe
-                    return alpha_j
-                # 6. if phi'(alpha_j)(alpha_high - alpha_low) >= 0
-                if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:
+
+                phi_p_alpha_j = gradient_j.dot(np)
+
+                if abs(phi_p_alpha_j) <= -c_2*phi_p_0:
+                    return  alpha_j
+
+                if phi_p_alpha_j*(alpha_high-alpha_low) >= 0:
                     alpha_high = alpha_low
+
                 alpha_low = alpha_j
 
-        print "max zoom iterations"
+
+            i = i+1
+
         return alpha_j
 
     def interpolate(self, alpha_high, alpha_low, data, lossObject, p, targets):
