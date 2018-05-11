@@ -152,7 +152,9 @@ def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, v
         for c_2 in parameter.c_2:
             for theta in parameter.theta:
                 for reg in parameter.regularization:
-                    print n_figure, "out of", total_experiments, "experiments"
+                    for arc, neur in zip(parameter.architecture, parameter.neurons):
+
+                     print n_figure, "out of", total_experiments, "experiments"
                     # initialize lists for saving reslut
                     squared_error_average = np.zeros(parameter.epoch + 1)
                     misClass_error_average = np.zeros(parameter.epoch + 1)
@@ -161,7 +163,7 @@ def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, v
                     # n_trials then average
                     for n in range(n_trials):
                         # buid a new network
-                        network = Network(parameter.architecture, parameter.neurons)
+                        network = Network(arc, neur)
                         # train
                         squared_error, misClass_error, \
                         squared_error_validation, misClass_error_validation = \

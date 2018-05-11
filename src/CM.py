@@ -1,7 +1,7 @@
 from monk_benchmark import *
 from Validation import *
 from Neural_network import *
-from grid_search import GridSearchLBFGSParams, grid_search_LBFGS
+from grid_search import *
 import time
 
 def main():
@@ -29,13 +29,13 @@ def main():
     c_1 = [0.0001]
     c_2 = [0.9]
     theta = [0.9]
-    reguralization = [0.0]
+    reguralization = [0.001]
     m = [50]
     epochs = 100
     lossObject = SquaredError("tangentH")
-    parameter = GridSearchLBFGSParams(c_1,c_2,theta,reguralization,m,epochs,arch,neuronsType)
+    parameter = GridSearchBFGSParams(c_1,c_2,theta,reguralization,epochs,arch,neuronsType)
     # perform grid search
-    grid_search_LBFGS(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,
+    grid_search_BFGS(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,
                    n_trials=3,save_in_dir="../temp/new-")
 
     # try BFGS

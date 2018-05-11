@@ -359,6 +359,8 @@ class Network:
 
         # rho_k = 1/(y_k^t*s_k)
         rho_k = float(1) / np.dot(s_k, y_k)
+        if rho_k < 0:
+            raise Exception ("rho_k < 0")
 
         # V_k = I - rho_k * s_k * y_k^t
         tmp = rho_k * np.outer(s_k, y_k)
