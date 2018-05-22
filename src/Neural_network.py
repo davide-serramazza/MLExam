@@ -662,8 +662,8 @@ class Network:
                 phi_p_alpha_j = np.dot(gradient_alpha_j, p)
                 # 5. if |phi'(alpha_j)| <= - c_2 * phi'(0) (Wolfe satisfied?)
                 # if abs(phi_p_alpha_j) <= c_2 * abs(phi_p_0):  # strong wolfe
-                if phi_p_alpha_j >= c_2 * phi_p_alpha_j:  # wolfe frangio
-                #if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:  # book algorithm: strong wolfe
+                #if phi_p_alpha_j >= c_2 * phi_p_alpha_j:  # wolfe frangio
+                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:  # book algorithm: strong wolfe   TODO:  <---- use this!
                     return alpha_j
                 # 6. if phi'(alpha_j)(alpha_high - alpha_low) >= 0
                 if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:
