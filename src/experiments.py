@@ -16,9 +16,9 @@ lbfgs_dir = "../grid_search_results/lbfgs/"
 
 # subdirectories to save experiements
 monk1 = "monk1/"
-monk2 = "monk2/"
-monk3 = "monk3/"
-cup = "cup/"
+monk2 = "monk2/aaa_prova_"
+monk3 = "monk3/aaa_prova_"
+cup = "cup/aaa_prova_"
 
 # monk dataset stuff
 encoding = [3, 3, 2, 3, 4, 2]
