@@ -637,7 +637,7 @@ class Network:
         return alpha_star
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization):
-        max_feval = 50
+        max_feval = 5000
 
         sfgrd = 0.01
 

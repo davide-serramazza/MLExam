@@ -8,3 +8,4 @@ weights_CM/*
 *.zip
 report/*
 grid_search_results/*
+temp/*

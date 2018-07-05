@@ -4,10 +4,10 @@ from Neural_network import *
 import sys
 
 # files training set
-monk1_train_file = "../monk_datasets/monks-1.train"
-monk2_train_file = "../monk_datasets/monks-2.train"
-monk3_train_file = "../monk_datasets/monks-3.train"
-cup_train_file = "../MLCup/ML-CUP17-TR_shuffled.csv"
+monk1_train_file = "../Data/monk_datasets/monks-1.train"
+monk2_train_file = "../Data/monk_datasets/monks-2.train"
+monk3_train_file = "../Data/monk_datasets/monks-3.train"
+cup_train_file = "../Data/MLCup/ML-CUP17-TR_shuffled.csv"
 
 # save experiments in
 sgd_dir = "../grid_search_results/sgd/"
@@ -17,7 +17,7 @@ lbfgs_dir = "../grid_search_results/lbfgs/"
 # subdirectories to save experiements
 monk1 = "monk1/"
 monk2 = "monk2/aaa_prova_"
-monk3 = "monk3/aaa_prova_"
+monk3 = "monk3/bbb_"
 cup = "cup/aaa_prova_"
 
 # monk dataset stuff
@@ -124,12 +124,12 @@ def lbfgs_all_grid_search():
     print "\nLBFGS-MONK2\n"
     #lbfgs_training_monk(train_file=monk2_train_file, grid_search_param=param_lbfgs, save_dir=lbfgs_dir + monk2)
     print "\nLBFGS-MONK3\n"
-    #lbfgs_training_monk(train_file=monk3_train_file, grid_search_param=param_lbfgs_reg, save_dir=lbfgs_dir + monk3)
+    lbfgs_training_monk(train_file=monk3_train_file, grid_search_param=param_lbfgs_reg, save_dir=lbfgs_dir + monk3)
     print "\nLBFGS-CUP\n"
     tr_patterns, tr_targets, vl_patterns, vl_targets = read_cup_data()
-    grid_search_LBFGS(param_lbfgs_cup, EuclideanError(), tr_patterns, tr_targets,
-                      vl_patterns, vl_targets,
-                      n_trials=5, save_in_dir=lbfgs_dir + cup)
+    #grid_search_LBFGS(param_lbfgs_cup, EuclideanError(), tr_patterns, tr_targets,
+    #                  vl_patterns, vl_targets,
+    #                  n_trials=5, save_in_dir=lbfgs_dir + cup)
 
 
 if __name__ == '__main__':

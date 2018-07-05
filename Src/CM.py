@@ -30,16 +30,16 @@ def main():
     c_1 = [0.0001]
     c_2 = [0.9]
     theta = [0.9]
-    regularization = [0.0]
-    m = [50]
-    epochs = 20
+    regularization = [0.01]
+    m = [30]
+    epochs = 100
     lossObject = SquaredError("tangentH")
     parameter = GridSearchLBFGSParams(c_1,c_2,theta,regularization,m,epochs,arch,neuronsType)
     # perform grid search
 
     tic = time.time()
     grid_search_LBFGS(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,
-                   n_trials=3, save_in_dir="../temp/monk_1-")
+                   n_trials=5, save_in_dir="../temp/monk_3-")
 
     toc = time.time()
     print "time in grid search: %.2f seconds" % (toc-tic)

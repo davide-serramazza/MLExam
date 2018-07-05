@@ -21,7 +21,6 @@ class GridSearchBFGSParams:
     """
     specifies the hyperparameters to tune in BFGS grid search
     """
-
     def __init__(self, c_1, c_2, theta, regularization, epoch, architecture, neurons):
         self.c_1 = c_1
         self.c_2 = c_2
@@ -36,7 +35,6 @@ class GridSearchLBFGSParams(GridSearchBFGSParams):
     """
     specifies the hyperparameters to tune in LBFGS grid search
     """
-
     def __init__(self, c_1, c_2, theta, regularization, m, epoch, architecture, neurons):
         GridSearchBFGSParams.__init__(self, c_1, c_2, theta, regularization, epoch, architecture, neurons)
         # number of vector used to define central matrix H
