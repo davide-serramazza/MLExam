@@ -61,6 +61,21 @@ def lbfgs_training_monk(train_file, grid_search_param, save_dir):
                       n_trials=5, save_in_dir=save_dir)
 
 
+def bfgs_training_monk(train_file, grid_search_param, save_dir):
+    # 1. load dataset
+    train_data = pd.read_csv(train_file, delim_whitespace=True, header=None)
+    train_data.columns = columns
+    # 2. hold out
+    training_set, validation_set = holdout(frac, train_data)
+    # 3. decode patterns and transform targets
+    training_patterns, validation_patterns = decode_patterns(encoding, features, training_set, validation_set)
+    training_labels, validation_labels = transform_labels(training_set, validation_set)
+
+    grid_search_BFGS(grid_search_param, SquaredError("tangentH"), training_patterns, training_labels,
+                      validation_patterns, validation_labels,
+                      n_trials=5, save_in_dir=save_dir)
+
+
 def read_cup_data():
     df = pd.read_csv(cup_train_file, comment='#')
     # 2. divide pattern and targets
@@ -124,13 +139,39 @@ def lbfgs_all_grid_search():
     print "\nLBFGS-MONK2\n"
     #lbfgs_training_monk(train_file=monk2_train_file, grid_search_param=param_lbfgs, save_dir=lbfgs_dir + monk2)
     print "\nLBFGS-MONK3\n"
-    lbfgs_training_monk(train_file=monk3_train_file, grid_search_param=param_lbfgs_reg, save_dir=lbfgs_dir + monk3)
+    #lbfgs_training_monk(train_file=monk3_train_file, grid_search_param=param_lbfgs_reg, save_dir=lbfgs_dir + monk3)
     print "\nLBFGS-CUP\n"
     tr_patterns, tr_targets, vl_patterns, vl_targets = read_cup_data()
-    #grid_search_LBFGS(param_lbfgs_cup, EuclideanError(), tr_patterns, tr_targets,
+    grid_search_LBFGS(param_lbfgs_cup, EuclideanError(), tr_patterns, tr_targets,
+                      vl_patterns, vl_targets,
+                      n_trials=5, save_in_dir=lbfgs_dir + cup)
+
+
+def bfgs_all_grid_search():
+    global tr_patterns, tr_targets, vl_patterns, vl_targets
+
+    param_bfgs_m1 = GridSearchBFGSParams(c_1=c_1_monk1, c_2=c_2, theta=theta, regularization=no_regularization,
+                                         epoch=epochs_bfgs, architecture=architecture, neurons=neurons)
+
+    param_bfgs = GridSearchBFGSParams(c_1=c_1_monk23, c_2=c_2, theta=theta, regularization=no_regularization,
+                                      epoch=epochs_bfgs, architecture=architecture, neurons=neurons)
+
+    param_bfgs_reg = GridSearchBFGSParams(c_1=c_1_monk23, c_2=c_2, theta=theta, regularization=regularization,
+                                          epoch=epochs_bfgs, architecture=architecture, neurons=neurons)
+
+    param_bfgs_cup = GridSearchBFGSParams(c_1=c_1_cup, c_2=c_2, theta=theta, regularization=regularization,
+                                          epoch=epochs_bfgs, architecture=architecture_cup, neurons=neurons_cup)
+    print "\nBFGS-MONK1\n"
+    bfgs_training_monk(train_file=monk1_train_file, grid_search_param=param_bfgs_m1, save_dir=bfgs_dir + monk1)
+    print "\nBFGS-MONK2\n"
+    bfgs_training_monk(train_file=monk2_train_file, grid_search_param=param_bfgs, save_dir=bfgs_dir + monk2)
+    print "\nBFGS-MONK3\n"
+    bfgs_training_monk(train_file=monk3_train_file, grid_search_param=param_bfgs_reg, save_dir=bfgs_dir + monk3)
+    print "\nBFGS-CUP\n"
+    tr_patterns, tr_targets, vl_patterns, vl_targets = read_cup_data()
+    #grid_search_BFGS(param_bfgs_cup, EuclideanError(), tr_patterns, tr_targets,
     #                  vl_patterns, vl_targets,
     #                  n_trials=5, save_in_dir=lbfgs_dir + cup)
-
 
 if __name__ == '__main__':
     architecture = [[17, 20, 1], [17, 10, 10, 1]]
@@ -145,7 +186,7 @@ if __name__ == '__main__':
     momentum = [0.5, 0.9]
     batch_size = [16, 32]
     no_regularization = [0.0]
-    regularization = [0.0, 0.01, 0.05]
+    regularization = [0.001]#[0.0, 0.01, 0.05]
     epochs_sgd = 200
 
     #### LBFGS ####
@@ -158,11 +199,14 @@ if __name__ == '__main__':
     m_cup = [1, 10, 20, 30, 40, 50, 100, 200]
     theta = [0.9]
     epochs_lbfgs = 100
+    epochs_bfgs = 100
 
     if len(sys.argv) == 2:
         if sys.argv[1] == 'sgd':
             sgd_all_grid_search()
         elif sys.argv[1] == 'lbfgs':
             lbfgs_all_grid_search()
+        elif sys.argv[1] == 'bfgs':
+            bfgs_all_grid_search()
     else:
         print "usage:", sys.argv[0], "{sgd,lbfgs}"

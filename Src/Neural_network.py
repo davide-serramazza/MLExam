@@ -637,14 +637,10 @@ class Network:
         return alpha_star
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization):
-        max_feval = 5000
-
-        sfgrd = 0.01
+        max_feval = 100
 
         for i in range(max_feval):
             # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
-            #alpha_j = self.interpolate(alpha_high, alpha_low, data, lossObject, p, targets)
-            #alpha_j = self.safeguarded_interpolation(alpha_high, alpha_low, sfgrd, data, lossObject, p, targets, regularization)
             alpha_j = select_random_point_between(alpha_low, alpha_high)
 
             # 2. evaluate phi(alpha_j)
@@ -659,10 +655,8 @@ class Network:
             else:
                 # 4. evaluate phi'(alpha_j)
                 phi_p_alpha_j = np.dot(gradient_alpha_j, p)
-                # 5. if |phi'(alpha_j)| <= - c_2 * phi'(0) (Wolfe satisfied?)
-                # if abs(phi_p_alpha_j) <= c_2 * abs(phi_p_0):  # strong wolfe
-                #if phi_p_alpha_j >= c_2 * phi_p_alpha_j:  # wolfe frangio
-                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:  # book algorithm: strong wolfe   TODO:  <---- use this!
+                # 5. if |phi'(alpha_j)| <= - c_2 * phi'(0) (strong Wolfe satisfied?)
+                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:
                     return alpha_j
                 # 6. if phi'(alpha_j)(alpha_high - alpha_low) >= 0
                 if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:
@@ -717,7 +711,6 @@ class Network:
         second = min(alpha_high * (1 - sfgrd), a)
         alpha_j = max(first, second)
         return alpha_j
-
 
     def evaluate_phi_alpha(self, alpha_i, data, lossObject, p, targets, regularization):
         """
