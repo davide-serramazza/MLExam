@@ -5,7 +5,7 @@ from grid_search import *
 import time
 
 def main():
-    train_file = "../monk_datasets/monks-3.train"
+    train_file = "../monk_datasets/monks-1.train"
 
     # 1. load dataset
     columns = ['label', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'id']
@@ -23,14 +23,14 @@ def main():
     training_labels, validation_labels = transform_labels(training_set, validation_set)
 
     # 4. define architecture and hyper parameter
-    arch = [[17,10,1]]
+    arch = [[17,20,1] , [17,15,1]]
     neuronsType = [[InputNeuron, TanHNeuron, TanHNeuron]]
 
-    c_1 = [0.0000001]
-    c_2 = [0.9999]
-    theta = [0.9]
-    reguralization = [0.001]
-    m = [50]
+    c_1 = [0.0001, 0.00005]
+    c_2 = [0.9, 0.85]
+    theta = [0.9, 0.85]
+    reguralization = [0.0001]
+    m = [30]
     epochs = 100
     lossObject = SquaredError("tangentH")
     parameter = GridSearchBFGSParams(c_1,c_2,theta,reguralization,epochs,arch,neuronsType)

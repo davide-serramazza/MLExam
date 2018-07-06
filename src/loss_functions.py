@@ -68,7 +68,7 @@ class EuclideanError:
 
         # regularization error
         regularization_error = regularization * np.linalg.norm(weights)
-        return data_error + regularization_error
+        return data_error - regularization_error
 
     def derivative(self, target, output_net):
         # return derivative of MSE

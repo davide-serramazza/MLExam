@@ -32,8 +32,8 @@ def main():
     epochs = 100
     theta=[0.9, 0.7 ,0.5]
     c_1=[0.001]
-    c_2=[ 0.8]
-    regularization = [0.01]
+    c_2=[ 0.9]
+    regularization = [0.0001]
     m = [20,30,50]
     parameter = GridSearchLBFGSParams(c_1,c_2,theta,regularization,m,epochs,architecture,neurons)
 
