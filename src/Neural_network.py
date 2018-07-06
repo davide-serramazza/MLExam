@@ -405,8 +405,8 @@ class Network:
             # 2. line search
             alpha_0 = 1   # initial step size trial is always 1 for quasi-Newton TODO: try initial step less than 1
 
-            #alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
-            alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta, regularization)
+            alpha = self.backtracking_line_search(alpha_0,c_1,data,gradient_old,loss,lossObject,p,targets,theta,regularization)
+            #alpha = self.armijo_wolfe_line_search(alpha_0, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta, regularization)
 
             # 3. compute weight update
             delta = p * alpha
