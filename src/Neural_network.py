@@ -611,15 +611,6 @@ class Network:
         i = 1
         while True:
 
-            if i > 50:
-                l = []
-                for i in range(0,100):
-                    print "plotting line search"
-                    a = self.evaluate_phi_alpha(i*0.01, data, lossObject, p, targets, regularization)
-                    l.append(a)
-                plt.plot(l)
-                plt.show()
-
         # 1. evaluate phi(alpha_i)
             gradient_alpha_i, phi_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets, regularization)
 
@@ -689,15 +680,6 @@ class Network:
                 if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:
                     alpha_high = alpha_low
                 alpha_low = alpha_j
-
-        l = []
-        print "plotting zoom"
-
-        for i in range(-100,100):
-            _,a = self.evaluate_phi_alpha(i*0.01, data, lossObject, p, targets, regularization)
-            l.append(a)
-        plt.plot(l)
-        plt.show()
 
         return alpha_j
 

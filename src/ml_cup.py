@@ -33,8 +33,8 @@ def main():
     theta=[0.9, 0.7 ,0.5]
     c_1=[0.001]
     c_2=[ 0.9]
-    regularization = [0.0001]
-    m = [20,30,50]
+    regularization = [0.00001]
+    m = [40]
     parameter = GridSearchLBFGSParams(c_1,c_2,theta,regularization,m,epochs,architecture,neurons)
 
     loss_obj = EuclideanError(normalizer=None)
