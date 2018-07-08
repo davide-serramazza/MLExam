@@ -143,7 +143,8 @@ def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, v
         raise Exception("grid search parameters of class %s instead of GridSearchBFGSParams", type(parameter))
 
     total_experiments = len(parameter.c_1) * len(parameter.c_2) \
-                        * len(parameter.theta) * len(parameter.regularization)
+                        * len(parameter.theta) * len(parameter.regularization) \
+                        * len(parameter.architecture)
     print "BEGIN GRID SEARCH BFGS: %d experiments" % total_experiments
     n_figure = 0  # index of figures
     # for every value
@@ -188,17 +189,17 @@ def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, v
                             squared_error_validation_average += squared_error_validation
                             misClass_error_validation_average += misClass_error_validation
 
-                            # taking mean error over trials and over patterns
-                            squared_error_average /= float(n_trials)
-                            misClass_error_average /= float(n_trials)
-                            squared_error_validation_average /= float(n_trials) * len(vl_patterns)
-                            misClass_error_validation_average /= float(n_trials) * len(vl_patterns)
+                        # taking mean error over trials and over patterns
+                        squared_error_average /= float(n_trials)
+                        misClass_error_average /= float(n_trials)
+                        squared_error_validation_average /= float(n_trials) * len(vl_patterns)
+                        misClass_error_validation_average /= float(n_trials) * len(vl_patterns)
 
-                            print_result_BFGS(misClass_error_average, misClass_error_validation_average,
-                                              squared_error_average, squared_error_validation_average,
-                                              arc, c_1, c_2, theta,
-                                              reg, n_figure, "validation set", loss_obj, save_in_dir)
-                            n_figure += 1  # increment to create a new figure
+                        print_result_BFGS(misClass_error_average, misClass_error_validation_average,
+                                        squared_error_average, squared_error_validation_average,
+                                        arc, c_1, c_2, theta,
+                                        reg, n_figure, "validation set", loss_obj, save_in_dir)
+                        n_figure += 1  # increment to create a new figure
 
 
 def grid_search_SGD(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, vl_labels, n_trials, save_in_dir):

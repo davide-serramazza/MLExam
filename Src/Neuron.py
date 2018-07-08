@@ -74,6 +74,11 @@ class TanHNeuron(Neuron):
     def activation_function(self, x):
         sigmoid = lambda y: (1 / (1 + np.exp(-y)))
         self.output = 2 * sigmoid(2*x) - 1
+        # check overflow
+        if np.isinf(self.output):
+            raise OverflowError()
+        if np.isnan(self.output):
+            raise Exception("Neuron output is NaN")
 
     def activation_function_derivative(self):
         return 1 - (self.output * self.output)

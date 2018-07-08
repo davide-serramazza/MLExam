@@ -416,6 +416,8 @@ class Network:
             # compute y_k = nabla f_{k+1} - nabla f_k = gradient new - gradient old
             s_k = x_new - x_old
             y_k = gradient_new - gradient_old
+            if not np.dot(s_k, y_k) > 0:
+                raise Exception("curvature condition np.dot(s_k, y_k) > 0 not satisfied")
 
             # 7. update matrix H
             H = self.update_matrix(H, s_k, y_k)
@@ -485,13 +487,14 @@ class Network:
         gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
         x_old = self.get_weights_as_vector()
 
-        # append losses
-        losses = np.append(losses,loss)
-        misses = np.append(misses,miss)
-        # compute validation error and append it
+
+        # compute validation error
         squared_error_validation_epoch, misClass_error_validation_epoch = \
             self.validation_error(eval_data, eval_targets, lossObject)
 
+        # append losses
+        losses = np.append(losses, loss)
+        misses = np.append(misses, miss)
         losses_validation = np.append(losses_validation,squared_error_validation_epoch)
         misses_validation = np.append(misses_validation,misClass_error_validation_epoch)
 
@@ -510,8 +513,10 @@ class Network:
             if epoch == 0:
                 H = np.identity(gradient_old.shape[0])
             else:
-                num = np.dot(s_list[-1],y_list[-1])
-                den = np.dot(y_list[-1],y_list[-1])
+                num = np.dot(s_list[-1],y_list[-1])   # s_k \dot y_k
+                if not num >= 0:
+                    raise Exception("curvature condition s_k \dot y_k > 0 not satisfied")
+                den = np.dot(y_list[-1],y_list[-1])   # y_k \dot y_k
                 gamma = num/den
                 H = gamma * np.identity(gradient_old.shape[0])
 
@@ -663,7 +668,7 @@ class Network:
                     alpha_high = alpha_low
                 alpha_low = alpha_j
 
-        print "max zoom iterations"
+        print "max zoom iterations, phi'(0) = ", phi_p_0
         return alpha_j
 
     def interpolate(self, alpha_high, alpha_low, data, lossObject, p, targets):

@@ -15,10 +15,10 @@ bfgs_dir = "../grid_search_results/bfgs/"
 lbfgs_dir = "../grid_search_results/lbfgs/"
 
 # subdirectories to save experiements
-monk1 = "monk1/"
-monk2 = "monk2/aaa_prova_"
-monk3 = "monk3/bbb_"
-cup = "cup/aaa_prova_"
+monk1 = "monk1/reg_"
+monk2 = "monk2/reg_"
+monk3 = "monk3/reg_"
+cup = "cup/reg_"
 
 # monk dataset stuff
 encoding = [3, 3, 2, 3, 4, 2]
@@ -130,9 +130,9 @@ def lbfgs_all_grid_search():
     param_lbfgs = GridSearchLBFGSParams(c_1=c_1_monk23, c_2=c_2, theta=theta, regularization=no_regularization, m=m_monk,
                                         epoch=epochs_lbfgs, architecture=architecture, neurons=neurons)
 
-    param_lbfgs_reg = GridSearchLBFGSParams(c_1=c_1_monk23, c_2=c_2, theta=theta, regularization=regularization, m=m_monk,
+    param_lbfgs_reg = GridSearchLBFGSParams(c_1=c_1_monk23, c_2=c_2, theta=theta, regularization=no_regularization, m=m_monk,
                                             epoch=epochs_lbfgs, architecture=architecture, neurons=neurons)
-    param_lbfgs_cup = GridSearchLBFGSParams(c_1=c_1_cup, c_2=c_2, theta=theta, regularization=regularization, m=m_cup,
+    param_lbfgs_cup = GridSearchLBFGSParams(c_1=c_1_cup, c_2=c_2, theta=theta, regularization=no_regularization, m=m_cup,
                                             epoch=epochs_lbfgs, architecture=architecture_cup, neurons=neurons_cup)
     print "\nLBFGS-MONK1\n"
     #lbfgs_training_monk(train_file=monk1_train_file, grid_search_param=param_lbfgs_m1, save_dir=lbfgs_dir + monk1)
@@ -150,28 +150,28 @@ def lbfgs_all_grid_search():
 def bfgs_all_grid_search():
     global tr_patterns, tr_targets, vl_patterns, vl_targets
 
-    param_bfgs_m1 = GridSearchBFGSParams(c_1=c_1_monk1, c_2=c_2, theta=theta, regularization=no_regularization,
+    param_bfgs_m1 = GridSearchBFGSParams(c_1=c_1_monk1, c_2=c_2, theta=theta, regularization=regularization,
                                          epoch=epochs_bfgs, architecture=architecture, neurons=neurons)
 
-    param_bfgs = GridSearchBFGSParams(c_1=c_1_monk23, c_2=c_2, theta=theta, regularization=no_regularization,
+    param_bfgs = GridSearchBFGSParams(c_1=c_1_monk23, c_2=c_2, theta=theta, regularization=regularization,
                                       epoch=epochs_bfgs, architecture=architecture, neurons=neurons)
 
     param_bfgs_reg = GridSearchBFGSParams(c_1=c_1_monk23, c_2=c_2, theta=theta, regularization=regularization,
                                           epoch=epochs_bfgs, architecture=architecture, neurons=neurons)
 
-    param_bfgs_cup = GridSearchBFGSParams(c_1=c_1_cup, c_2=c_2, theta=theta, regularization=regularization,
+    param_bfgs_cup = GridSearchBFGSParams(c_1=c_1_cup, c_2=c_2, theta=theta, regularization=no_regularization,
                                           epoch=epochs_bfgs, architecture=architecture_cup, neurons=neurons_cup)
     print "\nBFGS-MONK1\n"
-    bfgs_training_monk(train_file=monk1_train_file, grid_search_param=param_bfgs_m1, save_dir=bfgs_dir + monk1)
+    #bfgs_training_monk(train_file=monk1_train_file, grid_search_param=param_bfgs_m1, save_dir=bfgs_dir + monk1)
     print "\nBFGS-MONK2\n"
-    bfgs_training_monk(train_file=monk2_train_file, grid_search_param=param_bfgs, save_dir=bfgs_dir + monk2)
+    #bfgs_training_monk(train_file=monk2_train_file, grid_search_param=param_bfgs, save_dir=bfgs_dir + monk2)
     print "\nBFGS-MONK3\n"
-    bfgs_training_monk(train_file=monk3_train_file, grid_search_param=param_bfgs_reg, save_dir=bfgs_dir + monk3)
+    #bfgs_training_monk(train_file=monk3_train_file, grid_search_param=param_bfgs_reg, save_dir=bfgs_dir + monk3)
     print "\nBFGS-CUP\n"
     tr_patterns, tr_targets, vl_patterns, vl_targets = read_cup_data()
-    #grid_search_BFGS(param_bfgs_cup, EuclideanError(), tr_patterns, tr_targets,
-    #                  vl_patterns, vl_targets,
-    #                  n_trials=5, save_in_dir=lbfgs_dir + cup)
+    grid_search_BFGS(param_bfgs_cup, EuclideanError(), tr_patterns, tr_targets,
+                      vl_patterns, vl_targets,
+                      n_trials=5, save_in_dir=lbfgs_dir + cup)
 
 if __name__ == '__main__':
     architecture = [[17, 20, 1], [17, 10, 10, 1]]
@@ -186,19 +186,19 @@ if __name__ == '__main__':
     momentum = [0.5, 0.9]
     batch_size = [16, 32]
     no_regularization = [0.0]
-    regularization = [0.001]#[0.0, 0.01, 0.05]
+    regularization = [0.01, 0.001, 0.0001]#[0.0, 0.01, 0.05]
     epochs_sgd = 200
 
     #### LBFGS ####
     c_1_monk1 = [0.0001, 0.001, 0.01] # for the monk c_1 = 0.001 is fine, frangio usa c_1=0.01, il libro dice c_1=0.0001
     c_1_monk23 = [0.0001, 0.001]  # crashed monk2 because alpha=100
-    c_1_cup = [0.01] # also did one grid search with c_1=0.0001
+    c_1_cup = [0.0001] # also did one grid search with c_1=0.0001
 
     c_2 = [0.9]
     m_monk = [1, 10, 20, 30, 40, 50]
     m_cup = [1, 10, 20, 30, 40, 50, 100, 200]
     theta = [0.9]
-    epochs_lbfgs = 100
+    epochs_lbfgs = 200
     epochs_bfgs = 100
 
     if len(sys.argv) == 2:
