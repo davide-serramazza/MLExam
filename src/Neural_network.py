@@ -338,7 +338,7 @@ class Network:
 
         # getting the gradient as vector and adding reg tem
         gradient = self.get_gradient_as_vector(gradient_w_batch)
-      #  gradient = gradient + reg_term
+        gradient = gradient + reg_term
 
         # compute mean values
         gradient /= 1.0 * len(data)
