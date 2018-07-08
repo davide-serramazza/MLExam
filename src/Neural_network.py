@@ -326,10 +326,10 @@ class Network:
             miss_batch += miss_p
 
         #compute regularization term
-        reg_term =  np.array([])
+        reg_term = np.array([])
         for l in self.layers:
             for n in l.neurons:
-                if not (isinstance(n,BiasNeuron) or isinstance(n,InputNeuron)) :
+                if not (isinstance(n,BiasNeuron) or isinstance(n,InputNeuron)):
                     tmp = 2*regularization*n.weights
                     #exclude bias from regulariaztion
                     tmp[-1] = 0.0
@@ -356,7 +356,7 @@ class Network:
             raise Exception ("rho_k < 0")
 
         # V_k = I - rho_k * s_k * y_k^t
-        tmp = rho_k * np.outer(y_k,s_k)
+        tmp = rho_k * np.outer(s_k, y_k)
         V_k = np.identity(shape) - tmp
 
         # H_{k+1} = V_k^t * H_k * V_k - rho_k * s_k * s_k^t
