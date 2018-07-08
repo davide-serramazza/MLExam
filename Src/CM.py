@@ -23,14 +23,14 @@ def main():
     training_labels, validation_labels = transform_labels(training_set, validation_set)
 
     # 4. define architecture and hyper parameter
-    arch = [[17,10,1]]
+    arch = [[17,20,1]]
     neuronsType = [[InputNeuron, TanHNeuron, TanHNeuron]]
 
     #network = Network(arch, neuronsType)
     c_1 = [0.0001]
     c_2 = [0.9]
     theta = [0.9]
-    regularization = [0.01]
+    regularization = [0.00001]
     m = [30]
     epochs = 100
     lossObject = SquaredError("tangentH")

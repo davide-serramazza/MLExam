@@ -510,15 +510,7 @@ class Network:
         for epoch in range(epochs):
 
             # calculate central matrix {H_k}^0
-            if epoch == 0:
-                H = np.identity(gradient_old.shape[0])
-            else:
-                num = np.dot(s_list[-1],y_list[-1])   # s_k \dot y_k
-                if not num >= 0:
-                    raise Exception("curvature condition s_k \dot y_k > 0 not satisfied")
-                den = np.dot(y_list[-1],y_list[-1])   # y_k \dot y_k
-                gamma = num/den
-                H = gamma * np.identity(gradient_old.shape[0])
+            H = self.compute_H0(epoch, gradient_old, s_list, y_list)
 
             # compute p = - H_k * \nabla f_k using two loop recursion
             r = self.compute_direction(H, gradient_old, s_list, y_list, rho_list)
@@ -546,6 +538,9 @@ class Network:
             y_k = gradient_new - gradient_old
             rho_k = 1 / np.dot(s_k, y_k)
 
+            if rho_k < 0:
+                raise Exception("curvature condition not satisfied: rho_k < 0")
+
             # append to vector
             s_list.append(s_k)
             y_list.append(y_k)
@@ -571,8 +566,18 @@ class Network:
                 print "break at", epoch
                 break
 
-        return losses, misses,losses_validation,misses_validation
+        return losses, misses, losses_validation, misses_validation
 
+    def compute_H0(self, epoch, gradient_old, s_list, y_list):
+        if epoch == 0:
+            H = np.identity(gradient_old.shape[0])
+        else:
+            num = np.dot(s_list[-1], y_list[-1])  # s_k \dot y_k
+            den = np.dot(y_list[-1], y_list[-1])  # y_k \dot y_k
+            gamma = num / den
+            H = gamma * np.identity(gradient_old.shape[0])
+
+        return H
 
     def backtracking_line_search(self, alpha, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta):
         while True:
