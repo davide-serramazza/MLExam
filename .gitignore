@@ -2,7 +2,10 @@
 .idea/*
 image/*
 src/*.pyc
-my_prediction.csv
+*.csv
 weights/*
 weights_CM/*
 *.zip
+report/*
+grid_search_results/*
+temp/*

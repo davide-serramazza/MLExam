@@ -27,21 +27,21 @@ def main():
     tr_patterns, tr_targets, vl_patterns, vl_targets = holdout_cup(first_partition_patterns
                                                                    ,first_partition_labels, 0.8)
     # 5. define architecture and hyperparameters
-    architecture = [[10,10,2]]
-    neurons = [[InputNeuron,SigmoidNeuron,OutputNeuron]]
+    architecture = [[10,15,2], [10,20,2]]
+    neurons = [[InputNeuron,SigmoidNeuron,OutputNeuron], [InputNeuron,SigmoidNeuron,OutputNeuron]]
     epochs = 100
-    theta=[0.9, 0.7 ,0.5]
-    c_1=[0.001]
-    c_2=[ 0.9]
+    theta=[0.9, 0.7]
+    c_1=[0.0001, 0.00001]
+    c_2=[ 0.9, 0.8]
     regularization = [0.00001]
-    m = [40]
-    parameter = GridSearchLBFGSParams(c_1,c_2,theta,regularization,m,epochs,architecture,neurons)
+    m = [30,50]
+    parameter = GridSearchBFGSParams(c_1,c_2,theta,regularization,epochs,architecture,neurons)
 
     loss_obj = EuclideanError(normalizer=None)
 
     # 6. train
     start_time = time.time()
-    grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_targets, vl_patterns, vl_targets,
+    grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_targets, vl_patterns, vl_targets,
                    n_trials=3, save_in_dir="../grid_search_results/bfgs/cup/")
 
     elapsed_time = time.time() - start_time

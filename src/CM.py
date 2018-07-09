@@ -24,7 +24,7 @@ def main():
 
     # 4. define architecture and hyper parameter
     arch = [[17,20,1] , [17,15,1]]
-    neuronsType = [[InputNeuron, TanHNeuron, TanHNeuron]]
+    neuronsType = [[InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron]]
 
     c_1 = [0.0001]
     c_2 = [0.9]

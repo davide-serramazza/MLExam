@@ -398,6 +398,8 @@ class Network:
             # 2. line search
             #alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
             alpha = self.armijo_wolfe_line_search( 1, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta, regularization)
+            if alpha == -1:
+                break
 
             # 3. compute weight update
             delta = p * alpha
@@ -523,6 +525,9 @@ class Network:
 
             # line search
             alpha = self.armijo_wolfe_line_search(1,c_1,c_2,data,gradient_old,loss,lossObject,p,targets,theta,regularization)
+            if alpha == -1:
+                break
+
             # updating weights and compute x_k+1 = x_k + a_k*p_k
             delta = alpha * p
             x_new = self.update_weights_CM(delta)
@@ -641,10 +646,6 @@ class Network:
             tmp_alpha = alpha_i / theta
             alpha_i = tmp_alpha if tmp_alpha < alpha_max else alpha_max
 
-        if alpha_star <= 1e-16:
-            print "error, alpha =", alpha_star, "set alpha =", default_alpha
-            alpha_star = default_alpha
-
         return alpha_star
 
 
@@ -680,6 +681,8 @@ class Network:
                 if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:
                     alpha_high = alpha_low
                 alpha_low = alpha_j
+
+        return -1
 
         return alpha_j
 
