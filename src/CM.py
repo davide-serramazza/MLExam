@@ -33,9 +33,9 @@ def main():
     m = [30,40]
     epochs = 100
     lossObject = SquaredError("tangentH")
-    parameter = GridSearchLBFGSParams(c_1,c_2,theta,reguralization,m,epochs,arch,neuronsType)
+    parameter = GridSearchBFGSParams(c_1,c_2,theta,reguralization,epochs,arch,neuronsType)
     # perform grid search
-    grid_search_LBFGS(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,
+    grid_search_BFGS(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,
                    n_trials=3,save_in_dir="../temp/new-")
 
     # try BFGS

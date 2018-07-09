@@ -356,7 +356,9 @@ class Network:
             raise Exception ("rho_k < 0")
 
         # V_k = I - rho_k * s_k * y_k^t
-        tmp = rho_k * np.outer(s_k, y_k)
+        # non consideri il fatto che sul libro sono vettori colonna, mentre qui sono definiti come
+        #vettori riga
+        tmp = rho_k * np.outer(y_k,s_k)
         V_k = np.identity(shape) - tmp
 
         # H_{k+1} = V_k^t * H_k * V_k - rho_k * s_k * s_k^t

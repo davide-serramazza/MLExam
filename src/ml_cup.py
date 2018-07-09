@@ -30,10 +30,10 @@ def main():
     architecture = [[10,15,2], [10,20,2]]
     neurons = [[InputNeuron,SigmoidNeuron,OutputNeuron], [InputNeuron,SigmoidNeuron,OutputNeuron]]
     epochs = 100
-    theta=[0.9, 0.7]
-    c_1=[0.0001, 0.00001]
-    c_2=[ 0.9, 0.8]
-    regularization = [0.00001]
+    theta=[0.9]
+    c_1=[0.0001]
+    c_2=[0.8]
+    regularization = [0.00001, 0.0001]
     m = [30,50]
     parameter = GridSearchBFGSParams(c_1,c_2,theta,regularization,epochs,architecture,neurons)
 
