@@ -262,7 +262,7 @@ class Network:
                 # train, compute gradient for a batch
                 for pattern, t in zip(batch_pattern, batch_target):
                     self.forward(pattern)
-                    gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization / len(data))
+                    gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization * len(batch_pattern) / len(data))
                     loss_epoch += loss_p
                     misC_epoch += miss_p
                     gradient_w_batch += gradient_w
