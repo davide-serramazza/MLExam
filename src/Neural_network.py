@@ -89,7 +89,7 @@ class Network:
         for input_neuron, x in zip(input_layer.neurons[:-1], pattern):  # exclude bias
             input_neuron.activation_function(x)
 
-    def back_propagation(self, target, lossObject,regularization):
+    def back_propagation(self, target, lossObject, regularization):
         """
         Performs backpropagation.
         :param target: target vector for a single training example
@@ -119,10 +119,17 @@ class Network:
         # 4. compute network weights update
         gradient_weights = self.compute_gradient(np.asarray(delta_vectors))
 
+        # add regularization gradient 2 * lambda * w_{ji}
+        for grad_layer, layer in zip(gradient_weights, self.layers[1:]):  # exclude input layer
+            for grad_neuron, neuron in zip(grad_layer, layer.neurons[:-1]):  # exclude bias neuron
+                reg_component_vector = 2 * regularization * neuron.weights[:-1]  # exclude bias neuron weight
+                grad_neuron[:-1] = grad_neuron[:-1] + reg_component_vector
+
+
         # 5 report loss and misclassification count
         weights = self.get_weights_as_vector()
 
-        loss_value = lossObject.value(target, output_net, weights ,regularization)
+        loss_value = lossObject.value(target, output_net, weights, regularization)
         misClassification = lossObject.misClassification(target, output_net)
 
         return gradient_weights, loss_value, misClassification
@@ -255,7 +262,7 @@ class Network:
                 # train, compute gradient for a batch
                 for pattern, t in zip(batch_pattern, batch_target):
                     self.forward(pattern)
-                    gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization * len(batch_pattern) / len(data))
+                    gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization / len(data))
                     loss_epoch += loss_p
                     misC_epoch += miss_p
                     gradient_w_batch += gradient_w
@@ -310,7 +317,7 @@ class Network:
                 current_neuron_weights += tmp
         return self.get_weights_as_vector()
 
-    def calculate_gradient(self, data, targets, lossObject,regularization):
+    def calculate_gradient(self, data, targets, lossObject, regularization):
         # create empty vector, gradient_w_old = sum of gradient_w for the epoch
         gradient_w_batch = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
                                      for i in range(1, len(self.architecture))])
@@ -319,31 +326,20 @@ class Network:
         for pattern, t in zip(data, targets):
             # calculate derivative for every patten, then append to gradient_w_batch
             self.forward(pattern)
-            gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject,regularization)
+            gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization / len(data))
 
             gradient_w_batch += gradient_w
             loss_batch += loss_p
             miss_batch += miss_p
 
-        #compute regularization term
-        reg_term = np.array([])
-        for l in self.layers:
-            for n in l.neurons:
-                if not (isinstance(n,BiasNeuron) or isinstance(n,InputNeuron)):
-                    tmp = 2*regularization*n.weights
-                    #exclude bias from regulariaztion
-                    tmp[-1] = 0.0
-                    reg_term = np.append(reg_term,tmp)
-
-
-        # getting the gradient as vector and adding reg tem
+        # getting the gradient as vector
         gradient = self.get_gradient_as_vector(gradient_w_batch)
-        gradient = gradient + reg_term
 
         # compute mean values
         gradient /= 1.0 * len(data)
         loss_batch /= 1.0 * len(data)
         miss_batch /= 1.0 * len(data)
+
         return gradient, loss_batch, miss_batch
 
     def update_matrix(self, H_k, s_k, y_k):
