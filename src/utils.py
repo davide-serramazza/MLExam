@@ -135,6 +135,7 @@ def decode(data,encoding):
                 ris.append(0)
     return ris
 
+
 def transform_target(l):
     """
     transform specific negative example's target from 0 to -1
@@ -145,11 +146,12 @@ def transform_target(l):
     """
     res = []
     for i in l:
-        if i==0:
+        if i == 0:
             res.append(np.array([-1]))
         else:
             res.append(np.array([1]))
     return res
+
 
 def transform_labels(training_set, validation_set):
     training_labels = transform_target(training_set["label"].values)
@@ -172,11 +174,10 @@ def divide_patterns_labels(partition, feature_col, target_col):
 
 
 def holdout_cup(patterns, labels, frac_tr):
-
     # calculate size
     len_partion = int(frac_tr * len(patterns))
 
-    #divide train set
+    # divide train/set
     first_partition_patterns = patterns[:len_partion]
     first_partition_labels = labels[:len_partion]
     second_partition_pattens = patterns[len_partion:]

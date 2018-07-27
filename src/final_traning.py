@@ -1,4 +1,5 @@
 from monk_benchmark import *
+from time import time
 
 def main():
 
@@ -15,44 +16,56 @@ def main():
 
     # 3. getting patterns and labels
     encoding = [3, 3, 2, 3, 4, 2]
-    training_patterns, test_patterns = decode_patterns(encoding,['f1', 'f2', 'f3', 'f4', 'f5', 'f6'],
-                                                             train_data,test_data)
-    training_labels,test_labels = transform_labels(train_data,test_data)
+    features = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6']
+    train_patterns, test_patterns = decode_patterns(encoding, features, train_data, test_data)
+    train_labels, test_labels = transform_labels(train_data, test_data)
 
     # 4. define architecture and hyperparameters
-    architecture = [17,10,1]
-    neurons = [InputNeuron,TanHNeuron,TanHNeuron]
-    network = Network(architecture,neurons)
-    lossObject = SquaredError("tangentH")
+    architecture = [17, 20, 20, 1]
+    neurons = [InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron]
+    network = Network(architecture, neurons)
+    loss_object = SquaredError("tangentH")
+    epochs = 30
+    learning_rate = 0.01
+    batch_size = 16
+    momentum = 0.7
+    regularization = 0.05
 
-    epochs = 50
-    learning_rate = 0.2
-    batch_size = len(training_patterns)
-    momentum = 0.6
-    regularization = 0.001
-
+    tic = time()
     # 5. train
-    squared_error, misClass_error, squared_error_test, misClass_error_test = network.train(
-            data=training_patterns, targets=training_labels, eval_data=test_patterns,eval_targets=test_labels,
-            lossObject=lossObject, epochs=epochs, learning_rate=learning_rate, batch_size=batch_size,
+    loss_train, misclass_train, loss_test, misclass_test = network.train(
+            data=train_patterns, targets=train_labels, eval_data=test_patterns,eval_targets=test_labels,
+            lossObject=loss_object, epochs=epochs, learning_rate=learning_rate, batch_size=batch_size,
             momentum=momentum, regularization=regularization)
+    toc = time()
 
     # 6. getting average
-    squared_error /= float(len(training_patterns))
-    squared_error_test /= float(len(test_patterns))
-    misClass_error /= float(len(training_patterns))
-    misClass_error_test /= float(len(test_patterns))
-    print_result(misClass_error, misClass_error_test, squared_error, squared_error_test,
-                 architecture, batch_size, learning_rate, momentum, regularization, 1,
-                 "test set", lossObject, "../image/")
-    # 7. plot
-    print "accuracy", 1-misClass_error[-1]
-    print "accuracy test", 1-misClass_error_test[-1]
-    print "squared error", squared_error[-1]
-    print "squared error test", squared_error_test[-1]
+    loss_train /= float(len(train_patterns))
+    loss_test /= float(len(test_patterns))
+    misclass_train /= float(len(train_patterns))
+    misclass_test /= float(len(test_patterns))
 
+    # 7. print
+    print "accuracy train:", 1 - misclass_train[-1]
+    print "accuracy test:", 1 - misclass_test[-1]
+    print "squared error train:", loss_train[-1]
+    print "squared error test:", loss_test[-1]
+    print "training time:", (toc-tic)
 
+    # 8. plot
+    plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.7, label='train loss')
+    plt.plot(range(len(loss_test)), loss_test, '-D', alpha=0.7, label='test loss')
+    plt.legend(loc='best')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.show()
 
+    plt.plot(range(len(misclass_train)), 1 - misclass_train, '-o', alpha=0.7, label='train accuracy')
+    plt.plot(range(len(misclass_test)), 1 - misclass_test, '-D', alpha=0.7, label='test accuracy')
+    plt.legend(loc='best')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.show()
 
 
 if __name__ == '__main__':

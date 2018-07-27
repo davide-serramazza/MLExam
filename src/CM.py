@@ -29,14 +29,14 @@ def main():
     c_1 = [0.0001]
     c_2 = [0.9]
     theta = [0.9]
-    reguralization = [0.00001]
-    m = [30,40]
+    reguralization = [0.00001, 0.0001, 0.001, 0.01]
+    m = [40]
     epochs = 100
     lossObject = SquaredError("tangentH")
-    parameter = GridSearchBFGSParams(c_1,c_2,theta,reguralization,epochs,arch,neuronsType)
+    parameter = GridSearchLBFGSParams(c_1,c_2,theta,reguralization,m,epochs,arch,neuronsType)
     # perform grid search
-    grid_search_BFGS(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,
-                   n_trials=3,save_in_dir="../temp/new-")
+    grid_search_LBFGS(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,
+                   n_trials=3,save_in_dir="../temp/new-",)
 
     # try BFGS
     #tr_l, tr_ac, vl_l, vl_ac = network.trainBFGS(training_patterns, training_labels, validation_patterns, validation_labels,

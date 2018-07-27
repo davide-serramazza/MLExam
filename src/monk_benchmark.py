@@ -29,16 +29,16 @@ def main():
     architecture = [[17, 20, 1]]
     neurons = [[InputNeuron, TanHNeuron, TanHNeuron]]
     momentum = [0.9]
-    batch_size = [32, 64]
+    batch_size = [32]
     learning_rate = [0.01]
     regularization = [0.0, 0.01]
-    epoch = 300
+    epoch = 100
     param = GridSearchSGDParams(learning_rate, momentum, batch_size,
                                   architecture, neurons, regularization, epoch)
 
     start_time = time.time()
     grid_search_SGD(param, lossObject, training_patterns, training_labels,
-                validation_patterns, validation_labels, 5, "../temp/")
+                validation_patterns, validation_labels, 5, "../temp/does_")
     elapsed_time = time.time() - start_time
     print "time in grid search:", elapsed_time
 

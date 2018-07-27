@@ -16,17 +16,12 @@ def main():
     # 2. divide pattern and targets
     patterns,labels = divide_patterns_labels(df,features_col,targets_col)
 
-    # 3. normalization
-    normalizer = MinMaxScaler(feature_range=(-1, 1))
-    x_scaled = normalizer.fit_transform(patterns)
-    y_scaled = normalizer.fit_transform(labels)
-
-    # 4. divide in tr,vl and ts set
+    # 3. divide in tr,vl and ts set
     first_partition_patterns, first_partition_labels, test_patterns, test_targets = holdout_cup(patterns,
                                                                                                 labels, 0.8)
     tr_patterns, tr_targets, vl_patterns, vl_targets = holdout_cup(first_partition_patterns
                                                                    ,first_partition_labels, 0.8)
-    # 5. define architecture and hyperparameters
+    # 4. define architecture and hyperparameters
     architecture = [[10,15,2], [10,20,2]]
     neurons = [[InputNeuron,SigmoidNeuron,OutputNeuron], [InputNeuron,SigmoidNeuron,OutputNeuron]]
     epochs = 100

@@ -56,8 +56,8 @@ class EuclideanError:
 
     def value(self, target, output_net, weights, regularization):
 
-        if self.normalizer != None:
-            #denormalize
+        if self.normalizer is not None:
+            # de-normalize
             den_target = self.normalizer.inverse_transform([target])
             den_output = self.normalizer.inverse_transform([output_net])
             target = den_target[0]
@@ -65,9 +65,8 @@ class EuclideanError:
 
         # data error
         data_error = np.linalg.norm(output_net - target)
+        regularization_error = regularization * np.sum(np.square(weights))
 
-        # regularization error
-        regularization_error = regularization * np.linalg.norm(weights)
         return data_error + regularization_error
 
     def derivative(self, target, output_net):

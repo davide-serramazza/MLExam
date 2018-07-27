@@ -64,5 +64,6 @@ def main():
     plt.tight_layout()  # minimize overlap of subplots
     plt.savefig(s)
 
+
 if __name__ == '__main__':
     main()

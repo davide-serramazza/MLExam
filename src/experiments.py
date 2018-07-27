@@ -91,13 +91,13 @@ def sgd_all_grid_search():
                                     regularization=regularization, epoch=epochs_sgd)
     #### SGD - MONK 1 ###
     print "\nSGD-MONK1\n"
-    sgd_training_monk(train_file=monk1_train_file, grid_search_param=param, save_dir=sgd_dir + monk1)
+    #sgd_training_monk(train_file=monk1_train_file, grid_search_param=param, save_dir=sgd_dir + monk1)
     #### SGD - MONK 2 ###
     print "\nSGD-MONK2\n"
-    sgd_training_monk(train_file=monk2_train_file, grid_search_param=param, save_dir=sgd_dir + monk2)
+    #sgd_training_monk(train_file=monk2_train_file, grid_search_param=param, save_dir=sgd_dir + monk2)
     #### SGD - MONK 3 ###
     print "\nSGD-MONK3\n"
-    sgd_training_monk(train_file=monk3_train_file, grid_search_param=param_reg, save_dir=sgd_dir + monk3)
+    #sgd_training_monk(train_file=monk3_train_file, grid_search_param=param_reg, save_dir=sgd_dir + monk3)
     #### SGD - CUP ###
     print "\nSGD-CUP\n"
     # 1. read dataset
@@ -133,20 +133,19 @@ def lbfgs_all_grid_search():
 
 
 if __name__ == '__main__':
-    architecture = [[17, 20, 1], [17, 10, 10, 1]]
-    neurons = [[InputNeuron, TanHNeuron, TanHNeuron], [InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron]]
+    architecture = [[17, 20, 20, 1]]
+    neurons = [[InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron]]
 
-    architecture_cup = [[10, 10, 10, 2], [10, 20, 20, 2]]
-    neurons_cup = [[InputNeuron, TanHNeuron, TanHNeuron, OutputNeuron],
-                   [InputNeuron, TanHNeuron, TanHNeuron, OutputNeuron]]
-
+    architecture_cup = [[10, 10, 10, 10, 2], [10, 10, 10, 10, 10, 2]]
+    neurons_cup = [[InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron, OutputNeuron],
+                   [InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron, TanHNeuron, OutputNeuron]]
     #### SGD ####
-    learning_rate = [0.01, 0.001]
-    momentum = [0.5, 0.9]
+    learning_rate = [0.001, 0.01]
+    momentum = [0.9]
     batch_size = [16, 32]
-    no_regularization = [0.0]
-    regularization = [0.0, 0.01, 0.05]
-    epochs_sgd = 200
+    no_regularization = [0.01, 0.05]
+    regularization = [0.01, 0.001]
+    epochs_sgd = 100
 
     #### LBFGS ####
     c_1_monk1 = [0.0001, 0.001, 0.01] # for the monk c_1 = 0.001 is fine, frangio usa c_1=0.01, il libro dice c_1=0.0001
