@@ -383,7 +383,7 @@ class Network:
             self.validation_error(eval_data, eval_targets, lossObject)
 
         losses_validation = np.append(losses_validation,squared_error_validation_epoch)
-        misses_validation= np.append(misses_validation,misClass_error_validation_epoch)
+        misses_validation = np.append(misses_validation,misClass_error_validation_epoch)
 
         print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
         print "---------------------------------------------------------------------------"
@@ -440,11 +440,10 @@ class Network:
             losses_validation = np.append(losses_validation,squared_error_validation_epoch)
             misses_validation = np.append(misses_validation,misClass_error_validation_epoch)
 
-            if losses[-1] > losses[-2]:
-                raise  Exception ("foo increased")
+            #if losses[-1] > losses[-2]:
+            #    raise  Exception ("foo increased")
 
         return losses, misses, losses_validation, misses_validation
-
 
     def compute_direction(self, H, gradient, s_list, y_list, rho_list):
         """
@@ -575,11 +574,10 @@ class Network:
                 break
 
 
-            if losses[-1] > losses[-2]:
-                raise  Exception ("foo increased")
+            #if losses[-1] > losses[-2]:
+            #    raise  Exception ("foo increased")
 
         return losses, misses,losses_validation,misses_validation
-
 
     def backtracking_line_search(self, alpha, c_1, data, gradient_old, loss, lossObject, p, targets, theta,regularization):
         while True:
@@ -597,7 +595,6 @@ class Network:
             alpha *= theta  # theta < 1, decrease alpha
 
         return alpha
-
 
     def armijo_wolfe_line_search(self, alpha, c_1, c_2, data, gradient, loss, lossObject, p, targets, theta, regularization):
         # phi(alpha) = f(x_k + alpha * p_k)
