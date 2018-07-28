@@ -90,29 +90,29 @@ def read_cup_data():
 
 def sgd_all_grid_search():
     global tr_patterns, tr_targets, vl_patterns, vl_targets
-    param = GridSearchSGDParams(learning_rate=learning_rate,
-                                momentum=momentum,
-                                batch_size=batch_size,
-                                architecture=architecture,
-                                neurons=neurons,
-                                regularization=no_regularization,
-                                epoch=epochs_sgd)
-    param_reg = GridSearchSGDParams(learning_rate, momentum, batch_size, architecture, neurons,
-                                    regularization=regularization,
-                                    epoch=epochs_sgd)
+    param_m1 = GridSearchSGDParams(learning_rate=learning_rate,
+                                momentum=momentum, batch_size=batch_size, architecture=architecture_monk1,
+                                neurons=neurons_monk1, regularization=regularization, epoch=epochs_sgd)
+
+    param_m2 = GridSearchSGDParams(learning_rate, momentum, batch_size, architecture_monk2, neurons_monk2,
+                                   regularization=regularization, epoch=epochs_sgd)
+
+    param_m3 = GridSearchSGDParams(learning_rate, momentum, batch_size, architecture_monk3, neurons_monk3,
+                                   regularization=regularization, epoch=epochs_sgd)
+
     param_cup = GridSearchSGDParams(learning_rate, momentum, batch_size,
                                     architecture=architecture_cup,
                                     neurons=neurons_cup,
                                     regularization=regularization, epoch=epochs_sgd)
     #### SGD - MONK 1 ###
     print "\nSGD-MONK1\n"
-    sgd_training_monk(train_file=monk1_train_file, grid_search_param=param, save_dir=sgd_dir + monk1)
+    #sgd_training_monk(train_file=monk1_train_file, grid_search_param=param_m1, save_dir=sgd_dir + monk1)
     #### SGD - MONK 2 ###
     print "\nSGD-MONK2\n"
-    sgd_training_monk(train_file=monk2_train_file, grid_search_param=param, save_dir=sgd_dir + monk2)
+    #sgd_training_monk(train_file=monk2_train_file, grid_search_param=param_m2, save_dir=sgd_dir + monk2)
     #### SGD - MONK 3 ###
     print "\nSGD-MONK3\n"
-    sgd_training_monk(train_file=monk3_train_file, grid_search_param=param_reg, save_dir=sgd_dir + monk3)
+    #sgd_training_monk(train_file=monk3_train_file, grid_search_param=param_m3, save_dir=sgd_dir + monk3)
     #### SGD - CUP ###
     print "\nSGD-CUP\n"
     # 1. read dataset
@@ -124,42 +124,47 @@ def sgd_all_grid_search():
 def lbfgs_all_grid_search():
     global tr_patterns, tr_targets, vl_patterns, vl_targets
 
-    param_lbfgs_m1 = GridSearchLBFGSParams(c_1=c_1_monk1, c_2=c_2, theta=theta, regularization=no_regularization, m=m_monk,
-                                        epoch=epochs_lbfgs, architecture=architecture, neurons=neurons)
+    param_lbfgs_m1 = GridSearchLBFGSParams(c_1=c_1, c_2=c_2, theta=theta, regularization=regularization, m=m_monk,
+                                           epsilon=epsilon, epoch=epochs_lbfgs, architecture=architecture_monk1,
+                                           neurons=neurons_monk1)
 
-    param_lbfgs = GridSearchLBFGSParams(c_1=c_1_monk23, c_2=c_2, theta=theta, regularization=no_regularization, m=m_monk,
-                                        epoch=epochs_lbfgs, architecture=architecture, neurons=neurons)
+    param_lbfgs_m2 = GridSearchLBFGSParams(c_1=c_1, c_2=c_2, theta=theta, regularization=regularization, m=m_monk,
+                                           epsilon=epsilon, epoch=epochs_lbfgs, architecture=architecture_monk2,
+                                           neurons=neurons_monk2)
 
-    param_lbfgs_reg = GridSearchLBFGSParams(c_1=c_1_monk23, c_2=c_2, theta=theta, regularization=no_regularization, m=m_monk,
-                                            epoch=epochs_lbfgs, architecture=architecture, neurons=neurons)
-    param_lbfgs_cup = GridSearchLBFGSParams(c_1=c_1_cup, c_2=c_2, theta=theta, regularization=no_regularization, m=m_cup,
-                                            epoch=epochs_lbfgs, architecture=architecture_cup, neurons=neurons_cup)
+    param_lbfgs_m3 = GridSearchLBFGSParams(c_1=c_1, c_2=c_2, theta=theta, regularization=regularization, m=m_monk,
+                                           epsilon=epsilon, epoch=epochs_lbfgs, architecture=architecture_monk3,
+                                           neurons=neurons_monk3)
+
+    param_lbfgs_cup = GridSearchLBFGSParams(c_1=c_1, c_2=c_2, theta=theta, regularization=regularization, m=m_cup,
+                                            epsilon=epsilon, epoch=epochs_lbfgs, architecture=architecture_cup,
+                                            neurons=neurons_cup)
     print "\nLBFGS-MONK1\n"
-    #lbfgs_training_monk(train_file=monk1_train_file, grid_search_param=param_lbfgs_m1, save_dir=lbfgs_dir + monk1)
+    lbfgs_training_monk(train_file=monk1_train_file, grid_search_param=param_lbfgs_m1, save_dir=lbfgs_dir + monk1)
     print "\nLBFGS-MONK2\n"
-    #lbfgs_training_monk(train_file=monk2_train_file, grid_search_param=param_lbfgs, save_dir=lbfgs_dir + monk2)
+    lbfgs_training_monk(train_file=monk2_train_file, grid_search_param=param_lbfgs_m2, save_dir=lbfgs_dir + monk2)
     print "\nLBFGS-MONK3\n"
-    #lbfgs_training_monk(train_file=monk3_train_file, grid_search_param=param_lbfgs_reg, save_dir=lbfgs_dir + monk3)
+    lbfgs_training_monk(train_file=monk3_train_file, grid_search_param=param_lbfgs_m3, save_dir=lbfgs_dir + monk3)
     print "\nLBFGS-CUP\n"
-    tr_patterns, tr_targets, vl_patterns, vl_targets = read_cup_data()
-    grid_search_LBFGS(param_lbfgs_cup, EuclideanError(), tr_patterns, tr_targets,
-                      vl_patterns, vl_targets,
-                      n_trials=5, save_in_dir=lbfgs_dir + cup)
+    #tr_patterns, tr_targets, vl_patterns, vl_targets = read_cup_data()
+    #grid_search_LBFGS(param_lbfgs_cup, EuclideanError(), tr_patterns, tr_targets,
+    #                  vl_patterns, vl_targets,
+    #                  n_trials=5, save_in_dir=lbfgs_dir + cup)
 
 
 def bfgs_all_grid_search():
     global tr_patterns, tr_targets, vl_patterns, vl_targets
 
-    param_bfgs_m1 = GridSearchBFGSParams(c_1=c_1, c_2=c_2, theta=theta, regularization=regularization,
+    param_bfgs_m1 = GridSearchBFGSParams(c_1=c_1, c_2=c_2, theta=theta, regularization=regularization, epsilon=epsilon,
                                          epoch=epochs_bfgs, architecture=architecture_monk1, neurons=neurons_monk1)
 
-    param_bfgs_m2 = GridSearchBFGSParams(c_1=c_1, c_2=c_2, theta=theta, regularization=regularization,
+    param_bfgs_m2 = GridSearchBFGSParams(c_1=c_1, c_2=c_2, theta=theta, regularization=regularization, epsilon=epsilon,
                                       epoch=epochs_bfgs, architecture=architecture_monk2, neurons=neurons_monk2)
 
-    param_bfgs_m3 = GridSearchBFGSParams(c_1=c_1, c_2=c_2, theta=theta, regularization=regularization,
+    param_bfgs_m3 = GridSearchBFGSParams(c_1=c_1, c_2=c_2, theta=theta, regularization=regularization, epsilon=epsilon,
                                           epoch=epochs_bfgs, architecture=architecture_monk3, neurons=neurons_monk3)
 
-    param_bfgs_cup = GridSearchBFGSParams(c_1=c_1, c_2=c_2, theta=theta, regularization=regularization,
+    param_bfgs_cup = GridSearchBFGSParams(c_1=c_1, c_2=c_2, theta=theta, regularization=regularization, epsilon=epsilon,
                                           epoch=epochs_bfgs, architecture=architecture_cup, neurons=neurons_cup)
     print "\nBFGS-MONK1\n"
     bfgs_training_monk(train_file=monk1_train_file, grid_search_param=param_bfgs_m1, save_dir=bfgs_dir + monk1)
@@ -178,22 +183,25 @@ if __name__ == '__main__':
     architecture_monk1 = [[17, 20, 10, 1]]
     architecture_monk2 = [[17, 20, 1]]
     architecture_monk3 = [[17, 20, 20, 1]]
-    architecture_cup = [[10, 10, 10, 2], [10, 20, 20, 2]]
+    architecture_cup = [[10, 30, 20, 10, 2], [10, 40, 20, 2], [10, 100, 50, 2], [10, 100, 50, 25, 2], [10, 200, 100, 50, 2]]
 
     # neurons
     neurons_monk1 = [[InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron]]
     neurons_monk2 = [[InputNeuron, TanHNeuron, TanHNeuron]]
     neurons_monk3 = [[InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron]]
-    neurons_cup = [[InputNeuron, TanHNeuron, TanHNeuron, OutputNeuron],
-                   [InputNeuron, TanHNeuron, TanHNeuron, OutputNeuron]]
+    neurons_cup = [[InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron, OutputNeuron],
+                   [InputNeuron, TanHNeuron, TanHNeuron, OutputNeuron],
+                   [InputNeuron, TanHNeuron, TanHNeuron, OutputNeuron],
+                   [InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron, OutputNeuron],
+                   [InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron, OutputNeuron]]
 
-    regularization = [0.01, 0.001, 0.0001]
+    regularization = [0.05]
 
     #### SGD ####
     learning_rate = [0.01, 0.001]
-    momentum = [0.5, 0.9]
-    batch_size = [16, 32]
-    epochs_sgd = 200
+    momentum = [0.9]
+    batch_size = [16]
+    epochs_sgd = 100
 
     #### BFGS / LBFGS ####
     c_1 = [0.0001, 0.001, 0.01]
@@ -201,7 +209,9 @@ if __name__ == '__main__':
 
     m_monk = [1, 5, 10, 15, 20]
     m_cup = [1, 10, 20, 30, 40, 50, 100, 200]
-    theta = [0.1, 0.5, 0.9]
+
+    epsilon = [1e-2, 1e-3, 1e-4, 1e-5, 1e-6]
+    theta = [0.9]
     epochs_lbfgs = 100
     epochs_bfgs = 100
 

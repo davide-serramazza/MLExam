@@ -1,6 +1,21 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclass_train):
+    plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.7, label='train loss')
+    plt.plot(range(len(loss_test)), loss_test, '-D', alpha=0.7, label='test loss')
+    plt.legend(loc='best')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.show()
+    plt.plot(range(len(misclass_train)), 1 - misclass_train, '-o', alpha=0.7, label='train accuracy')
+    plt.plot(range(len(misclass_test)), 1 - misclass_test, '-D', alpha=0.7, label='test accuracy')
+    plt.legend(loc='best')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.show()
+
 #### transform values to string format (to create file name of image) #####
 
 def transf_value(value):
@@ -28,7 +43,7 @@ def tranf_arc(architecture):
 ###### to print results of GRID SEARCH ######
 
 def print_result_LBFGS(misClass_error, misClass_error_evaluation,
-                 squared_error, squared_error_evaluation, arc,c_1,c_2,theta, reg, m, n_figure,
+                 squared_error, squared_error_evaluation, arc,c_1,c_2,theta, reg, epsilon, m, n_figure,
                  eval_string, lossObject, save_in_dir):
     # get accuracy
     accuracy = 1 - misClass_error
@@ -49,8 +64,8 @@ def print_result_LBFGS(misClass_error, misClass_error_evaluation,
     plt.xlabel("epochs")
     plt.ylabel(lossObject.__class__.__name__)
     s = save_in_dir + "c1_" + transf_value(c_1) + "-c2_" + transf_value(
-        c_2) + "-theta_" + transf_value(theta) + "-reg_" + transf_value(reg) + "-m_" + str(m) +\
-        "-arc_" + tranf_arc(arc)
+        c_2) + "-theta_" + transf_value(theta) + "-reg_" + transf_value(reg) + "-eps_" + \
+        transf_value(epsilon) + "-m_" + str(m) + "-arc_" + tranf_arc(arc)
     plt.tight_layout()  # minimize overlap of subplots
     plt.savefig(s)
     plt.close()
@@ -58,7 +73,7 @@ def print_result_LBFGS(misClass_error, misClass_error_evaluation,
 
 
 def print_result_BFGS(misClass_error, misClass_error_evaluation,
-                 squared_error, squared_error_evaluation, arc,c_1,c_2,theta, reg, n_figure,
+                 squared_error, squared_error_evaluation, arc,c_1,c_2,theta, reg, epsilon, n_figure,
                  eval_string, lossObject, save_in_dir):
     # get accuracy
     accuracy = 1 - misClass_error
@@ -80,7 +95,7 @@ def print_result_BFGS(misClass_error, misClass_error_evaluation,
     plt.ylabel(lossObject.__class__.__name__)
     s = save_in_dir + "c1_" + transf_value(c_1) + "-c2_" + transf_value(
         c_2) + "-theta_" + transf_value(theta) + "-reg_" + transf_value(reg) +\
-        "-arc_" + tranf_arc(arc)
+        "-eps_" + transf_value(epsilon) + "-arc_" + tranf_arc(arc)
     plt.tight_layout()  # minimize overlap of subplots
     plt.savefig(s)
     plt.close()

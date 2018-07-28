@@ -34,7 +34,7 @@ def main():
     regularization = [0.0, 0.01]
     epoch = 100
     param = GridSearchSGDParams(learning_rate, momentum, batch_size,
-                                  architecture, neurons, regularization, epoch)
+                                architecture, neurons, regularization, epoch)
 
     start_time = time.time()
     grid_search_SGD(param, lossObject, training_patterns, training_labels,

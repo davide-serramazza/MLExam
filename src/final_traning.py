@@ -39,12 +39,6 @@ def main():
             momentum=momentum, regularization=regularization)
     toc = time()
 
-    # 6. getting average
-    loss_train /= float(len(train_patterns))
-    loss_test /= float(len(test_patterns))
-    misclass_train /= float(len(train_patterns))
-    misclass_test /= float(len(test_patterns))
-
     # 7. print
     print "accuracy train:", 1 - misclass_train[-1]
     print "accuracy test:", 1 - misclass_test[-1]
@@ -53,19 +47,7 @@ def main():
     print "training time:", (toc-tic)
 
     # 8. plot
-    plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.7, label='train loss')
-    plt.plot(range(len(loss_test)), loss_test, '-D', alpha=0.7, label='test loss')
-    plt.legend(loc='best')
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.show()
-
-    plt.plot(range(len(misclass_train)), 1 - misclass_train, '-o', alpha=0.7, label='train accuracy')
-    plt.plot(range(len(misclass_test)), 1 - misclass_test, '-D', alpha=0.7, label='test accuracy')
-    plt.legend(loc='best')
-    plt.xlabel('Epochs')
-    plt.ylabel('Accuracy')
-    plt.show()
+    plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclass_train)
 
 
 if __name__ == '__main__':

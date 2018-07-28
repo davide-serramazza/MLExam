@@ -5,7 +5,7 @@ from grid_search import *
 import time
 
 def main():
-    train_file = "../monk_datasets/monks-3.train"
+    train_file = "../monk_datasets/monks-1.train"
 
     # 1. load dataset
     columns = ['label', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'id']
@@ -32,8 +32,9 @@ def main():
     reguralization = [0.00001, 0.0001, 0.001, 0.01]
     m = [40]
     epochs = 100
+    epsilon = [0.001]
     lossObject = SquaredError("tangentH")
-    parameter = GridSearchLBFGSParams(c_1,c_2,theta,reguralization,m,epochs,arch,neuronsType)
+    parameter = GridSearchLBFGSParams(c_1,c_2,theta,reguralization, epsilon, m,epochs,arch,neuronsType)
     # perform grid search
     grid_search_LBFGS(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,
                    n_trials=3,save_in_dir="../temp/new-",)
