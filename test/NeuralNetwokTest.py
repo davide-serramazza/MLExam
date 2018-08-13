@@ -27,7 +27,7 @@ class TestNeuralNetwork(unittest.TestCase):
         target = [0.01, 0.99]
         network.forward(data)
         delta_w, loss_value, _ = network.back_propagation(target=target, lossObject=SquaredError("sigmoid"), regularization=0)
-        network.update_weights(delta_w, learning_rate=0.5/2, prev_delta=np.zeros(delta_w.shape), momentum=0)
+        network.update_weights_SGD(delta_w, learning_rate=0.5/2, prev_delta=np.zeros(delta_w.shape), momentum=0)
 
         layers = network.layers
         self.assert_weights(layers)
@@ -41,8 +41,8 @@ class TestNeuralNetwork(unittest.TestCase):
 
         data = [[0.05, 0.1]]
         target = np.array([[0.01, 0.99]])
-        tr_l, _, _, _ = network.train(data=data, targets=target,
-                                      eval_data=data, eval_targets=target, lossObject=SquaredError("sigmoid"),
+        tr_l, _, _, _ = network.train_SGD(x_train=data, y_train=target,
+                                          x_test=data, y_test=target, lossObject=SquaredError("sigmoid"),
                                       epochs=1, learning_rate=0.5/2, batch_size=1, momentum=0, regularization=0)
 
         self.assert_weights(network.layers)
@@ -116,7 +116,7 @@ class TestNeuralNetwork(unittest.TestCase):
         data = [[2,2]]
         target = np.array([[4]])
         self.assertEqual(network.predict(data)[0][0], 1.7)
-        loss, _, _, _ = network.train(data, target, data, target, SquaredError("sigmoid"), 1, 0.01, 1, 0, 0)
+        loss, _, _, _ = network.train_SGD(data, target, data, target, SquaredError("sigmoid"), 1, 0.01, 1, 0, 0)
         self.assertEqual(np.round(loss[0], 2), 5.29)
         self.assertEqual(np.round(network.predict(data)[0][0], 3), 2.114)
 
@@ -126,7 +126,7 @@ class TestNeuralNetwork(unittest.TestCase):
         network.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
         data = [[2, 2]]
         target = np.array([[4]])
-        loss, _, _, _ = network.trainBFGS(data, target, data, target, theta=0.9, c_1=0.0001, c_2=0.9,
+        loss, _, _, _ = network.train_BFGS(data, target, data, target, theta=0.9, c_1=0.0001, c_2=0.9,
                                           lossObject=SquaredError("sigmoid"), epochs=1, regularization=0,
                                           epsilon=0.0001)
         self.assertEqual(np.round(loss[1], 8), 0.08265625)
@@ -144,13 +144,13 @@ class TestNeuralNetwork(unittest.TestCase):
         network_bfgs.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
         network_lbfgs.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
 
-        loss_bfgs, _, _, _ = network_bfgs.trainBFGS(data, target, data, target, theta=0.9, c_1=0.0001,
+        loss_bfgs, _, _, _ = network_bfgs.train_BFGS(data, target, data, target, theta=0.9, c_1=0.0001,
                                                     c_2=0.9, epsilon=0.001, lossObject=SquaredError("sigmoid"),
                                                     epochs=5, regularization=0)
-        loss_lbfgs, _, _, _ = network_lbfgs.trainLBFGS(data, target, data, target, SquaredError("sigmoid"),
+        loss_lbfgs, _, _, _ = network_lbfgs.train_LBFGS(data, target, data, target, SquaredError("sigmoid"),
                                                        m=10, epochs=5, regularization=0, theta=0.9,
                                                        c_1=0.0001, c_2=0.9, epsilon=0.001)
-        # TODO this two should be the same
+        # TODO this two should be the same for m greater than epochs
         print loss_bfgs
         print loss_lbfgs
 

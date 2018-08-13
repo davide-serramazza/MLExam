@@ -6,7 +6,7 @@ class SquaredError:
     def __init__(self, t):
         self.type = t
 
-    def value(self, target, output_net, weights, regularization=0):
+    def value(self, target, output_net, weights=[], regularization=0):
         """
         Computes value of the squared error (data error + regularization error).
 

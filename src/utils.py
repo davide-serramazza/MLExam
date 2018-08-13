@@ -2,6 +2,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+def shuffle_dataset(data, targets):
+    permumation = np.random.permutation(len(data))
+    data_shuffled = [data[i] for i in permumation]
+    targets_shuffled = [targets[i] for i in permumation]
+    return data_shuffled, targets_shuffled
+
 def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclass_train):
     plt.figure()
     plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.7, label='train loss')
