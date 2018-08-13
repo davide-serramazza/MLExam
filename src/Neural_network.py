@@ -290,20 +290,17 @@ class Network:
 
         # end of training - getting average
         losses /= float(len(data))
-        losses_val /= float(len(eval_data))
         missclass /= float(len(data))
-        missclass_val /= float(len(eval_data))
 
         return losses, missclass, losses_val, missclass_val
 
     #begginning CM part -------------------------------------------------------
 
-
-    def get_gradient_as_vector(self,list):
+    def get_gradient_as_vector(self, list):
         gradient = np.array([])
         for l in list:
             tmp = np.concatenate(l)
-            gradient = np.append(gradient,tmp)
+            gradient = np.append(gradient, tmp)
         return gradient
 
     def update_weights_CM(self, delta):
@@ -324,6 +321,7 @@ class Network:
                 start += weights_len
                 # update weights
                 current_neuron_weights += tmp
+
         return self.get_weights_as_vector()
 
     def calculate_gradient(self, data, targets, lossObject, regularization):
@@ -358,43 +356,41 @@ class Network:
         # rho_k = 1/(y_k^t*s_k)
         rho_k = float(1) / np.dot(s_k, y_k)
         if rho_k < 0:
-            raise Exception ("rho_k < 0")
+            raise Exception("rho_k < 0")
 
         # V_k = I - rho_k * s_k * y_k^t
-        # non consideri il fatto che sul libro sono vettori colonna, mentre qui sono definiti come
-        #vettori riga
-        tmp = rho_k * np.outer(y_k,s_k)
+        tmp = rho_k * np.outer(s_k, y_k)
         V_k = np.identity(shape) - tmp
 
-        # H_{k+1} = V_k^t * H_k * V_k - rho_k * s_k * s_k^t
+        # H_{k+1} = V_k^t * H_k * V_k + rho_k * s_k * s_k^t
         tmp = np.dot(V_k.T, H_k)
         H_new = np.dot(tmp, V_k)
-        # adding rho_k*s_k*s_k^t
-        H_new = H_new + rho_k* np.outer(s_k, s_k)
+        H_new = H_new + rho_k * np.outer(s_k, s_k)
+
         return H_new
 
-    def trainBFGS(self, data, targets, eval_data, eval_targets, theta,c_1, c_2,
+    def trainBFGS(self, data, targets, eval_data, eval_targets, theta, c_1, c_2,
                   lossObject, epochs, regularization, epsilon):
-        losses = np.array([]) # vector containing the loss of each epoch
-        misses = np.array([]) # vector containing the misclassification for each epoch
+        losses = np.array([])  # vector containing the loss of each epoch
+        misses = np.array([])  # vector containing the misclassification for each epoch
         losses_validation = np.array([])
-        misses_validation =  np.array([])
+        misses_validation = np.array([])
+
         # 1. compute initial gradient and initial Hessian approximation H_0
         gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
         H = np.identity(gradient_old.shape[0])
         x_old = self.get_weights_as_vector()
-        # append losses
-        losses = np.append(losses,loss)
-        misses = np.append(misses,miss)
-        # compute validation error and append it
-        squared_error_validation_epoch, misClass_error_validation_epoch = \
-            self.validation_error(eval_data, eval_targets, lossObject)
 
-        losses_validation = np.append(losses_validation,squared_error_validation_epoch)
-        misses_validation = np.append(misses_validation,misClass_error_validation_epoch)
+        # append train / validation losses
+        losses = np.append(losses, loss)
+        misses = np.append(misses, miss)
+        loss_val_epoch, misclass_val_epoch = self.validation_error(eval_data, eval_targets, lossObject)
 
-        print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
-        print "---------------------------------------------------------------------------"
+        losses_validation = np.append(losses_validation, loss_val_epoch)
+        misses_validation = np.append(misses_validation, misclass_val_epoch)
+
+        #print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
+        #print "---------------------------------------------------------------------------"
 
         for epoch in range(epochs):
             # 1. compute search direction p = -H * gradient
@@ -402,8 +398,9 @@ class Network:
 
             # 2. line search
             # alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
-            alpha = self.armijo_wolfe_line_search( 1, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta, regularization)
+            alpha = self.armijo_wolfe_line_search(1, c_1, c_2, data, gradient_old, loss, lossObject, p, targets, theta, regularization)
             if alpha == -1:
+                print "stop: line search, epoch", epoch
                 break
 
             # 3. compute weight update
@@ -432,11 +429,12 @@ class Network:
             H = self.update_matrix(H, s_k, y_k)
 
             # print statistics
-            print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
-                  (epoch+1, loss, miss, norm(gradient_new), norm(H), float(1)/np.dot(s_k, y_k), alpha)
+            #print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
+            #     (epoch+1, loss, miss, norm(gradient_new), norm(H), float(1)/np.dot(s_k, y_k), alpha)
 
             # stop criterion
-            if epoch > 0 and (norm(gradient_old)) < epsilon:
+            if (norm(gradient_old)) < epsilon:
+                print "stop: gradient norm, epoch", epoch
                 break
 
             # update x_old and gradient_old
@@ -477,32 +475,31 @@ class Network:
     def trainLBFGS(self, data, targets, eval_data, eval_targets, lossObject, theta, c_1, c_2,
                    epsilon, m, regularization, epochs):
 
-        losses = np.array([]) # vector containing the loss of each epoch
-        misses = np.array([]) # vector containing the misclassification for each epoch
+        losses = np.array([])  # vector containing the loss of each epoch
+        misses = np.array([])  # vector containing the misclassification for each epoch
         losses_validation = np.array([])
         misses_validation = np.array([])
 
         # 1. compute initial gradient and initial Hessian approximation H_0
-        gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject,regularization)
+        gradient_old, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
         x_old = self.get_weights_as_vector()
 
         # append losses
-        losses = np.append(losses,loss)
-        misses = np.append(misses,miss)
+        losses = np.append(losses, loss)
+        misses = np.append(misses, miss)
         # compute validation error and append it
-        squared_error_validation_epoch, misClass_error_validation_epoch = \
-            self.validation_error(eval_data, eval_targets, lossObject)
+        loss_val_epoch, missclass_val_epoch = self.validation_error(eval_data, eval_targets, lossObject)
 
-        losses_validation = np.append(losses_validation,squared_error_validation_epoch)
-        misses_validation= np.append(misses_validation,misClass_error_validation_epoch)
+        losses_validation = np.append(losses_validation, loss_val_epoch)
+        misses_validation = np.append(misses_validation, missclass_val_epoch)
 
         # set of current s,y,p lists
         s_list = []
         y_list = []
         rho_list = []
 
-        print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
-        print "---------------------------------------------------------------------------"
+        #print "epoch\tMSE\t\t\tmisclass\t\tnorm(g)\t\tnorm(h)\t\trho\t\t\talpha"
+        #print "---------------------------------------------------------------------------"
 
         # main loop
         for epoch in range(epochs):
@@ -521,14 +518,16 @@ class Network:
             p = -r
 
             # line search
-            alpha = self.armijo_wolfe_line_search(1,c_1,c_2,data,gradient_old,loss,lossObject,p,targets,theta,regularization)
+            alpha = self.armijo_wolfe_line_search(1, c_1, c_2, data, gradient_old, loss,
+                                                  lossObject, p, targets, theta, regularization)
             if alpha == -1:
+                print "stop: line search, epoch", epoch
                 break
 
             # updating weights and compute x_k+1 = x_k + a_k*p_k
             delta = alpha * p
             x_new = self.update_weights_CM(delta)
-            gradient_new, loss, miss = self.calculate_gradient(data,targets,lossObject,regularization)
+            gradient_new, loss, miss = self.calculate_gradient(data, targets, lossObject, regularization)
 
             # append training / validation losses
             losses = np.append(losses, loss)
@@ -549,7 +548,7 @@ class Network:
             rho_k = 1 / np.dot(s_k, y_k)
 
             if rho_k < 0:
-                raise Exception ("rho_K < 0")
+                raise Exception("rho_K < 0")
 
             # append to vector
             s_list.append(s_k)
@@ -557,8 +556,8 @@ class Network:
             rho_list.append(rho_k)
 
             # print statistics
-            print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
-                  (epoch+1, loss, miss, norm(gradient_new), norm(H), rho_k, alpha)
+            #print "%d\t\t%f\t%f\t\t%f\t%f\t%f\t%f" % \
+            #      (epoch+1, loss, miss, norm(gradient_new), norm(H), rho_k, alpha)
 
             # update x_old and gradient_old
             x_old = x_new
@@ -566,9 +565,10 @@ class Network:
 
             # stop criterion
             if (norm(gradient_old)) < epsilon:
+                print "stop: norm gradient, epoch", epoch
                 break
 
-        return losses, misses,losses_validation,misses_validation
+        return losses, misses, losses_validation, misses_validation
 
     def backtracking_line_search(self, alpha, c_1, data, gradient_old, loss, lossObject, p, targets, theta,regularization):
         while True:

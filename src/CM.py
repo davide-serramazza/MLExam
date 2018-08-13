@@ -36,15 +36,22 @@ def main():
     lossObject = SquaredError("tangentH")
     parameter = GridSearchLBFGSParams(c_1,c_2,theta,reguralization, epsilon, m,epochs,arch,neuronsType)
     # perform grid search
-    grid_search_LBFGS(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,
-                   n_trials=3,save_in_dir="../temp/new-",)
+    #grid_search_LBFGS(parameter,lossObject,training_patterns,training_labels,validation_patterns,validation_labels,
+    #               n_trials=3,save_in_dir="../temp/new-",)
 
     # try BFGS
-    #tr_l, tr_ac, vl_l, vl_ac = network.trainBFGS(training_patterns, training_labels, validation_patterns, validation_labels,
-    #                  theta=0.9, c_1=0.0001, c_2=0.9, lossObject=lossObject, regularization=0.01, epochs=10)
-    #plt.plot(range(len(tr_l)), tr_l, "r", label="TR error")
-    #plt.plot(range(len(vl_l)), vl_l, "b", label="VL error")
-    #plt.show()
+    network = Network([17, 20, 10, 1], [InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron])
+    loss_tr, miss_tr, loss_vl, miss_vl = network.trainBFGS(training_patterns, training_labels,
+                                                 validation_patterns, validation_labels,
+                                                 theta=0.9, c_1=0.0001, c_2=0.9, lossObject=lossObject,
+                                                 regularization=0.01, epochs=50, epsilon=0.005)
+
+    #loss_tr, miss_tr, loss_vl, miss_vl = network.trainLBFGS(training_patterns, training_labels,
+    #                                             validation_patterns, validation_labels,
+    #                                             theta=0.9, c_1=0.0001, c_2=0.9, lossObject=lossObject,
+    #                                             regularization=0.01, epochs=10, epsilon=0.001, m=10)
+
+    plot_train_test_learning_curve(loss_vl, loss_tr, miss_vl, miss_tr)
 
 if __name__ == '__main__':
     main()

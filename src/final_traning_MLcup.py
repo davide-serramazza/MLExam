@@ -18,7 +18,7 @@ def main():
     # 4. define architecture and hyperparameters
     architecture = [10, 10, 2]
     neurons = [InputNeuron,SigmoidNeuron, OutputNeuron]
-    network = Network(architecture,neurons)
+    network = Network(architecture, neurons)
     epochs = 200
     learning_rate = 0.2
     batch_size = 256

@@ -33,7 +33,6 @@ class TestNeuralNetwork(unittest.TestCase):
         self.assert_weights(layers)
         self.assertEqual(loss_value.round(9) / 2, 0.298371109)  # divide the obtained loss by two
 
-
     def test_train(self):
         arch = [2, 2, 2]
         neuronsType = [InputNeuron, SigmoidNeuron, SigmoidNeuron]
@@ -41,9 +40,10 @@ class TestNeuralNetwork(unittest.TestCase):
         self.set_weights(network)
 
         data = [[0.05, 0.1]]
-        target = [[0.01, 0.99]]
-        tr_l, _, _, _ = network.train(data=data, targets=target, eval_data=[], eval_targets=[], lossObject=SquaredError("sigmoid"),
-                      epochs=1, learning_rate=0.5/2, batch_size=1, momentum=0, regularization=0)
+        target = np.array([[0.01, 0.99]])
+        tr_l, _, _, _ = network.train(data=data, targets=target,
+                                      eval_data=data, eval_targets=target, lossObject=SquaredError("sigmoid"),
+                                      epochs=1, learning_rate=0.5/2, batch_size=1, momentum=0, regularization=0)
 
         self.assert_weights(network.layers)
 
@@ -114,9 +114,9 @@ class TestNeuralNetwork(unittest.TestCase):
         network = Network([2,1], [InputNeuron, OutputNeuron])
         network.layers[1].neurons[0].weights = np.array([0.5,0.2,0.3])
         data = [[2,2]]
-        target = [[4]]
+        target = np.array([[4]])
         self.assertEqual(network.predict(data)[0][0], 1.7)
-        loss, _, _, _ = network.train(data, target, [], [], SquaredError("sigmoid"), 1, 0.01, 1, 0, 0)
+        loss, _, _, _ = network.train(data, target, data, target, SquaredError("sigmoid"), 1, 0.01, 1, 0, 0)
         self.assertEqual(np.round(loss[0], 2), 5.29)
         self.assertEqual(np.round(network.predict(data)[0][0], 3), 2.114)
 
@@ -124,15 +124,17 @@ class TestNeuralNetwork(unittest.TestCase):
         # AAA assumes that the interpolation takes the middle value between alpha_low and alpha_high
         network = Network([2, 1], [InputNeuron, OutputNeuron])
         network.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
-        data = [[2,2]]
-        target = [[4]]
-        loss, _, _, _ = network.trainBFGS(data, target, [], [], 0.9, 0.0001, 0.9, SquaredError("sigmoid"), 1, 0)
+        data = [[2, 2]]
+        target = np.array([[4]])
+        loss, _, _, _ = network.trainBFGS(data, target, data, target, theta=0.9, c_1=0.0001, c_2=0.9,
+                                          lossObject=SquaredError("sigmoid"), epochs=1, regularization=0,
+                                          epsilon=0.0001)
         self.assertEqual(np.round(loss[1], 8), 0.08265625)
         self.assertEqual(network.predict(data)[0][0], 4.2875)
 
     def test_bfgs_equal_lbfgs_if_m_is_big(self):
         data = [[2, 2], [1, 1], [3, 2], [2, 4]]
-        target = [[4], [2], [5], [6]]
+        target = np.array([[4], [2], [5], [6]])
         arch = [2, 1]
         neurons = [InputNeuron, OutputNeuron]
 
@@ -142,11 +144,12 @@ class TestNeuralNetwork(unittest.TestCase):
         network_bfgs.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
         network_lbfgs.layers[1].neurons[0].weights = np.array([0.5, 0.2, 0.3])
 
-        loss_bfgs, _, _, _ = network_bfgs.trainBFGS(data, target, [], [], theta=0.9, c_1=0.0001, c_2=0.9,
-                                                    lossObject=SquaredError("sigmoid"), epochs=5, regularization=0)
-        loss_lbfgs, _, _, _ = network_lbfgs.trainLBFGS(data, target, [], [], SquaredError("sigmoid"),
+        loss_bfgs, _, _, _ = network_bfgs.trainBFGS(data, target, data, target, theta=0.9, c_1=0.0001,
+                                                    c_2=0.9, epsilon=0.001, lossObject=SquaredError("sigmoid"),
+                                                    epochs=5, regularization=0)
+        loss_lbfgs, _, _, _ = network_lbfgs.trainLBFGS(data, target, data, target, SquaredError("sigmoid"),
                                                        m=10, epochs=5, regularization=0, theta=0.9,
-                                                       c_1=0.0001, c_2=0.9, alpha_0=1)
+                                                       c_1=0.0001, c_2=0.9, epsilon=0.001)
         # TODO this two should be the same
         print loss_bfgs
         print loss_lbfgs

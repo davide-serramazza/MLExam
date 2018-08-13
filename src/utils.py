@@ -3,12 +3,14 @@ import numpy as np
 
 
 def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclass_train):
+    plt.figure()
     plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.7, label='train loss')
     plt.plot(range(len(loss_test)), loss_test, '-D', alpha=0.7, label='test loss')
     plt.legend(loc='best')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
-    plt.show()
+
+    plt.figure()
     plt.plot(range(len(misclass_train)), 1 - misclass_train, '-o', alpha=0.7, label='train accuracy')
     plt.plot(range(len(misclass_test)), 1 - misclass_test, '-D', alpha=0.7, label='test accuracy')
     plt.legend(loc='best')
@@ -188,9 +190,9 @@ def divide_patterns_labels(partition, feature_col, target_col):
     return patterns, labels
 
 
-def holdout_cup(patterns, labels, frac_tr):
+def holdout_cup(patterns, labels, fraction_tr):
     # calculate size
-    len_partion = int(frac_tr * len(patterns))
+    len_partion = int(fraction_tr * len(patterns))
 
     # divide train/set
     first_partition_patterns = patterns[:len_partion]
