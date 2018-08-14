@@ -51,7 +51,7 @@ class SquaredError:
 
 class EuclideanError:
 
-    def __init__(self,normalizer=None):
+    def __init__(self, normalizer=None):
         self.normalizer = normalizer
 
     def value(self, target, output_net, weights, regularization):

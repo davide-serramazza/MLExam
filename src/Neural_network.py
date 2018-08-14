@@ -779,7 +779,7 @@ class Network:
         alpha_j = max(first, second)
         return alpha_j
 
-    def evaluate_phi_alpha(self, alpha_i, data, lossObject, p, targets,regularization):
+    def evaluate_phi_alpha(self, alpha_i, data, lossObject, p, targets, regularization):
         """
         Computes phi(alpha) = f(x_k + alpha_i * p_k), where
         - x_k are the current weights of the network
@@ -791,6 +791,7 @@ class Network:
         :param lossObject: object to compute the loss and its derivative
         :param p: descent direction
         :param targets: target variables of the patterns in the dataset
+        :param regularization
         :return:
             - gradient_alpha = nabla f(x_k + alpha_i * p_k)
             - loss_alpha     = phi(alpha_i)
@@ -799,16 +800,19 @@ class Network:
         actual_weights = copy.deepcopy(self.layers)
         # compute x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
         self.update_weights_BFGS(delta=alpha_i * p)
-        gradient_alpha, loss_alpha, _ = self.calculate_gradient(data, targets, lossObject,regularization)
+        gradient_alpha, loss_alpha, _ = self.calculate_gradient(data, targets, lossObject, regularization)
         # restore original weights
         self.layers = actual_weights
         return gradient_alpha, loss_alpha
 
-    #------------------- end BFGS & L-BFGS ----------------------------------
+    # ------------------- end BFGS & L-BFGS ----------------------------------
 
     def predict(self, data):
-        # predict target variables
-        # returns and array, where each element is an array of #output scores.
+        """
+        predict target variables, returns and array, where each element is an array of scores.
+        :param data: dataset which targets have to be predicted
+        :return: scores
+        """
         scores = []
         for pattern in data:
             self.forward(pattern)
@@ -844,9 +848,8 @@ class Network:
                             "expected " + str(self.architecture) +
                             "\ngiven " + str(architecture))
 
-        """ TODO maybe also check the type of neurons? (e.g. if the network that was trained
-            had Sigmoids, should we raise an error if the network we want to load has TanH. I think so.
-        """
+        # TODO maybe also check the type of neurons
+
         for layer in self.layers[1:]:  # skip input layer
             for neuron in layer.neurons[:-1]:  # skip bias neuron
                 neuron.weights = np.load(file_input)
@@ -854,8 +857,8 @@ class Network:
 
 def check_topology(architecture, neurons):
     """
-    Checks that the newly created neural network has a proper architectures
-    (i.e. the neurons of the first layer are InputNeurons)
+    Checks that the newly created neural network has a proper architecture
+    (i.e. the neurons of the first layer are InputNeurons ecc..)
     :param architecture: network architecture
     :param neurons: list of layers' neurons' type
     :return:
@@ -864,8 +867,6 @@ def check_topology(architecture, neurons):
         raise Exception("Architecture miss match")
     if not neurons[0].__name__ is InputNeuron.__name__:
         raise Exception("Input neurons have incorrect type")
-    #if not neurons[-1].__name__ is OutputNeuron.__name__:
-    #    raise Exception("Output neurons have incorrect type")
     for i in range(1, len(neurons) - 1):
         if neurons[i].__name__ is InputNeuron.__name__ or neurons[i].__name__ is OutputNeuron.__name__:
             raise Exception("Hidden neurons have incorrect type")

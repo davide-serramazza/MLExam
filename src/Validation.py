@@ -15,20 +15,22 @@ def holdout(frac, train_data):
     """
     # shuffle data set
     train_data = train_data.reindex(np.random.permutation(train_data.index))
-    # devide in positive and negative examples
+    # divide in positive and negative examples
     positive_set = train_data[train_data["label"] == 1]
     negative_set = train_data[train_data["label"] == 0]
 
     # compute length of partitions given frac
     len_pos_training = int(np.round(frac * len(positive_set)))  # for training set
     len_neg_training = int(np.round(frac * len(negative_set)))  # for validation set
-    len_pos_validation = len(positive_set) - len_pos_training        # for training set
-    len_neg_validation = len(negative_set) - len_neg_training        # for validation set
+    len_pos_validation = len(positive_set) - len_pos_training   # for training set
+    len_neg_validation = len(negative_set) - len_neg_training   # for validation set
 
     positive_set_partition = positive_set.head(len_pos_training)
     negative_set_partition = negative_set.head(len_neg_training)
-    positive_set_other = positive_set.head(len_pos_validation)
-    negative_set_other = negative_set.head(len_neg_validation)
+
+    positive_set_other = positive_set.tail(len_pos_validation)
+    negative_set_other = negative_set.tail(len_neg_validation)
+
     training_set = pd.concat([positive_set_partition, negative_set_partition])
     validation_set = pd.concat([positive_set_other, negative_set_other])
 
