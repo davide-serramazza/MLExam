@@ -146,10 +146,10 @@ def lbfgs_all_grid_search():
     print "\nLBFGS-MONK3\n"
     lbfgs_training_monk(train_file=monk3_train_file, grid_search_param=param_lbfgs_m3, save_dir=lbfgs_dir + monk3)
     print "\nLBFGS-CUP\n"
-    #tr_patterns, tr_targets, vl_patterns, vl_targets = read_cup_data()
-    #grid_search_LBFGS(param_lbfgs_cup, EuclideanError(), tr_patterns, tr_targets,
-    #                  vl_patterns, vl_targets,
-    #                  n_trials=5, save_in_dir=lbfgs_dir + cup)
+    tr_patterns, tr_targets, vl_patterns, vl_targets = read_cup_data()
+    grid_search_LBFGS(param_lbfgs_cup, EuclideanError(), tr_patterns, tr_targets,
+                      vl_patterns, vl_targets,
+                      n_trials=5, save_in_dir=lbfgs_dir + cup)
 
 
 def bfgs_all_grid_search():

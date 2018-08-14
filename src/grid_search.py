@@ -53,6 +53,11 @@ class GridSearchLBFGSParams(GridSearchBFGSParams):
                                       epoch, architecture, neurons)
         self.m = m
 
+    def experiments_number(self):
+        return len(self.c_1) * len(self.c_2) \
+               * len(self.theta) * len(self.regularization) \
+               * len(self.m) * len(self.architecture) * len(self.epsilon)
+
 #### GRID SEARCH IMPLEMENTATIONS ####
 
 
@@ -73,9 +78,7 @@ def grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, 
     if not isinstance(parameter, GridSearchLBFGSParams):
         raise Exception("grid search parameters of class %s instead of GridSearchLBFGSParams", type(parameter))
 
-    total_experiments = len(parameter.c_1) * len(parameter.c_2) \
-                        * len(parameter.theta) * len(parameter.regularization) \
-                        * len(parameter.m) * len(parameter.architecture) * len(parameter.epsilon)
+    total_experiments = parameter.experiments_number()
     print "BEGIN GRID SEARCH L-BFGS: %d experiments" % total_experiments
 
     n_figure = 0  # index of figures
@@ -100,10 +103,10 @@ def grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, 
                                     # train
                                     squared_error, misClass_error, \
                                     squared_error_validation, misClass_error_validation = \
-                                        network.trainLBFGS(data=tr_patterns, targets=tr_labels, eval_data=vl_patterns,
-                                                           eval_targets=vl_labels, epsilon=eps,
-                                                           lossObject=loss_obj, theta=theta, c_1=c_1, c_2=c_2,
-                                                           m=m, epochs=parameter.epoch, regularization=reg)
+                                        network.train_LBFGS(x_train=tr_patterns, y_train=tr_labels, x_test=vl_patterns,
+                                                            y_test=vl_labels, epsilon=eps,
+                                                            lossObject=loss_obj, theta=theta, c_1=c_1, c_2=c_2,
+                                                            m=m, epochs=parameter.epoch, regularization=reg)
 
                                     # eventually pad vector
                                     diff = squared_error_average.shape[0] - squared_error.shape[0]
@@ -118,18 +121,18 @@ def grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, 
                                     misClass_error_validation = np.pad(misClass_error_validation, (0, diff), 'constant',
                                                                        constant_values=(misClass_error_validation[-1]))
 
-                                    # append result of single epoch in list previously created
+                                    # add result of single epoch in list previously created
                                     squared_error_average += squared_error
                                     misClass_error_average += misClass_error
                                     squared_error_validation_average += squared_error_validation
                                     misClass_error_validation_average += misClass_error_validation
 
 
-                                    # taking mean error over trials and over patterns
+                                # taking mean error over trials
                                 squared_error_average /= float(n_trials)
                                 misClass_error_average /= float(n_trials)
-                                squared_error_validation_average /= float(n_trials) * len(vl_patterns)
-                                misClass_error_validation_average /= float(n_trials) * len(vl_patterns)
+                                squared_error_validation_average /= float(n_trials)
+                                misClass_error_validation_average /= float(n_trials)
 
                                 print_result_LBFGS(misClass_error_average, misClass_error_validation_average,
                                                    squared_error_average, squared_error_validation_average,
