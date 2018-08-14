@@ -4,7 +4,7 @@ import numpy as np
 
 def holdout(frac, train_data):
     """
-    Splits train_data in training set and validation set. Each set has the property that
+    Splits the dataframe 'train_data' in training set and validation set. Each set has the property that
     the positive and negative example follow roughly the same distribution of the original set.
     The training set is 'frac' percent of the data whereas the validation set is the remaining
     (1-frac) percent.

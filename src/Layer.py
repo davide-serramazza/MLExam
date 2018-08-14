@@ -23,6 +23,10 @@ class Layer:
         self.neurons.append(BiasNeuron())
 
     def getOutput(self):
+        """
+        returns neurons output
+        :return:
+        """
         return [neuron.getOutput() for neuron in self.neurons]
 
     def dump_weights(self, file_output):

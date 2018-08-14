@@ -3,6 +3,7 @@ from utils import *
 
 #### GRID SEARCH PARAMETERS ####
 
+
 class GridSearchSGDParams:
     """
     specifies the hyperparameters to tune in SGD grid search
@@ -15,6 +16,13 @@ class GridSearchSGDParams:
         self.neurons = neurons
         self.regularization = regularization
         self.epoch = epoch
+
+    def experiments_number(self):
+        """
+        :return: total number of experiments
+        """
+        return len(self.regularization) * len(self.learning_rate) \
+               * len(self.momentum) * len(self.batch_size) * len(self.architecture)
 
 
 class GridSearchBFGSParams:
@@ -41,9 +49,8 @@ class GridSearchLBFGSParams(GridSearchBFGSParams):
                                       epoch, architecture, neurons)
         self.m = m
 
-
-
 #### GRID SEARCH IMPLEMENTATIONS ####
+
 
 def grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, vl_labels, n_trials, save_in_dir):
     """
@@ -223,8 +230,7 @@ def grid_search_SGD(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, vl
     if not isinstance(parameter, GridSearchSGDParams):
         raise Exception("grid search parameters of class %s instead of GridSearchSGDParams", type(parameter))
 
-    total_experiments = len(parameter.regularization) * len(parameter.learning_rate) \
-                        * len(parameter.momentum) * len(parameter.batch_size) * len(parameter.architecture)
+    total_experiments = parameter.experiments_number()
     print "BEGIN GRID SEARCH SGD: %d experiments" % total_experiments
 
     n_figure = 0  # index of figures
@@ -247,9 +253,9 @@ def grid_search_SGD(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, vl
                             # train
                             squared_error, misClass_error, \
                             squared_error_validation, misClass_error_validation = \
-                                network.train(data=tr_patterns, targets=tr_labels, eval_data=vl_patterns,
-                                              eval_targets=vl_labels, lossObject=loss_obj, epochs=parameter.epoch,
-                                              learning_rate=lr, batch_size=bat, momentum=mo, regularization=reg)
+                                network.train_SGD(x_train=tr_patterns, y_train=tr_labels,
+                                                  x_test=vl_patterns, y_test=vl_labels, lossObject=loss_obj,
+                                                  epochs=parameter.epoch, learning_rate=lr, batch_size=bat, momentum=mo, regularization=reg)
 
                             # append result of single epoch in list previously created
                             squared_error_average += squared_error
@@ -257,11 +263,11 @@ def grid_search_SGD(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, vl
                             squared_error_validation_average += squared_error_validation
                             misClass_error_validation_average += misClass_error_validation
 
-                        # taking mean error over trials and over patterns
-                        squared_error_average /= float(n_trials) * len(tr_patterns)
-                        misClass_error_average /= float(n_trials) * len(tr_patterns)
-                        squared_error_validation_average /= float(n_trials) * len(vl_patterns)
-                        misClass_error_validation_average /= float(n_trials) * len(vl_patterns)
+                        # taking mean error over trials
+                        squared_error_average /= float(n_trials)
+                        misClass_error_average /= float(n_trials)
+                        squared_error_validation_average /= float(n_trials)
+                        misClass_error_validation_average /= float(n_trials)
 
                         print_result_SGD(misClass_error_average, misClass_error_validation_average,
                                          squared_error_average, squared_error_validation_average,
