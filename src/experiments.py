@@ -173,10 +173,10 @@ def bfgs_all_grid_search():
     print "\nBFGS-MONK3\n"
     bfgs_training_monk(train_file=monk3_train_file, grid_search_param=param_bfgs_m3, save_dir=bfgs_dir + monk3)
     print "\nBFGS-CUP\n"
-    #tr_patterns, tr_targets, vl_patterns, vl_targets = read_cup_data()
-    #grid_search_BFGS(param_bfgs_cup, EuclideanError(), tr_patterns, tr_targets,
-    #                  vl_patterns, vl_targets,
-    #                  n_trials=5, save_in_dir=lbfgs_dir + cup)
+    tr_patterns, tr_targets, vl_patterns, vl_targets = read_cup_data()
+    grid_search_BFGS(param_bfgs_cup, EuclideanError(), tr_patterns, tr_targets,
+                      vl_patterns, vl_targets,
+                      n_trials=5, save_in_dir=lbfgs_dir + cup)
 
 if __name__ == '__main__':
     # architectures

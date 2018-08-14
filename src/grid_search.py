@@ -39,6 +39,10 @@ class GridSearchBFGSParams:
         self.regularization = regularization
         self.epsilon = epsilon
 
+    def experiments_number(self):
+        return len(self.c_1) * len(self.c_2) * len(self.theta) * len(self.regularization) \
+               * len(self.architecture) * len(self.epsilon)
+
 
 class GridSearchLBFGSParams(GridSearchBFGSParams):
     """
@@ -151,9 +155,7 @@ def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, v
     if not isinstance(parameter, GridSearchBFGSParams):
         raise Exception("grid search parameters of class %s instead of GridSearchBFGSParams", type(parameter))
 
-    total_experiments = len(parameter.c_1) * len(parameter.c_2) \
-                        * len(parameter.theta) * len(parameter.regularization) \
-                        * len(parameter.architecture) * len(parameter.epsilon)
+    total_experiments = parameter.experiments_number()
     print "BEGIN GRID SEARCH BFGS: %d experiments" % total_experiments
 
     n_figure = 0  # index of figures
@@ -177,9 +179,9 @@ def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, v
                                 # train
                                 squared_error, misClass_error, \
                                 squared_error_validation, misClass_error_validation = \
-                                    network.trainBFGS(data=tr_patterns, targets=tr_labels, eval_data=vl_patterns,
-                                                      eval_targets=vl_labels, lossObject=loss_obj, theta=theta, c_1=c_1,
-                                                      c_2=c_2, epochs=parameter.epoch, regularization=reg, epsilon=eps)
+                                    network.train_BFGS(x_train=tr_patterns, y_train=tr_labels, x_test=vl_patterns,
+                                                       y_test=vl_labels, lossObject=loss_obj, theta=theta, c_1=c_1,
+                                                       c_2=c_2, epochs=parameter.epoch, regularization=reg, epsilon=eps)
 
                                 # eventually pad vector
                                 diff = squared_error_average.shape[0] - squared_error.shape[0]
@@ -200,11 +202,11 @@ def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, v
                                 squared_error_validation_average += squared_error_validation
                                 misClass_error_validation_average += misClass_error_validation
 
-                            # taking mean error over trials and over patterns
+                            # taking mean error over trials
                             squared_error_average /= float(n_trials)
                             misClass_error_average /= float(n_trials)
-                            squared_error_validation_average /= float(n_trials) * len(vl_patterns)
-                            misClass_error_validation_average /= float(n_trials) * len(vl_patterns)
+                            squared_error_validation_average /= float(n_trials)
+                            misClass_error_validation_average /= float(n_trials)
 
                             print_result_BFGS(misClass_error_average, misClass_error_validation_average,
                                             squared_error_average, squared_error_validation_average,
