@@ -106,13 +106,13 @@ def sgd_all_grid_search():
                                     regularization=regularization, epoch=epochs_sgd)
     #### SGD - MONK 1 ###
     print "\nSGD-MONK1\n"
-    #sgd_training_monk(train_file=monk1_train_file, grid_search_param=param_m1, save_dir=sgd_dir + monk1)
+    sgd_training_monk(train_file=monk1_train_file, grid_search_param=param_m1, save_dir=sgd_dir + monk1)
     #### SGD - MONK 2 ###
     print "\nSGD-MONK2\n"
-    #sgd_training_monk(train_file=monk2_train_file, grid_search_param=param_m2, save_dir=sgd_dir + monk2)
+    sgd_training_monk(train_file=monk2_train_file, grid_search_param=param_m2, save_dir=sgd_dir + monk2)
     #### SGD - MONK 3 ###
     print "\nSGD-MONK3\n"
-    #sgd_training_monk(train_file=monk3_train_file, grid_search_param=param_m3, save_dir=sgd_dir + monk3)
+    sgd_training_monk(train_file=monk3_train_file, grid_search_param=param_m3, save_dir=sgd_dir + monk3)
     #### SGD - CUP ###
     print "\nSGD-CUP\n"
     # 1. read dataset

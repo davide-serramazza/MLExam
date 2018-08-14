@@ -54,7 +54,7 @@ class EuclideanError:
     def __init__(self, normalizer=None):
         self.normalizer = normalizer
 
-    def value(self, target, output_net, weights, regularization):
+    def value(self, target, output_net, weights=[], regularization=0):
 
         if self.normalizer is not None:
             # de-normalize
