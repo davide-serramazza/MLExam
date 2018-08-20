@@ -647,20 +647,18 @@ class Network:
         if not phi_p_0 < 0:
             raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
 
-        alpha_max = 500
+        max_iter = 100
         alpha_i = 1
         alpha_old = 0  # alpha_0 = 0
 
-        i = 1
-        while True:
-
+        for i in range(max_iter):
             # 1. evaluate phi(alpha_i)
             gradient_alpha_i, phi_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets, regularization)
 
             # 2. if phi(alpha_i) > phi(0) + c1 * alpha_i * phi_p(0) or [phi(alpha_i) >= phi(alpha_{i-1}) and i > 1]
-            if phi_alpha_i > phi_0 + c_1 * alpha_i * phi_p_0 or (i > 1 and phi_alpha_i >= phi_alpha_old):
+            if phi_alpha_i > phi_0 + c_1 * alpha_i * phi_p_0 or (i > 0 and phi_alpha_i >= phi_alpha_old):
                 alpha_star = self.zoom(alpha_old, alpha_i, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization)
-                break
+                return alpha_star
 
             # 3. evaluate phi'(alpha_i) = \nabla f(x_k + alpha * p_k) * p_k
             phi_p_alpha_i = np.dot(gradient_alpha_i, p)
@@ -668,23 +666,21 @@ class Network:
             # 4. if |phi'(alpha_i)| <= - c_2 * phi'(0) (strong Wolfe satisfied?)
             if abs(phi_p_alpha_i) <= - c_2 * phi_p_0:
                 alpha_star = alpha_i
-                break
+                return alpha_star
 
             # 5. if phi'(alpha_i) >= 0 (if the derivative is positive)
             if phi_p_alpha_i >= 0:
                 alpha_star = self.zoom(alpha_i, alpha_old, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization)
-                break
+                return alpha_star
 
             # save previous results and iterate
             alpha_old = alpha_i
             phi_alpha_old = phi_alpha_i
-            i += 1
 
-            # 6. choose alpha_{i+1} in (alpha_i, alpha_max)
-            tmp_alpha = alpha_i / theta
-            alpha_i = tmp_alpha if tmp_alpha < alpha_max else alpha_max
+            # 6. choose alpha_{i+1}
+            alpha_i = alpha_i / theta
 
-        return alpha_star
+        return -1
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization):
         """

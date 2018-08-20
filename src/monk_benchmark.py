@@ -38,7 +38,7 @@ def main():
 
     start_time = time.time()
     grid_search_SGD(param, lossObject, training_patterns, training_labels,
-                validation_patterns, validation_labels, 5, "../temp/does_")
+                validation_patterns, validation_labels, 5, "../temp/")
     elapsed_time = time.time() - start_time
     print "time in grid search:", elapsed_time
 

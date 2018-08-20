@@ -4,11 +4,14 @@ import sys
 
 # superclass abstract Neuron
 class Neuron(object):
+    """
+    Abstract Neuron class. Its subclasses implements the activation function and its derivative.
+    """
     def __init__(self, len_weights):
         """
         Creates and initializes a neuron.
 
-        :param len_weights: lenght of the weights
+        :param len_weights: length of the weights
         """
         self.output = 0.0
         self.weights = np.random.uniform(low=-0.7, high=0.7, size=len_weights)

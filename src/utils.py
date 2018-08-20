@@ -3,12 +3,21 @@ import numpy as np
 
 
 def shuffle_dataset(data, targets):
-    permumation = np.random.permutation(len(data))
-    data_shuffled = [data[i] for i in permumation]
-    targets_shuffled = [targets[i] for i in permumation]
+    permutation = np.random.permutation(len(data))
+    data_shuffled = [data[i] for i in permutation]
+    targets_shuffled = [targets[i] for i in permutation]
     return data_shuffled, targets_shuffled
 
+
 def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclass_train):
+    """
+    plots loss and accuracy learning curves on training and test set
+    :param loss_test:
+    :param loss_train:
+    :param misclass_test:
+    :param misclass_train:
+    :return:
+    """
     plt.figure()
     plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.7, label='train loss')
     plt.plot(range(len(loss_test)), loss_test, '-D', alpha=0.7, label='test loss')
@@ -29,7 +38,7 @@ def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclas
 def transf_value(value):
     """
     transform value of variable to suitable string
-    :param value: string to be transformef
+    :param value: string to be transformed
     :return:
     """
     return str(value).replace(".",",")
@@ -37,7 +46,7 @@ def transf_value(value):
 
 def tranf_arc(architecture):
     """
-    transoform architecture value to suitable string
+    transform architecture value to suitable string
     :param architecture: architecture to be transformed
     :return:
     """
@@ -141,7 +150,7 @@ def print_result_SGD(misClass_error, misClass_error_evaluation,
 
 #### ONE-HOT ENCODING AND OTHER TRANSFORMATIONS USED IN MONK BENCHMARK  ######
 
-def decode(data,encoding):
+def decode(data, encoding):
     """
     Decode examples encoded with 1-of-k
 
@@ -150,9 +159,9 @@ def decode(data,encoding):
     :return: decoded data
     """
     ris = []
-    for i in range (len(data)):
-        for j in range(1,encoding[i]+1):
-            if j==data[i]:
+    for i in range(len(data)):
+        for j in range(1, encoding[i]+1):
+            if j == data[i]:
                 ris.append(1)
             else:
                 ris.append(0)

@@ -63,16 +63,16 @@ class GridSearchLBFGSParams(GridSearchBFGSParams):
 
 def grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, vl_labels, n_trials, save_in_dir):
     """
-    grid search for optimal hyperparameter
-    :param network: network to be trained
+    grid search for optimal hyperparameters selection. Saves the plots of the results in directory.
+
+    :param parameter: grid search object specifying the parameters
     :param loss_obj: loss used
-    :param reguaritazion:
     :param n_trials: n of random trails for each value
-    :param tr_patterns: traning set patterns
-    :param tr_labels: traning set target
+    :param tr_patterns: training set patterns
+    :param tr_labels: training set target
     :param vl_patterns: validation set patterns
     :param vl_labels: validation set target
-    :param directory where to save results (learning curves)
+    :param save_in_dir: where to save results (learning curves)
     :return:
     """
     if not isinstance(parameter, GridSearchLBFGSParams):
@@ -98,7 +98,7 @@ def grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, 
                                 misClass_error_validation_average = np.zeros(parameter.epoch + 1)
                                 # n_trials then average
                                 for n in range(n_trials):
-                                    # buid a new network
+                                    # build a new network
                                     network = Network(arc, neur)
                                     # train
                                     squared_error, misClass_error, \
@@ -143,18 +143,18 @@ def grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, 
 
 def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, vl_labels, n_trials, save_in_dir):
     """
-    grid search for optimal hyperparameter
-    :param network: network to be trained
-    :param loss_obj: loss used
-    :param reguaritazion:
-    :param n_trials: n of random trails for each value
-    :param tr_patterns: traning set patterns
-    :param tr_labels: traning set target
-    :param vl_patterns: validation set patterns
-    :param vl_labels: validation set target
-    :param directory where to save results (learning curves)
-    :return:
-    """
+       grid search for optimal hyperparameters selection. Saves the plots of the results in directory.
+
+       :param parameter: grid search object specifying the parameters
+       :param loss_obj: loss used
+       :param n_trials: n of random trails for each value
+       :param tr_patterns: training set patterns
+       :param tr_labels: training set target
+       :param vl_patterns: validation set patterns
+       :param vl_labels: validation set target
+       :param save_in_dir: where to save results (learning curves)
+       :return:
+       """
     if not isinstance(parameter, GridSearchBFGSParams):
         raise Exception("grid search parameters of class %s instead of GridSearchBFGSParams", type(parameter))
 
@@ -220,18 +220,17 @@ def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, v
 
 def grid_search_SGD(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, vl_labels, n_trials, save_in_dir):
     """
-    grid search for optimal hyperparameter
-    :param network: network to be trained
-    :param loss_obj: loss used
-    :param reguaritazion:
-    :param n_trials: n of random trails for each value
-    :param tr_patterns: traning set patterns
-    :param tr_labels: traning set target
-    :param vl_patterns: validation set patterns
-    :param vl_labels: validation set target
-    :param directory where to save results (learning curves)
-    :return:
-    """
+       grid search for optimal hyperparameters selection. Saves the plots of the results in directory.
+       :param parameter: grid search object specifying the parameters
+       :param loss_obj: loss used
+       :param n_trials: n of random trails for each value
+       :param tr_patterns: training set patterns
+       :param tr_labels: training set target
+       :param vl_patterns: validation set patterns
+       :param vl_labels: validation set target
+       :param save_in_dir: where to save results (learning curves)
+       :return:
+       """
     if not isinstance(parameter, GridSearchSGDParams):
         raise Exception("grid search parameters of class %s instead of GridSearchSGDParams", type(parameter))
 

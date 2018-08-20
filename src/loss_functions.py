@@ -3,7 +3,7 @@ import numpy as np
 
 class SquaredError:
 
-    def __init__(self, t):
+    def __init__(self, t=""):
         self.type = t
 
     def value(self, target, output_net, weights=[], regularization=0):
@@ -37,6 +37,8 @@ class SquaredError:
             return np.sum(np.square((target - np.round(output_net))))
         if self.type == "tangentH":
             return np.sum(np.square(target - np.sign(output_net)[0]))/4
+        else:
+            return np.Inf
 
     def derivative(self, target, output_net):
         """
@@ -55,6 +57,14 @@ class EuclideanError:
         self.normalizer = normalizer
 
     def value(self, target, output_net, weights=[], regularization=0):
+        """
+        computes Euclidean error between targets and output
+        :param target: target vector
+        :param output_net: output vector
+        :param weights: network weights
+        :param regularization: regularization strength
+        :return:
+        """
 
         if self.normalizer is not None:
             # de-normalize
@@ -70,6 +80,12 @@ class EuclideanError:
         return data_error + regularization_error
 
     def derivative(self, target, output_net):
+        """
+        computes derivative of Squared Error
+        :param target:
+        :param output_net:
+        :return:
+        """
         # return derivative of MSE
         return 2 * (output_net - target)
 

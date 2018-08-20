@@ -1,5 +1,6 @@
 from ml_cup import *
 
+
 def main():
 
     # 1. read file train set
@@ -29,9 +30,9 @@ def main():
     losses_train = []
     losses_eval = []
     for e in range(epochs):
-        error_train_epoch, _, error_evaluation_epoch, _ = network.train(
-            data=development_patterns, targets=development_labels, eval_data=test_patterns, eval_targets=test_targets,
-            lossObject=lossObject, epochs=1, learning_rate=learning_rate, batch_size=batch_size,
+        error_train_epoch, _, error_evaluation_epoch, _ = network.train_SGD(
+            x_train=development_patterns, y_train=development_labels, x_test=test_patterns,
+            y_test=test_targets, lossObject=lossObject, epochs=1, learning_rate=learning_rate, batch_size=batch_size,
             momentum=momentum, regularization=regularization)
 
         losses_train.append(error_train_epoch)
@@ -58,7 +59,7 @@ def main():
     plt.legend(['training set', "validation set"])
     plt.xlabel("epochs")
     plt.ylabel(lossObject.__class__.__name__)
-    s = "../image/MLCup/FINAL_model-" + "lr_" + transf_value(learning_rate) + \
+    s = "../image/FINAL_model-" + "lr_" + transf_value(learning_rate) + \
         "-mo_" + transf_value(momentum) + "-bat:" + transf_value(batch_size) + \
         "-reg_" + transf_value(regularization) + "-arc_" + tranf_arc(architecture)
     plt.tight_layout()  # minimize overlap of subplots
