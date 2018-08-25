@@ -11,7 +11,7 @@ def shuffle_dataset(data, targets):
 
 def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclass_train):
     """
-    plots loss and accuracy learning curves on training and test set
+    plots loss (in log-scale) and accuracy learning curves on training and test set
     :param loss_test:
     :param loss_train:
     :param misclass_test:
@@ -21,6 +21,7 @@ def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclas
     plt.figure()
     plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.7, label='train loss')
     plt.plot(range(len(loss_test)), loss_test, '-D', alpha=0.7, label='test loss')
+    plt.yscale('log')
     plt.legend(loc='best')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
