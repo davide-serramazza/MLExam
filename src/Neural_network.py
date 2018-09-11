@@ -252,8 +252,10 @@ class Network:
                 # take only batch_size examples
                 batch_pattern = data_shuffled[i:i + batch_size]
                 batch_target = targets_shuffled[i:i + batch_size]
+
                 # gradient_w_batch = sum of gradient_w for the epoch
                 gradient_w_batch = self.zero_init_gradient()
+
                 # train, compute gradient for a batch
                 for pattern, t in zip(batch_pattern, batch_target):
                     self.forward(pattern)
@@ -263,6 +265,7 @@ class Network:
                     gradient_w_batch += gradient_w
 
                 gradient_w_batch /= len(batch_pattern)  # take mean gradient across batch
+
                 # update neural network weights after a batch of training example
                 # save previous weight update
                 prev_delta = self.update_weights_SGD(gradient_w=gradient_w_batch,
@@ -279,6 +282,7 @@ class Network:
 
             losses_val = np.append(losses_val, loss_val_epoch)
             missclass_val = np.append(missclass_val, missclass_val_epoch)
+
 
         # end of training - getting average
         losses /= float(len(x_train))

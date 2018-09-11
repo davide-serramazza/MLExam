@@ -19,9 +19,9 @@ def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclas
     :return:
     """
     plt.figure()
+    plt.yscale('log')
     plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.7, label='train loss')
     plt.plot(range(len(loss_test)), loss_test, '-D', alpha=0.7, label='test loss')
-    plt.yscale('log')
     plt.legend(loc='best')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')

@@ -31,7 +31,7 @@ def main():
     theta = [0.9]
     reguralization = [0.00001, 0.0001, 0.001, 0.01]
     m = [40]
-    epochs = 10
+    epochs = 20
     epsilon = [0.001]
     lossObject = SquaredError("tangentH")
     parameter = GridSearchLBFGSParams(c_1,c_2,theta,reguralization, epsilon, m,epochs,arch,neuronsType)
@@ -43,8 +43,8 @@ def main():
     network = Network([17, 20, 10, 1], [InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron])
     loss_tr, miss_tr, loss_vl, miss_vl = network.train_BFGS(training_patterns, training_labels,
                                                  validation_patterns, validation_labels,
-                                                 theta=0.9, c_1=0.0001, c_2=0.9, lossObject=lossObject,
-                                                 regularization=0.01, epochs=50, epsilon=0.005)
+                                                 theta=0.5, c_1=0.0001, c_2=0.9, lossObject=lossObject,
+                                                 regularization=0.0, epochs=50, epsilon=0.001)
 
     #loss_tr, miss_tr, loss_vl, miss_vl = network.trainLBFGS(training_patterns, training_labels,
     #                                             validation_patterns, validation_labels,
