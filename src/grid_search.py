@@ -170,7 +170,7 @@ def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, v
                     for reg in parameter.regularization:
                         for arc, neur in zip(parameter.architecture, parameter.neurons):
                             print n_figure, "out of", total_experiments, "experiments"
-                            # initialize lists for saving reslut
+                            # initialize lists for saving results
                             squared_error_average = np.zeros(parameter.epoch + 1)
                             misClass_error_average = np.zeros(parameter.epoch + 1)
                             squared_error_validation_average = np.zeros(parameter.epoch + 1)

@@ -34,6 +34,32 @@ def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclas
     plt.ylabel('Accuracy')
     plt.show()
 
+
+def plot_norm_gradient_vs_iterations(gradient_norm_list):
+    #plt.yscale('log')
+    plt.plot(range(len(gradient_norm_list)), gradient_norm_list, '-o', alpha=0.7, label='norm gradient')
+    plt.legend(loc='best')
+    plt.xlabel('Iterations')
+    plt.ylabel(r'$||\nabla E(w)||$')
+    plt.show()
+
+
+def plot_alpha_vs_iterations(alpha_list):
+    plt.plot(range(len(alpha_list)), alpha_list, '-o', alpha=0.7, label='step size ' + r'$\alpha$')
+    plt.legend(loc='best')
+    plt.xlabel('Iterations')
+    plt.ylabel(r'$\alpha$')
+    plt.show()
+
+
+def plot_relative_gap_vs_iterations(train_loss_list):
+    #min_value = ..
+    plt.plot(range(len(train_loss_list)), train_loss_list, '-o', alpha=0.7, label='relative gap')
+    plt.legend(loc='best')
+    plt.xlabel('Iterations')
+    plt.ylabel(r'$|E(w) - E(w*)|$')
+    plt.show()
+
 #### transform values to string format (to create file name of image) #####
 
 def transf_value(value):

@@ -9,7 +9,7 @@ def main():
     targets_col = ["target_x", "target_y"]
 
     # 2. divide pattern and targets
-    patterns,labels = divide_patterns_labels(df,features_col,targets_col)
+    patterns, labels = divide_patterns_labels(df,features_col,targets_col)
 
     # 3. divide in development set and test set
     development_patterns, development_labels, test_patterns, test_targets = holdout_cup(patterns,labels, 0.8)

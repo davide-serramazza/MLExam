@@ -25,7 +25,7 @@ def main():
     neurons = [InputNeuron, TanHNeuron, TanHNeuron, TanHNeuron]
     network = Network(architecture, neurons)
     loss_object = SquaredError("tangentH")
-    epochs = 30
+    epochs = 50
     learning_rate = 0.01
     batch_size = 16
     momentum = 0.7
@@ -33,8 +33,8 @@ def main():
 
     tic = time()
     # 5. train
-    loss_train, misclass_train, loss_test, misclass_test = network.train(
-            data=train_patterns, targets=train_labels, eval_data=test_patterns,eval_targets=test_labels,
+    loss_train, misclass_train, loss_test, misclass_test = network.train_SGD(
+            x_train=train_patterns, y_train=train_labels, x_test=test_patterns, y_test=test_labels,
             lossObject=loss_object, epochs=epochs, learning_rate=learning_rate, batch_size=batch_size,
             momentum=momentum, regularization=regularization)
     toc = time()

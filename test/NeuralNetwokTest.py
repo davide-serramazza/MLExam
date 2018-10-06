@@ -105,7 +105,7 @@ class TestNeuralNetwork(unittest.TestCase):
         np.testing.assert_array_equal(network.layers[2].neurons[1].weights, weights_2_1)
 
     def test_dummy_forward(self):
-        network = Network([1,1], [InputNeuron, OutputNeuron])
+        network = Network([1, 1], [InputNeuron, OutputNeuron])
         network.layers[1].neurons[0].weights = [2, 1]
         self.assertEqual(11, network.forward([5])[0])
         self.assertEqual(7, network.forward([3])[0])
