@@ -217,7 +217,7 @@ class Network:
         return loss_epoch, missclass_epoch
 
     def train_SGD(self, x_train, y_train, x_test, y_test, lossObject, epochs, learning_rate,
-                  batch_size, momentum, regularization):
+                  batch_size, momentum, regularization, epsilon):
         """
         Performs the training of the neural network.
         :param x_train: traning patterns
@@ -287,7 +287,8 @@ class Network:
             missclass_val = np.append(missclass_val, missclass_val_epoch)
 
             # condition stop
-            if gradient_norm_epoch < 0.00001:
+            if gradient_norm_epoch < epsilon:
+                print "stop: norm gradient. Epoch", epoch
                 break
 
         # end of training - average over training set
@@ -347,7 +348,7 @@ class Network:
         loss_batch, miss_batch = 0, 0
 
         for pattern, t in zip(data, targets):
-            # calculate derivative for every patten, then append to gradient_w_batch
+            # calculate derivative for every pattern, then append to gradient_w_batch
             self.forward(pattern)
             gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization)
 
@@ -387,11 +388,9 @@ class Network:
 
         # rho_k = 1/(y_k^t*s_k)
         rho_k = float(1) / np.dot(s_k, y_k)
-        if rho_k < 0:
-            raise Exception("rho_k < 0")
 
         # V_k = I - rho_k * s_k * y_k^t
-        tmp = rho_k * np.outer(s_k, y_k)
+        tmp = rho_k * np.outer(y_k, s_k)
         V_k = np.identity(shape) - tmp
 
         # H_{k+1} = V_k^t * H_k * V_k + rho_k * s_k * s_k^t
@@ -419,6 +418,7 @@ class Network:
         norm_gradient.append(np.linalg.norm(gradient_old))
 
         for epoch in range(epochs):
+            print epoch, "out of", epochs
             # 1. compute search direction p = -H * gradient
             p = - H.dot(gradient_old)
 
@@ -514,7 +514,7 @@ class Network:
 
         # main loop
         for epoch in range(epochs):
-
+            print epoch, "out of", epochs
             # calculate central matrix {H_k}^0
             if epoch == 0:
                 H = np.identity(gradient_old.shape[0])
@@ -530,6 +530,7 @@ class Network:
             # line search
             alpha = self.armijo_wolfe_line_search(c_1, c_2, x_train, gradient_old, loss,
                                                   lossObject, p, y_train, theta, regularization)
+
             if alpha == -1:
                 print "stop: line search, epoch", epoch
                 break
@@ -556,7 +557,7 @@ class Network:
             # compute s_k , y_k, p_k
             s_k = x_new - x_old
             y_k = gradient_new - gradient_old
-            rho_k = 1 / np.dot(s_k, y_k)
+            rho_k = 1.0 / np.dot(s_k, y_k)
 
             if rho_k < 0:
                 raise Exception("rho_K < 0")
@@ -632,9 +633,9 @@ class Network:
         if not phi_p_0 < 0:
             raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
 
-        max_iter = 100
-        alpha_i = 1
-        alpha_old = 0  # alpha_0 = 0
+        max_iter = 200
+        alpha_i = 1.0
+        alpha_old = 0.0  # alpha_0 = 0
 
         for i in range(max_iter):
             # 1. evaluate phi(alpha_i)
@@ -685,15 +686,13 @@ class Network:
         :param regularization:
         :return:
         """
-        max_iter = 100
+        max_iter = 200
 
         for i in range(max_iter):
             # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
-            # TODO: uncomment/comment to use a different interpolation approach
-            #alpha_j = self.interpolate(alpha_high, alpha_low, data, lossObject, p, targets)
-            #alpha_j = self.safeguarded_interpolation(alpha_high, alpha_low, sfgrd=0.01, data, lossObject, p, targets, regularization)
+            #alpha_j = self.interpolate(alpha_high, alpha_low, data, lossObject, p, targets, regularization)
+            #alpha_j = self.safeguarded_interpolation(alpha_high, alpha_low, 0.01, data, lossObject, p, targets, regularization)
             alpha_j = select_random_point_between(alpha_low, alpha_high)
-
             # 2. evaluate phi(alpha_j)
             gradient_alpha_j, phi_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets, regularization)
 
@@ -714,9 +713,25 @@ class Network:
                     alpha_high = alpha_low
                 alpha_low = alpha_j
 
+        # print phi(alpha)
+        import matplotlib.pyplot as plt
+        a_values = np.linspace(-2, 2, 100000)
+        phi_values = []
+        for a in a_values:
+            gradient_alpha_j, phi_alpha_try = self.evaluate_phi_alpha(a, data, lossObject, p, targets,
+                                                                    regularization)
+            phi_values.append(phi_alpha_try)
+        plt.plot(a_values, phi_values)
+        plt.yscale('log')
+        plt.xlabel(r'$\alpha$')
+        plt.ylabel(r'$\phi(\alpha)$')
+        plt.legend(loc='best')
+        plt.show()
+
+        print "zoom - max iterations"
         return -1
 
-    def interpolate(self, alpha_high, alpha_low, data, lossObject, p, targets):
+    def interpolate(self, alpha_high, alpha_low, data, lossObject, p, targets, reg):
         """
         find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation.
         :param alpha_high: left edge of the interval containing step sizes satisfying the wolfe conditions
@@ -728,9 +743,9 @@ class Network:
         :return:
         """
         # 1.1 evaluate phi(alpha_low), phi'(alpha_low), and phi(alpha_high)
-        gradient_alpha_low, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets)
+        gradient_alpha_low, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets, reg)
         phi_p_alpha_low = np.dot(gradient_alpha_low, p)
-        _, phi_alpha_high = self.evaluate_phi_alpha(alpha_high, data, lossObject, p, targets)
+        _, phi_alpha_high = self.evaluate_phi_alpha(alpha_high, data, lossObject, p, targets, reg)
         # 1.2 interpolate
         alpha_j = - (phi_p_alpha_low * alpha_high ** 2) / \
                   (2 * (phi_alpha_high - phi_alpha_low - phi_p_alpha_low * alpha_high))
@@ -779,9 +794,11 @@ class Network:
         """
         # creates a copy of weights
         actual_weights = copy.deepcopy(self.layers)
+
         # compute x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
         self.update_weights_BFGS(delta=alpha_i * p)
         gradient_alpha, loss_alpha, _ = self.calculate_gradient(data, targets, lossObject, regularization)
+
         # restore original weights
         self.layers = actual_weights
         return gradient_alpha, loss_alpha
@@ -860,7 +877,7 @@ def select_random_point_between(alpha_low, alpha_high):
     :param alpha_high:
     :return:
     """
-    # convex = random.uniform(0.01, 0.99)
+    #convex = np.random.uniform(0.01, 0.99)
     convex = 0.5  # bisection
     alpha_j = convex * alpha_low + (1 - convex) * alpha_high
     return alpha_j

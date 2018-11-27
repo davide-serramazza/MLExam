@@ -35,29 +35,46 @@ def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclas
     plt.show()
 
 
-def plot_norm_gradient_vs_iterations(gradient_norm_list):
-    #plt.yscale('log')
-    plt.plot(range(len(gradient_norm_list)), gradient_norm_list, '-o', alpha=0.7, label='norm gradient')
+def plot_norm_gradient_vs_iterations(g_norm_list_sgd, g_norm_list_bfgs, g_norm_list_lbfgs):
+    plt.plot(range(len(g_norm_list_sgd)), g_norm_list_sgd, '-', alpha=1, label='sgd')
+    plt.plot(range(len(g_norm_list_bfgs)), g_norm_list_bfgs, '--', alpha=1, label='bfgs')
+    plt.plot(range(len(g_norm_list_lbfgs)), g_norm_list_lbfgs, ':', alpha=1, label='l-bfgs')
+
     plt.legend(loc='best')
-    plt.xlabel('Iterations')
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.xlabel('Iterazioni')
     plt.ylabel(r'$||\nabla E(w)||$')
     plt.show()
 
 
-def plot_alpha_vs_iterations(alpha_list):
-    plt.plot(range(len(alpha_list)), alpha_list, '-o', alpha=0.7, label='step size ' + r'$\alpha$')
+def plot_alpha_vs_iterations(alpha_list_bfgs, alpha_list_lbfgs):
+    plt.step(range(len(alpha_list_bfgs)), alpha_list_bfgs, 'o', alpha=0.7, label='bfgs')
+    plt.step(range(len(alpha_list_lbfgs)), alpha_list_lbfgs, 's', alpha=0.7, label='l-bfgs')
     plt.legend(loc='best')
-    plt.xlabel('Iterations')
-    plt.ylabel(r'$\alpha$')
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.xlabel('Iterazioni')
+    plt.ylabel('step size ' + r'$\alpha$')
     plt.show()
 
 
-def plot_relative_gap_vs_iterations(train_loss_list):
-    #min_value = ..
-    plt.plot(range(len(train_loss_list)), train_loss_list, '-o', alpha=0.7, label='relative gap')
+def plot_relative_gap_vs_iterations(loss_tr_sgd, loss_tr_bfgs, loss_tr_lbfgs):
+    labels = ['sgd', 'bfgs', 'l-bfgs']
+    line_style = ['-', '--', ':']
+    lists = [loss_tr_sgd, loss_tr_bfgs, loss_tr_lbfgs]
+
+    for l, style, label in zip(lists, line_style, labels):
+        l_ = np.array(l)
+        value_at_x_star = l_[-1]
+        relative_gap_list = np.abs(l_ - value_at_x_star)
+        plt.plot(range(len(relative_gap_list)), relative_gap_list, style, alpha=1, label=label)
+
     plt.legend(loc='best')
-    plt.xlabel('Iterations')
+    plt.xlabel('Iterazioni')
     plt.ylabel(r'$|E(w) - E(w*)|$')
+    plt.yscale('log')
+    plt.xscale('log')
     plt.show()
 
 #### transform values to string format (to create file name of image) #####
