@@ -3,7 +3,9 @@ from loss_functions import *
 import sys
 from collections import deque
 from scipy.linalg import norm
-from utils import shuffle_dataset
+from numpy.linalg import cond
+import matplotlib.pyplot as plt
+from utils import shuffle_dataset, is_pos_semidef
 
 
 class Network:
@@ -401,9 +403,10 @@ class Network:
         return H_k
 
     def train_BFGS(self, x_train, y_train, x_test, y_test, theta, c_1, c_2,
-                  lossObject, epochs, regularization, epsilon):
+                  lossObject, epochs, regularization, epsilon, debug=False):
         alpha_list = []  # list that holds the step lengths alpha_k taken at each epoch
         norm_gradient = []
+        condition_numbers = []
         # 1. compute initial gradient and initial Hessian approximation H_0
         gradient_old, loss, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
         H = np.identity(gradient_old.shape[0])
@@ -416,6 +419,7 @@ class Network:
         losses_validation = np.array([loss_val_epoch])
         misses_validation = np.array([misclass_val_epoch])
         norm_gradient.append(np.linalg.norm(gradient_old))
+        condition_numbers.append(cond(H))
 
         for epoch in range(epochs):
             print epoch, "out of", epochs
@@ -423,10 +427,13 @@ class Network:
             p = - H.dot(gradient_old)
 
             # 2. line search
-            # alpha = self.backtracking_line_search(alpha_0, c_1, data, epoch, gradient_old, loss, lossObject, p, targets, theta)
+            #alpha = self.backtracking_line_search(1, c_1, x_train, gradient_old, loss, lossObject, p, y_train, theta, regularization)
             alpha = self.armijo_wolfe_line_search(c_1, c_2, x_train, gradient_old, loss, lossObject, p, y_train, theta, regularization)
             if alpha == -1:
                 print "stop: line search, epoch", epoch
+                if debug:
+                    self.plot_phi_alpha_in_neighborhood(x_train, lossObject, p, y_train, regularization)
+                    self.plot_phi_alpha_and_tangent_line(x_train, lossObject, y_train, p, gradient_old, regularization)
                 break
             alpha_list.append(alpha)
 
@@ -452,6 +459,9 @@ class Network:
 
             # 6. update matrix H
             H = self.update_matrix_BFGS(H, s_k, y_k)
+            condition_numbers.append(cond(H))
+            if not is_pos_semidef(H):
+                raise Exception("matrix H is not positive semidefinite")
 
             # stop criterion
             if (norm(gradient_old)) < epsilon:
@@ -462,7 +472,7 @@ class Network:
             x_old = x_new
             gradient_old = gradient_new
 
-        return losses, misses, losses_validation, misses_validation, alpha_list, norm_gradient
+        return losses, misses, losses_validation, misses_validation, alpha_list, norm_gradient, condition_numbers
 
     def compute_direction(self, H, gradient, s_list, y_list, rho_list):
         """
@@ -494,9 +504,10 @@ class Network:
         return r
 
     def train_LBFGS(self, x_train, y_train, x_test, y_test, lossObject, theta, c_1, c_2,
-                    epsilon, m, regularization, epochs):
+                    epsilon, m, regularization, epochs, debug=False):
         alpha_list = []  # list that holds the step lengths alpha_k taken at each epoch
         gradient_norm = []
+        condition_numbers = []
         # 1. compute initial gradient
         gradient_old, loss, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
         x_old = self.get_weights_as_vector()
@@ -524,6 +535,11 @@ class Network:
                 gamma = num/den
                 H = gamma * np.identity(gradient_old.shape[0])
 
+            # compute condition number
+            condition_numbers.append(cond(H))
+            if not is_pos_semidef(H):
+                raise Exception("matrix H is not positive semidefinite")
+
             # compute p = - H_k * \nabla f_k using two loop recursion
             p = - self.compute_direction(H, gradient_old, s_list, y_list, rho_list)
 
@@ -533,6 +549,9 @@ class Network:
 
             if alpha == -1:
                 print "stop: line search, epoch", epoch
+                if debug:
+                    self.plot_phi_alpha_in_neighborhood(x_train, lossObject, p, y_train, regularization)
+                    self.plot_phi_alpha_and_tangent_line(x_train, lossObject, y_train, p, gradient_old, regularization)
                 break
             alpha_list.append(alpha)
 
@@ -576,7 +595,7 @@ class Network:
                 print "stop: norm gradient, epoch", epoch
                 break
 
-        return losses, misses, losses_validation, misses_validation, alpha_list, gradient_norm
+        return losses, misses, losses_validation, misses_validation, alpha_list, gradient_norm, condition_numbers
 
     def backtracking_line_search(self, alpha, c_1, data, gradient, loss,
                                  lossObject, p, targets, theta, regularization):
@@ -598,17 +617,17 @@ class Network:
         assert theta < 1
         phi_0 = loss  # phi(0) = f(x_k + 0 * p) = f(x_k)
         phi_p_0 = np.dot(gradient, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
-        while True:
-            _, phi_alpha = self.evaluate_phi_alpha(alpha, data, lossObject, p, targets, regularization=regularization)
 
+        if not phi_p_0 < 0:
+            raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
+
+        while alpha > 1e-16:
+            _, phi_alpha = self.evaluate_phi_alpha(alpha, data, lossObject, p, targets, regularization)
             if phi_alpha <= phi_0 + c_1 * alpha * phi_p_0:
                 # Armijo condition satisfied
                 return alpha
-            if alpha < 1e-16:
-                # error
-                return -1
-
             alpha *= theta  # theta < 1, decrease alpha
+        return -1
 
     def armijo_wolfe_line_search(self, c_1, c_2, data, gradient, loss, lossObject, p, targets, theta, regularization):
         """
@@ -649,7 +668,7 @@ class Network:
             # 3. evaluate phi'(alpha_i) = \nabla f(x_k + alpha * p_k) * p_k
             phi_p_alpha_i = np.dot(gradient_alpha_i, p)
 
-            # 4. if |phi'(alpha_i)| <= - c_2 * phi'(0) (strong Wolfe satisfied?)
+            # 4. if |phi'(alpha_i)| <= - c_2 * phi'(0) (strong Wolfe satisfied?) or Wolfe
             if abs(phi_p_alpha_i) <= - c_2 * phi_p_0:
                 alpha_star = alpha_i
                 return alpha_star
@@ -666,6 +685,7 @@ class Network:
             # 6. choose alpha_{i+1}
             alpha_i = alpha_i / theta
 
+        print "line search/bracketing phase - max iterations"
         return -1
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization):
@@ -706,27 +726,16 @@ class Network:
                 # 4. evaluate phi'(alpha_j)
                 phi_p_alpha_j = np.dot(gradient_alpha_j, p)
                 # 5. if |phi'(alpha_j)| <= - c_2 * phi'(0) (strong Wolfe satisfied?)
-                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:
+                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0: #or phi_p_alpha_j >= c_2 * phi_p_0:     #TODO: trial (or wolfe satisfied)
                     return alpha_j
                 # 6. if phi'(alpha_j)(alpha_high - alpha_low) >= 0
                 if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:
                     alpha_high = alpha_low
                 alpha_low = alpha_j
 
-        # print phi(alpha)
-        import matplotlib.pyplot as plt
-        a_values = np.linspace(-2, 2, 100000)
-        phi_values = []
-        for a in a_values:
-            gradient_alpha_j, phi_alpha_try = self.evaluate_phi_alpha(a, data, lossObject, p, targets,
-                                                                    regularization)
-            phi_values.append(phi_alpha_try)
-        plt.plot(a_values, phi_values)
-        plt.yscale('log')
-        plt.xlabel(r'$\alpha$')
-        plt.ylabel(r'$\phi(\alpha)$')
-        plt.legend(loc='best')
-        plt.show()
+            if abs(alpha_high - alpha_low) < 1e-16:
+                print "zoom - interval too small"
+                return -1
 
         print "zoom - max iterations"
         return -1
@@ -851,6 +860,48 @@ class Network:
         for layer in self.layers[1:]:  # skip input layer
             for neuron in layer.neurons[:-1]:  # skip bias neuron
                 neuron.weights = np.load(file_input)
+
+    def plot_phi_alpha_in_neighborhood(self, data, lossObject, p, targets, regularization):
+        alpha_values = np.linspace(0, 5e-14, 500)
+        phi_values = []
+        for a in alpha_values:
+            gradient_alpha_j, phi_alpha_try = self.evaluate_phi_alpha(a, data, lossObject, p, targets, regularization)
+            phi_values.append(phi_alpha_try)
+
+        plt.figure()
+        plt.plot(alpha_values, phi_values)
+        plt.xlabel(r'$\alpha$')
+        plt.ylabel(r'$\phi(\alpha)$')
+        plt.legend(loc='best')
+        #plt.yticks([round(min(phi_values),2), round(max(phi_values),2)])
+        plt.yscale('log')
+        #plt.xscale('log')
+        plt.show()
+
+    def plot_phi_alpha_and_tangent_line(self, data, lossObject, targets, p, gradient, regularization):
+        alpha_values = np.linspace(0, 1, 500)
+        phi_values = []
+
+        # phi(alpha)
+        for a in alpha_values:
+            gradient_alpha_j, phi_alpha_try = self.evaluate_phi_alpha(a, data, lossObject, p, targets, regularization)
+            phi_values.append(phi_alpha_try)
+
+        # tangent line at alpha=0
+        x = np.linspace(0, 1, 10)
+        phi_0 = phi_values[0]
+        phi_p_0 = np.dot(gradient, p)
+        y = phi_p_0 * x + phi_0 # y = mx + q
+
+        plt.figure()
+        plt.plot(alpha_values, phi_values, label=r'$\phi(\alpha)$')
+        plt.plot(x, y, label='retta tangente a ' + r'$\phi(0)$', color='red')
+        plt.xlabel(r'$\alpha$')
+        plt.ylabel(r'$\phi(\alpha)$')
+        plt.legend(loc='best')
+        plt.yscale('log')
+        #plt.xscale('log')
+        plt.show()
 
 
 def check_topology(architecture, neurons):

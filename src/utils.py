@@ -1,6 +1,24 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+def plot_condition_number_vs_iterations(cond_bfgs=None, cond_lbfgs=None):
+    if cond_bfgs is not None:
+        plt.plot(range(len(cond_bfgs)), cond_bfgs, '--', alpha=1, label='bfgs')
+    if cond_lbfgs is not None:
+        plt.plot(range(len(cond_lbfgs)), cond_lbfgs, '-', alpha=1, label='l-bfgs')
+    plt.legend(loc='best')
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.xlabel('Iterazioni')
+    plt.ylabel(r'k(H)')
+    plt.show()
+
+def lbfgs_iterations_vs_m(iter_values, m_values):
+    plt.yscale('log')
+    plt.plot(m_values, iter_values, '-o', alpha=1)
+    plt.xlabel('m')
+    plt.ylabel('iterazioni')
+    plt.show()
 
 def shuffle_dataset(data, targets):
     permutation = np.random.permutation(len(data))
@@ -20,25 +38,29 @@ def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclas
     """
     plt.figure()
     plt.yscale('log')
-    plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.7, label='train loss')
-    plt.plot(range(len(loss_test)), loss_test, '-D', alpha=0.7, label='test loss')
+    plt.xscale('log')
+    plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.8, label='train loss')
+    plt.plot(range(len(loss_test)), loss_test, '-x', alpha=0.8, label='test loss')
     plt.legend(loc='best')
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
+    plt.xlabel('Iterazioni')
+    plt.ylabel('Errore')
 
     plt.figure()
-    plt.plot(range(len(misclass_train)), 1 - misclass_train, '-o', alpha=0.7, label='train accuracy')
-    plt.plot(range(len(misclass_test)), 1 - misclass_test, '-D', alpha=0.7, label='test accuracy')
+    plt.plot(range(len(misclass_train)), 1 - misclass_train, '-o', alpha=0.8, label='train accuracy')
+    plt.plot(range(len(misclass_test)), 1 - misclass_test, '-x', alpha=0.8, label='test accuracy')
     plt.legend(loc='best')
-    plt.xlabel('Epochs')
-    plt.ylabel('Accuracy')
+    plt.xlabel('Iterazioni')
+    plt.ylabel('Accuratezza')
     plt.show()
 
 
-def plot_norm_gradient_vs_iterations(g_norm_list_sgd, g_norm_list_bfgs, g_norm_list_lbfgs):
-    plt.plot(range(len(g_norm_list_sgd)), g_norm_list_sgd, '-', alpha=1, label='sgd')
-    plt.plot(range(len(g_norm_list_bfgs)), g_norm_list_bfgs, '--', alpha=1, label='bfgs')
-    plt.plot(range(len(g_norm_list_lbfgs)), g_norm_list_lbfgs, ':', alpha=1, label='l-bfgs')
+def plot_norm_gradient_vs_iterations(g_norm_list_sgd=None, g_norm_list_bfgs=None, g_norm_list_lbfgs=None):
+    if g_norm_list_sgd is not None:
+        plt.plot(range(len(g_norm_list_sgd)), g_norm_list_sgd, '-', alpha=1, label='sgd')
+    if g_norm_list_bfgs is not None:
+        plt.plot(range(len(g_norm_list_bfgs)), g_norm_list_bfgs, '--', alpha=1, label='bfgs')
+    if g_norm_list_lbfgs is not None:
+        plt.plot(range(len(g_norm_list_lbfgs)), g_norm_list_lbfgs, ':', alpha=1, label='l-bfgs')
 
     plt.legend(loc='best')
     plt.xscale('log')
@@ -48,9 +70,11 @@ def plot_norm_gradient_vs_iterations(g_norm_list_sgd, g_norm_list_bfgs, g_norm_l
     plt.show()
 
 
-def plot_alpha_vs_iterations(alpha_list_bfgs, alpha_list_lbfgs):
-    plt.step(range(len(alpha_list_bfgs)), alpha_list_bfgs, 'o', alpha=0.7, label='bfgs')
-    plt.step(range(len(alpha_list_lbfgs)), alpha_list_lbfgs, 's', alpha=0.7, label='l-bfgs')
+def plot_alpha_vs_iterations(alpha_list_bfgs=None, alpha_list_lbfgs=None):
+    if alpha_list_bfgs is not None:
+        plt.step(range(len(alpha_list_bfgs)), alpha_list_bfgs, 'o', alpha=0.7, label='bfgs')
+    if alpha_list_lbfgs is not None:
+        plt.step(range(len(alpha_list_lbfgs)), alpha_list_lbfgs, 's', alpha=0.7, label='l-bfgs')
     plt.legend(loc='best')
     plt.xscale('log')
     plt.yscale('log')
@@ -59,22 +83,56 @@ def plot_alpha_vs_iterations(alpha_list_bfgs, alpha_list_lbfgs):
     plt.show()
 
 
-def plot_relative_gap_vs_iterations(loss_tr_sgd, loss_tr_bfgs, loss_tr_lbfgs):
+def plot_relative_gap_vs_iterations(loss_tr_sgd=None, loss_tr_bfgs=None, loss_tr_lbfgs=None):
     labels = ['sgd', 'bfgs', 'l-bfgs']
     line_style = ['-', '--', ':']
     lists = [loss_tr_sgd, loss_tr_bfgs, loss_tr_lbfgs]
 
     for l, style, label in zip(lists, line_style, labels):
-        l_ = np.array(l)
-        value_at_x_star = l_[-1]
-        relative_gap_list = np.abs(l_ - value_at_x_star)
-        plt.plot(range(len(relative_gap_list)), relative_gap_list, style, alpha=1, label=label)
+        if l is not None:
+            l_ = np.array(l)
+            value_at_x_star = l_[-1]
+            relative_gap_list = np.abs(l_ - value_at_x_star)
+            plt.plot(range(len(relative_gap_list)), relative_gap_list, style, alpha=1, label=label)
 
     plt.legend(loc='best')
     plt.xlabel('Iterazioni')
     plt.ylabel(r'$|E(w) - E(w*)|$')
     plt.yscale('log')
     plt.xscale('log')
+    plt.show()
+
+
+def plot_all_loss(sgd_tr, sgd_ts, bfgs_tr, bfgs_ts, lbfgs_tr, lbfgs_ts, \
+                    xscale='linear', yscale='log'):
+    labels = ['sgd_tr', 'sgd_ts', 'bfgs_tr', 'bfgs_ts', 'lbfgs_tr', 'lbfgs_ts']
+    line_style = ['-o', '--o', '-x', '--x', '-*', '--*']
+    lists = [sgd_tr, sgd_ts, bfgs_tr, bfgs_ts, lbfgs_tr, lbfgs_ts]
+
+    plt.figure()
+    for l, style, label in zip(lists, line_style, labels):
+        plt.plot(range(len(l)), l, style, alpha=0.8, label=label)
+    plt.legend(loc='best')
+    plt.xlabel('Iterazioni')
+    plt.ylabel(r'$E(w)$')
+    plt.yscale(yscale)
+    plt.xscale(xscale)
+    plt.show()
+
+def plot_all_accuracy(sgd_tr, sgd_ts, bfgs_tr, bfgs_ts, lbfgs_tr, lbfgs_ts, \
+                    xscale='linear', yscale='linear'):
+    labels = ['sgd_tr', 'sgd_ts', 'bfgs_tr', 'bfgs_ts', 'lbfgs_tr', 'lbfgs_ts']
+    line_style = ['-o', '--o', '-x', '--x', '-*', '--*']
+    lists = [sgd_tr, sgd_ts, bfgs_tr, bfgs_ts, lbfgs_tr, lbfgs_ts]
+
+    plt.figure()
+    for l, style, label in zip(lists, line_style, labels):
+        plt.plot(range(len(l)), 1 - l, style, alpha=0.8, label=label)
+    plt.legend(loc='best')
+    plt.xlabel('Iterazioni')
+    plt.ylabel('Accuratezza')
+    plt.yscale(yscale)
+    plt.xscale(xscale)
     plt.show()
 
 #### transform values to string format (to create file name of image) #####
@@ -259,3 +317,14 @@ def holdout_cup(patterns, labels, fraction_tr):
     second_partition_pattens = patterns[len_partion:]
     second_partition_labels = labels[len_partion:]
     return first_partition_patterns, first_partition_labels, second_partition_pattens, second_partition_labels
+
+def is_pos_semidef(x):
+    """
+    checks if matrix 'x' is positive semidefinite. For debugging and exploration reasons
+    prints out if at least one eigenvalue is equal to 0.
+    """
+    eigenvalues = np.linalg.eigvals(x)
+    if np.any(eigenvalues == 0):
+        print "eigenvalues - at least one equal to 0"
+
+    return np.all(eigenvalues >= 0)
