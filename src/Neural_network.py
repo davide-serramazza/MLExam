@@ -2,8 +2,7 @@ from Layer import *
 from loss_functions import *
 import sys
 from collections import deque
-from scipy.linalg import norm
-from numpy.linalg import cond
+from numpy.linalg import cond, norm
 import matplotlib.pyplot as plt
 from utils import shuffle_dataset, is_pos_semidef
 
@@ -30,17 +29,6 @@ class Network:
             neuron = neurons[i](len_weights=len_weights)
             layer = Layer(architecture[i], architecture[i - 1], neuron)
             self.layers.append(layer)
-
-    # TODO: never used
-    def initialize_weight(self):
-        """
-        reinitialize network's weights
-        :return:
-        """
-        for l in range(1, len(self.layers)):
-            for n in range(0, len(self.layers[l].neurons)-1):
-                len_weights = len(self.layers[l].neurons[n].weights)
-                self.layers[l].neurons[n].weights = np.random.uniform(low=-0.7, high=0.7, size=len_weights)
 
     def getOutput(self):
         """
@@ -733,7 +721,7 @@ class Network:
                     alpha_high = alpha_low
                 alpha_low = alpha_j
 
-            if abs(alpha_high - alpha_low) < 1e-16:
+            if abs(alpha_high - alpha_low) < 1e-19:
                 print "zoom - interval too small"
                 return -1
 
@@ -862,7 +850,7 @@ class Network:
                 neuron.weights = np.load(file_input)
 
     def plot_phi_alpha_in_neighborhood(self, data, lossObject, p, targets, regularization):
-        alpha_values = np.linspace(0, 5e-14, 500)
+        alpha_values = np.linspace(0, 5e-10, 500)
         phi_values = []
         for a in alpha_values:
             gradient_alpha_j, phi_alpha_try = self.evaluate_phi_alpha(a, data, lossObject, p, targets, regularization)
