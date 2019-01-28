@@ -406,7 +406,7 @@ class Network:
         misses = np.array([miss])
         losses_validation = np.array([loss_val_epoch])
         misses_validation = np.array([misclass_val_epoch])
-        norm_gradient.append(np.linalg.norm(gradient_old))
+        norm_gradient.append(norm(gradient_old))
         condition_numbers.append(cond(H))
 
         for epoch in range(epochs):
@@ -473,7 +473,7 @@ class Network:
         :return: returns ascent direction
         """
         a_list = []
-        q = gradient
+        q = np.copy(gradient)
         # first loop
         # for i = k-1, ..., k-m
         for i in range(len(s_list) - 1, -1, -1):
@@ -492,7 +492,7 @@ class Network:
         return r
 
     def train_LBFGS(self, x_train, y_train, x_test, y_test, lossObject, theta, c_1, c_2,
-                    epsilon, m, regularization, epochs, debug=False):
+                    epsilon, m, regularization, epochs, debug=False, is_test=False):
         alpha_list = []  # list that holds the step lengths alpha_k taken at each epoch
         gradient_norm = []
         condition_numbers = []
@@ -515,7 +515,7 @@ class Network:
         for epoch in range(epochs):
             print epoch, "out of", epochs
             # calculate central matrix {H_k}^0
-            if epoch == 0:
+            if epoch == 0 or is_test:
                 H = np.identity(gradient_old.shape[0])
             else:
                 num = np.dot(s_list[-1], y_list[-1])
@@ -721,7 +721,7 @@ class Network:
                     alpha_high = alpha_low
                 alpha_low = alpha_j
 
-            if abs(alpha_high - alpha_low) < 1e-19:
+            if abs(alpha_high - alpha_low) < 1e-16:
                 print "zoom - interval too small"
                 return -1
 
