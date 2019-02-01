@@ -113,7 +113,6 @@ class Network:
 
         # 5 report loss and misclassification count
         weights = self.get_weights_as_vector()
-
         loss_value = lossObject.value(target, output_net, weights, regularization)
         misClassification = lossObject.misClassification(target, output_net)
 
@@ -124,7 +123,7 @@ class Network:
         gets neural network weights as a single array.
         :return: array of weights
         """
-        weights = np.array([neuron.weights for layer in self.layers[1:] for neuron in layer.neurons[:-1]])
+        weights = [neuron.weights for layer in self.layers[1:] for neuron in layer.neurons[:-1]]
         weights = np.concatenate(weights).ravel()
         return weights
 
@@ -136,15 +135,15 @@ class Network:
         :return: a matrix gradient_w where each entry gradient[l][n][w] is the gradient w.r.t
                 the weight 'w' of the neuron 'n' in the layer 'l'.
         """
-        gradient_w = []
-        for l in range(1, len(self.layers)):
-            tmpL = []
-            for n in range(len(self.layers[l].neurons[:-1])):  # exclude bias neuron
-                neuron_input = np.asarray([neuron.getOutput() for neuron in self.layers[l-1].neurons])
-                tmpL.append(neuron_input * delta_vectors[l-1][n])
-            gradient_w.append(tmpL)
+        gradient_w = np.empty((len(delta_vectors)), dtype=object)
 
-        return np.asarray(gradient_w)
+        for l in range(1, len(self.layers)):
+            tmpL = np.empty((len(self.layers[l].neurons[:-1]),len(self.layers[l-1].neurons)), dtype=float)
+            for n in range(len(self.layers[l].neurons[:-1])):  # exclude bias neuron
+                neuron_input = np.array([neuron.getOutput() for neuron in self.layers[l-1].neurons], dtype=float)
+                tmpL[n,:] = neuron_input * delta_vectors[l-1][n]
+            gradient_w[l-1] = tmpL
+        return gradient_w
 
     def update_weights_SGD(self, gradient_w, learning_rate, prev_delta, momentum):
         """
@@ -165,14 +164,14 @@ class Network:
 
     def compute_delta_hidden_layer(self, delta_next_layer, currentLayerIndex):
         # delta_layer vector
-        delta_layer = np.array([])
+        delta_layer = np.empty(shape=(len(self.layers[currentLayerIndex].neurons)-1))
         for h in range(len(self.layers[currentLayerIndex].neurons)-1):
             downstream = self.layers[currentLayerIndex + 1].neurons[:-1]
             weights = [neuron.weights[h] for neuron in downstream]
             gradient_flow = np.dot(weights, delta_next_layer)
             derivative_net = self.layers[currentLayerIndex].neurons[h].activation_function_derivative()
             delta_h = gradient_flow * derivative_net
-            delta_layer = np.append(delta_layer, delta_h)
+            delta_layer[h] = delta_h
         return delta_layer
 
     def compute_delta_output_layer(self, output_net, target, loss):
@@ -295,11 +294,9 @@ class Network:
         :param list_of_lists:
         :return:
         """
-        gradient = np.array([])
-        for l in list_of_lists:
-            tmp = np.concatenate(l)
-            gradient = np.append(gradient, tmp)
-        return gradient
+        gradient_vector = [n for l in list_of_lists for n in l]
+        gradient_vector = np.concatenate(gradient_vector).ravel()
+        return gradient_vector
 
     def update_weights_BFGS(self, delta):
         """
@@ -341,7 +338,6 @@ class Network:
             # calculate derivative for every pattern, then append to gradient_w_batch
             self.forward(pattern)
             gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization)
-
             gradient_w_batch += gradient_w
             loss_batch += loss_p
             miss_batch += miss_p
@@ -361,8 +357,11 @@ class Network:
         initialize a gradient-placeholder to zero
         :return:
         """
-        zero_gradient = np.array([np.zeros((self.architecture[i], self.architecture[i - 1] + 1))
-                                 for i in range(1, len(self.architecture))])
+        a = self.architecture
+        #zero_gradient = np.array([np.zeros((a[i], a[i - 1] + 1)) for i in range(1, len(a))])
+        zero_gradient = np.empty(len(a)-1, dtype=object)
+        for i in range(1, len(a)):
+            zero_gradient[i-1] = np.zeros((a[i], a[i - 1] + 1))
         return zero_gradient
 
     def update_matrix_BFGS(self, H_k, s_k, y_k):
@@ -391,10 +390,16 @@ class Network:
         return H_k
 
     def train_BFGS(self, x_train, y_train, x_test, y_test, theta, c_1, c_2,
-                  lossObject, epochs, regularization, epsilon, debug=False):
-        alpha_list = []  # list that holds the step lengths alpha_k taken at each epoch
-        norm_gradient = []
-        condition_numbers = []
+                  lossObject, epochs, regularization, epsilon, line_search='wolfe', debug=False):
+        # allocate arrays
+        alpha_list = np.empty((epochs+1), dtype=object) # list that holds the step lengths alpha_k taken at each epoch
+        norm_gradient = np.empty((epochs+1), dtype=object)
+        condition_numbers = np.empty((epochs+1), dtype=object)
+        tr_losses = np.empty((epochs+1), dtype=object)
+        vl_losses = np.empty((epochs+1), dtype=object)
+        tr_misses = np.empty((epochs+1), dtype=object)
+        vl_misses = np.empty((epochs+1), dtype=object)
+
         # 1. compute initial gradient and initial Hessian approximation H_0
         gradient_old, loss, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
         H = np.identity(gradient_old.shape[0])
@@ -402,28 +407,39 @@ class Network:
 
         # append train / validation losses
         loss_val_epoch, misclass_val_epoch = self.validation_error(x_test, y_test, lossObject)
-        losses = np.array([loss])
-        misses = np.array([miss])
-        losses_validation = np.array([loss_val_epoch])
-        misses_validation = np.array([misclass_val_epoch])
-        norm_gradient.append(norm(gradient_old))
-        condition_numbers.append(cond(H))
+        tr_losses[0] = loss
+        tr_misses[0] = miss
+        vl_losses[0] = loss_val_epoch
+        vl_misses[0] = misclass_val_epoch
+        norm_gradient[0] = norm(gradient_old)
+        condition_numbers[0] = cond(H)
 
         for epoch in range(epochs):
             print epoch, "out of", epochs
+
+            # stop criterion
+            if (norm(gradient_old)) < epsilon:
+                print "stop: gradient norm, epoch", epoch
+                break
+
             # 1. compute search direction p = -H * gradient
             p = - H.dot(gradient_old)
+            #TODO: try normalize p
+            #p /= norm(p)
 
             # 2. line search
-            #alpha = self.backtracking_line_search(1, c_1, x_train, gradient_old, loss, lossObject, p, y_train, theta, regularization)
-            alpha = self.armijo_wolfe_line_search(c_1, c_2, x_train, gradient_old, loss, lossObject, p, y_train, theta, regularization)
+            if line_search == 'wolfe':
+                alpha = self.armijo_wolfe_line_search(c_1, c_2, x_train, gradient_old, loss, lossObject, p, y_train, theta, regularization)
+            elif line_search == 'backtracking':
+                alpha = self.backtracking_line_search(c_1, x_train, gradient_old, loss, lossObject, p, y_train, theta, regularization)
+
             if alpha == -1:
                 print "stop: line search, epoch", epoch
                 if debug:
                     self.plot_phi_alpha_in_neighborhood(x_train, lossObject, p, y_train, regularization)
                     self.plot_phi_alpha_and_tangent_line(x_train, lossObject, y_train, p, gradient_old, regularization)
                 break
-            alpha_list.append(alpha)
+            alpha_list[epoch] = alpha
 
             # 3. update weights using x_{k+1} = x_{k} + alpha_{k} * p_k
             x_new = self.update_weights_BFGS(delta=alpha * p)
@@ -433,11 +449,11 @@ class Network:
 
             # append training / validation losses
             loss_val_epoch, misclass_val_epoch = self.validation_error(x_test, y_test, lossObject)
-            losses = np.append(losses, loss)
-            misses = np.append(misses, miss)
-            losses_validation = np.append(losses_validation, loss_val_epoch)
-            misses_validation = np.append(misses_validation, misclass_val_epoch)
-            norm_gradient.append(np.linalg.norm(gradient_new))
+            tr_losses[epoch+1] = loss
+            tr_misses[epoch+1] = miss
+            vl_losses[epoch+1] = loss_val_epoch
+            vl_misses[epoch+1] = misclass_val_epoch
+            norm_gradient[epoch+1] = norm(gradient_new)
 
             # 5. compute
             # s_k = x_{k+1} - x_k = x_new - x_old
@@ -447,20 +463,25 @@ class Network:
 
             # 6. update matrix H
             H = self.update_matrix_BFGS(H, s_k, y_k)
-            condition_numbers.append(cond(H))
+            condition_numbers[epoch+1] = cond(H)
             if not is_pos_semidef(H):
                 raise Exception("matrix H is not positive semidefinite")
-
-            # stop criterion
-            if (norm(gradient_old)) < epsilon:
-                print "stop: gradient norm, epoch", epoch
-                break
 
             # update x_old and gradient_old
             x_old = x_new
             gradient_old = gradient_new
 
-        return losses, misses, losses_validation, misses_validation, alpha_list, norm_gradient, condition_numbers
+        # truncate arrays to proper length
+        none = np.array(None)
+        tr_losses = tr_losses[tr_losses != none]
+        tr_misses = tr_misses[tr_misses != none]
+        vl_losses = vl_losses[vl_losses != none]
+        vl_misses = vl_misses[vl_misses != none]
+        alpha_list = alpha_list[alpha_list != none]
+        norm_gradient = norm_gradient[norm_gradient != none]
+        condition_numbers = condition_numbers[condition_numbers != none]
+
+        return tr_losses, tr_misses, vl_losses, vl_misses, alpha_list, norm_gradient, condition_numbers
 
     def compute_direction(self, H, gradient, s_list, y_list, rho_list):
         """
@@ -472,18 +493,16 @@ class Network:
         :param rho_list:
         :return: returns ascent direction
         """
-        a_list = []
-        q = np.copy(gradient)
-        # first loop
+        a_list = [0] * len(s_list)
+        q = gradient
         # for i = k-1, ..., k-m
         for i in range(len(s_list) - 1, -1, -1):
             a = rho_list[i] * np.dot(s_list[i], q)
-            a_list.insert(0, a)
+            a_list[i] = a
             q = q - a * y_list[i]
 
         r = H.dot(q)
 
-        # second loop
         # for i = k-m, ..., k-1
         for i in range(len(s_list)):
             beta = rho_list[i] * np.dot(y_list[i], r)
@@ -492,28 +511,40 @@ class Network:
         return r
 
     def train_LBFGS(self, x_train, y_train, x_test, y_test, lossObject, theta, c_1, c_2,
-                    epsilon, m, regularization, epochs, debug=False, is_test=False):
-        alpha_list = []  # list that holds the step lengths alpha_k taken at each epoch
-        gradient_norm = []
-        condition_numbers = []
+                    epsilon, m, regularization, epochs, line_search='wolfe', debug=False, is_test=False):
+        # allocate arrays
+        alpha_list = np.empty((epochs+1), dtype=object) # list that holds the step lengths alpha_k taken at each epoch
+        norm_gradient = np.empty((epochs+1), dtype=object)
+        condition_numbers = np.empty((epochs+1), dtype=object)
+        tr_losses = np.empty((epochs+1), dtype=object)
+        vl_losses = np.empty((epochs+1), dtype=object)
+        tr_misses = np.empty((epochs+1), dtype=object)
+        vl_misses = np.empty((epochs+1), dtype=object)
+
         # 1. compute initial gradient
         gradient_old, loss, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
         x_old = self.get_weights_as_vector()
 
-        # append  train / validation losses
-        loss_val_epoch, missclass_val_epoch = self.validation_error(x_test, y_test, lossObject)
-        losses = np.array([loss])
-        misses = np.array([miss])
-        losses_validation = np.array([loss_val_epoch])
-        misses_validation = np.array([missclass_val_epoch])
-        gradient_norm.append(np.linalg.norm(gradient_old))
+        # append train / validation losses
+        loss_val_epoch, misclass_val_epoch = self.validation_error(x_test, y_test, lossObject)
+        tr_losses[0] = loss
+        tr_misses[0] = miss
+        vl_losses[0] = loss_val_epoch
+        vl_misses[0] = misclass_val_epoch
+        norm_gradient[0] = norm(gradient_old)
 
         # set of current s, y, rho lists
-        s_list, y_list, rho_list = [], [], []
+        s_list, y_list, rho_list = deque([]), deque([]), deque([])
 
         # main loop
         for epoch in range(epochs):
             print epoch, "out of", epochs
+
+            # stop criterion
+            if (norm(gradient_old)) < epsilon:
+                print "stop: norm gradient, epoch", epoch
+                break
+
             # calculate central matrix {H_k}^0
             if epoch == 0 or is_test:
                 H = np.identity(gradient_old.shape[0])
@@ -524,16 +555,20 @@ class Network:
                 H = gamma * np.identity(gradient_old.shape[0])
 
             # compute condition number
-            condition_numbers.append(cond(H))
+            condition_numbers[epoch] = cond(H)
             if not is_pos_semidef(H):
                 raise Exception("matrix H is not positive semidefinite")
 
             # compute p = - H_k * \nabla f_k using two loop recursion
             p = - self.compute_direction(H, gradient_old, s_list, y_list, rho_list)
+            #TODO: try normalize p
+            #p /= norm(p)
 
             # line search
-            alpha = self.armijo_wolfe_line_search(c_1, c_2, x_train, gradient_old, loss,
-                                                  lossObject, p, y_train, theta, regularization)
+            if line_search == 'wolfe':
+                alpha = self.armijo_wolfe_line_search(c_1, c_2, x_train, gradient_old, loss, lossObject, p, y_train, theta, regularization)
+            elif line_search == 'backtracking':
+                alpha = self.backtracking_line_search(c_1, x_train, gradient_old, loss, lossObject, p, y_train, theta, regularization)
 
             if alpha == -1:
                 print "stop: line search, epoch", epoch
@@ -541,25 +576,25 @@ class Network:
                     self.plot_phi_alpha_in_neighborhood(x_train, lossObject, p, y_train, regularization)
                     self.plot_phi_alpha_and_tangent_line(x_train, lossObject, y_train, p, gradient_old, regularization)
                 break
-            alpha_list.append(alpha)
+            alpha_list[epoch] = alpha
 
             # updating weights and compute x_k+1 = x_k + a_k*p_k
             x_new = self.update_weights_BFGS(delta=alpha * p)
             gradient_new, loss, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
 
             # append training / validation losses
-            losses = np.append(losses, loss)
-            misses = np.append(misses, miss)
             loss_val_epoch, misclass_val_epoch = self.validation_error(x_test, y_test, lossObject)
-            losses_validation = np.append(losses_validation, loss_val_epoch)
-            misses_validation = np.append(misses_validation, misclass_val_epoch)
-            gradient_norm.append(np.linalg.norm(gradient_new))
+            tr_losses[epoch+1] = loss
+            tr_misses[epoch+1] = miss
+            vl_losses[epoch+1] = loss_val_epoch
+            vl_misses[epoch+1] = misclass_val_epoch
+            norm_gradient[epoch+1] = norm(gradient_new)
 
             if epoch > (m-1):
                 # discard first element
-                del s_list[0]
-                del y_list[0]
-                del rho_list[0]
+                s_list.popleft()
+                y_list.popleft()
+                rho_list.popleft()
 
             # compute s_k , y_k, p_k
             s_k = x_new - x_old
@@ -578,14 +613,19 @@ class Network:
             x_old = x_new
             gradient_old = gradient_new
 
-            # stop criterion
-            if (norm(gradient_old)) < epsilon:
-                print "stop: norm gradient, epoch", epoch
-                break
+        # truncate arrays to proper length
+        none = np.array(None)
+        tr_losses = tr_losses[tr_losses != none]
+        tr_misses = tr_misses[tr_misses != none]
+        vl_losses = vl_losses[vl_losses != none]
+        vl_misses = vl_misses[vl_misses != none]
+        alpha_list = alpha_list[alpha_list != none]
+        norm_gradient = norm_gradient[norm_gradient != none]
+        condition_numbers = condition_numbers[condition_numbers != none]
 
-        return losses, misses, losses_validation, misses_validation, alpha_list, gradient_norm, condition_numbers
+        return tr_losses, tr_misses, vl_losses, vl_misses, alpha_list, norm_gradient, condition_numbers
 
-    def backtracking_line_search(self, alpha, c_1, data, gradient, loss,
+    def backtracking_line_search(self, c_1, data, gradient, loss,
                                  lossObject, p, targets, theta, regularization):
         """
         Performs a backtracking line search, along the search direction p, that satisfies the Armijo
@@ -605,6 +645,7 @@ class Network:
         assert theta < 1
         phi_0 = loss  # phi(0) = f(x_k + 0 * p) = f(x_k)
         phi_p_0 = np.dot(gradient, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
+        alpha = 1.0
 
         if not phi_p_0 < 0:
             raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
@@ -614,7 +655,8 @@ class Network:
             if phi_alpha <= phi_0 + c_1 * alpha * phi_p_0:
                 # Armijo condition satisfied
                 return alpha
-            alpha *= theta  # theta < 1, decrease alpha
+            alpha = alpha * theta  # theta < 1, decrease alpha
+        print "backtracking line search - alpha too small"
         return -1
 
     def armijo_wolfe_line_search(self, c_1, c_2, data, gradient, loss, lossObject, p, targets, theta, regularization):
@@ -714,7 +756,7 @@ class Network:
                 # 4. evaluate phi'(alpha_j)
                 phi_p_alpha_j = np.dot(gradient_alpha_j, p)
                 # 5. if |phi'(alpha_j)| <= - c_2 * phi'(0) (strong Wolfe satisfied?)
-                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0: #or phi_p_alpha_j >= c_2 * phi_p_0:     #TODO: trial (or wolfe satisfied)
+                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0: #or phi_p_alpha_j >= c_2 * phi_p_0: #TODO: trial (or wolfe satisfied)
                     return alpha_j
                 # 6. if phi'(alpha_j)(alpha_high - alpha_low) >= 0
                 if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:
@@ -789,15 +831,12 @@ class Network:
             - gradient_alpha = nabla f(x_k + alpha_i * p_k)
             - loss_alpha     = phi(alpha_i)
         """
-        # creates a copy of weights
-        actual_weights = copy.deepcopy(self.layers)
-
         # compute x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
         self.update_weights_BFGS(delta=alpha_i * p)
         gradient_alpha, loss_alpha, _ = self.calculate_gradient(data, targets, lossObject, regularization)
+        # restore weights
+        self.update_weights_BFGS(delta=-alpha_i*p)
 
-        # restore original weights
-        self.layers = actual_weights
         return gradient_alpha, loss_alpha
 
     # ------------------- end BFGS & L-BFGS ----------------------------------
@@ -916,7 +955,6 @@ def select_random_point_between(alpha_low, alpha_high):
     :param alpha_high:
     :return:
     """
-    #convex = np.random.uniform(0.01, 0.99)
     convex = 0.5  # bisection
     alpha_j = convex * alpha_low + (1 - convex) * alpha_high
     return alpha_j

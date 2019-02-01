@@ -75,12 +75,11 @@ class ReLuNeuron(Neuron):
 class TanHNeuron(Neuron):
 
     def activation_function(self, x):
-        sigmoid = lambda y: (1 / (1 + np.exp(-y)))
-        self.output = 2 * sigmoid(2*x) - 1
+        self.output = np.tanh(x)
+        return self.output
 
     def activation_function_derivative(self):
-        return 1 - (self.output * self.output)
-
+        return 1.0 - self.output**2
 
 class BiasNeuron(Neuron):
     def __init__(self):

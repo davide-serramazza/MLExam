@@ -324,7 +324,7 @@ def is_pos_semidef(x):
     prints out if at least one eigenvalue is equal to 0.
     """
     eigenvalues = np.linalg.eigvals(x)
-    if np.any(eigenvalues == 0):
+    if np.any(eigenvalues < 1e-16):
         print "eigenvalues - at least one equal to 0"
 
-    return np.all(eigenvalues >= 0)
+    return np.all(eigenvalues >= 1e-16)

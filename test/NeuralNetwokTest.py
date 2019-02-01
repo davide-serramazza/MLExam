@@ -134,7 +134,7 @@ class TestNeuralNetwork(unittest.TestCase):
                                           lossObject=SquaredError("sigmoid"), epochs=1, regularization=0,
                                           epsilon=0.0001)
         self.assertEqual(np.round(loss[1], 8), 0.08265625)
-        self.assertEqual(network.predict(data)[0][0], 4.2875)
+        self.assertAlmostEqual(network.predict(data)[0][0], 4.2875)
 
     def test_bfgs_equal_lbfgs_if_m_is_big(self):
         x_train = [[2, 2], [1, 1], [3, 2], [2, 4]]
@@ -164,7 +164,7 @@ class TestNeuralNetwork(unittest.TestCase):
 
         np.testing.assert_almost_equal(gradient_bfgs, gradient_lbfgs, decimal=5)
 
-    def test_gradient(self):
+    def test_gradient_1_layer_linear(self):
         network = Network([2,2], [InputNeuron, OutputNeuron])
         network.layers[-1].neurons[0].weights = np.array([3, 2, 1], dtype=np.float)
         network.layers[-1].neurons[1].weights = np.array([4, 1, 1], dtype=np.float)
@@ -176,13 +176,91 @@ class TestNeuralNetwork(unittest.TestCase):
         loss_derivative = loss_obj.derivative(y, output_net)[0]
         delta_out_layer = network.compute_delta_output_layer(output_net, y, loss_obj)[0]
         gradient, _, _ = network.back_propagation(y[0], lossObject=EuclideanError(), regularization=0)
+        gradient_vector, _, _ = network.calculate_gradient(x, y, loss_obj, regularization=0)
         # assertion
+        np.testing.assert_array_equal(output_net[0], [8,7])
         np.testing.assert_array_equal(loss_derivative, [10, 8])
         np.testing.assert_array_equal(delta_out_layer, [10, 8])
-        np.testing.assert_array_equal(gradient[0], [[10, 20, 10], [8, 16, 8]])
-
-        gradient_vector, _, _ = network.calculate_gradient(x, y, loss_obj, regularization=0)
+        np.testing.assert_array_equal(gradient.tolist(), [[[10, 20, 10], [8, 16, 8]]])
         np.testing.assert_array_equal(gradient_vector, [10, 20, 10, 8, 16, 8])
+
+    def test_gradient_2_layer_linear(self):
+        network = Network([2,2,2], [InputNeuron, LinearNeuron, OutputNeuron])
+        network.layers[-2].neurons[0].weights = np.array([3, 2, 1], dtype=np.float)
+        network.layers[-2].neurons[1].weights = np.array([4, 1, 1], dtype=np.float)
+        network.layers[-1].neurons[0].weights = np.array([1, 0, 1], dtype=np.float)
+        network.layers[-1].neurons[1].weights = np.array([2, 1, 1], dtype=np.float)
+
+        x, y = [[1,2]], np.array([[10,26]])
+        loss_obj = EuclideanError()
+        # computation sub-routines
+        output_net = network.predict(x)
+        loss_derivative = loss_obj.derivative(y, output_net)[0]
+        delta_out_layer = network.compute_delta_output_layer(output_net, y, loss_obj)[0]
+        gradient, _, _ = network.back_propagation(y[0], lossObject=EuclideanError(), regularization=0)
+        gradient_vector, _, _ = network.calculate_gradient(x, y, loss_obj, regularization=0)
+        # assertion
+        np.testing.assert_array_equal(output_net[0], [9,24])
+        np.testing.assert_array_equal(loss_derivative, [-2, -4])
+        np.testing.assert_array_equal(delta_out_layer, [-2, -4])
+        np.testing.assert_array_equal(gradient.tolist(), [[[-10, -20, -10], [-4, -8, -4]], [[-16,-14,-2], [-32,-28,-4]]])
+        np.testing.assert_array_equal(gradient_vector, [-10, -20, -10,-4, -8, -4,-16,-14,-2, -32,-28,-4])
+
+    def test_init_zero_gradient(self):
+        network = Network([2,5,1], [InputNeuron, TanHNeuron, OutputNeuron])
+        g_init = network.zero_init_gradient()
+        np.testing.assert_array_equal((g_init[0].shape, g_init[1].shape), ((5,3), (1,6)))
+
+        network = Network([2,1,1], [InputNeuron, TanHNeuron, OutputNeuron])
+        g_init = network.zero_init_gradient()
+        np.testing.assert_array_equal((g_init[0].shape, g_init[1].shape), ((1,3), (1,2)))
+
+    def test_gradient_2_layer_tanh_lin(self):
+        network = Network([2,1,1], [InputNeuron, TanHNeuron, OutputNeuron])
+        network.layers[-2].neurons[0].weights = np.array([1, 2, 1], dtype=np.float)
+        network.layers[-1].neurons[0].weights = np.array([2, 1], dtype=np.float)
+
+        x, y = [[2,1]], np.array([[4]])
+        loss_obj = EuclideanError()
+
+        # computation sub-routines
+        output_net = network.predict(x)
+        loss_derivative = loss_obj.derivative(y, output_net)[0]
+        delta_out_layer = network.compute_delta_output_layer(output_net, y, loss_obj)[0]
+        delta_hid_layer = network.compute_delta_hidden_layer(delta_out_layer, currentLayerIndex=1)
+        gradient_vector, _, _ = network.calculate_gradient(x, y, loss_obj, regularization=0)
+        #gradient, _, _ = network.back_propagation(y[0], lossObject=EuclideanError(), regularization=0)
+
+        # assertion
+        np.testing.assert_array_almost_equal(output_net[0], [2.9998184])
+        np.testing.assert_array_almost_equal(loss_derivative, [-2.0003632])
+        np.testing.assert_array_almost_equal(delta_out_layer, [-2.0003632])
+        np.testing.assert_array_almost_equal(delta_hid_layer, [-0.0007264648])
+        np.testing.assert_array_almost_equal(gradient_vector, [-0.00145293, -0.00072646, -0.00072646, -2.00018158, -2.0003632])
+        #gradient_paper = np.reshape([[[-0.00145293, -0.00072646, -0.00072646]], [[-2.00018158, -2.0003632]]], newshape=(2,))
+        #np.testing.assert_array_almost_equal(gradient, gradient_paper)
+
+    def test_evaluate_phi_alpha(self):
+        network = Network([2,2], [InputNeuron, OutputNeuron])
+        network.layers[-1].neurons[0].weights = np.array([3, 2, 1], dtype=np.float)
+        network.layers[-1].neurons[1].weights = np.array([4, 1, 1], dtype=np.float)
+
+        x, y = [[1,2]], np.array([[3,3]])
+        loss_obj = EuclideanError()
+        gradient_vector, _, _ = network.calculate_gradient(x, y, loss_obj, regularization=0)
+        H = np.identity(gradient_vector.shape[0])
+        p = - H.dot(gradient_vector)
+
+        layers = copy.deepcopy(network.get_weights_as_vector())
+        g_phi_alpha, phi_alpha = network.evaluate_phi_alpha(0.5, x, loss_obj, p, y, regularization=0)
+        _, phi_0 = network.evaluate_phi_alpha(0.0, x, loss_obj, p, y, regularization=0)
+        loss = loss_obj.value(y, network.predict(x))
+
+        np.testing.assert_array_almost_equal(layers, network.get_weights_as_vector())
+        self.assertAlmostEqual(phi_alpha, 32.0156212)
+        np.testing.assert_array_equal(g_phi_alpha, np.array([-50,-100,-50,-40,-80,-40]))
+        self.assertAlmostEqual(phi_0, loss)
+
 
 
 if __name__ == '__main__':
