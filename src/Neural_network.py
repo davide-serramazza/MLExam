@@ -4,7 +4,7 @@ import sys
 from collections import deque
 from numpy.linalg import cond, norm
 import matplotlib.pyplot as plt
-from utils import shuffle_dataset, is_pos_semidef
+from utils import shuffle_dataset, is_pos_def
 
 
 class Network:
@@ -378,6 +378,9 @@ class Network:
         # rho_k = 1/(y_k^t*s_k)
         rho_k = float(1) / np.dot(s_k, y_k)
 
+        if rho_k < 0:
+            raise Exception("rho_K < 0")
+
         # V_k = I - rho_k * s_k * y_k^t
         tmp = rho_k * np.outer(y_k, s_k)
         V_k = np.identity(shape) - tmp
@@ -426,6 +429,7 @@ class Network:
             p = - H.dot(gradient_old)
             #TODO: try normalize p
             #p /= norm(p)
+            #print - np.dot(gradient_old, p) / (norm(gradient_old) * norm(p)) >= 1 / cond(H)
 
             # 2. line search
             if line_search == 'wolfe':
@@ -464,8 +468,10 @@ class Network:
             # 6. update matrix H
             H = self.update_matrix_BFGS(H, s_k, y_k)
             condition_numbers[epoch+1] = cond(H)
-            if not is_pos_semidef(H):
+            if not is_pos_def(H):
                 raise Exception("matrix H is not positive semidefinite")
+
+            #np.testing.assert_array_almost_equal(np.dot(H,y_k), s_k)
 
             # update x_old and gradient_old
             x_old = x_new
@@ -556,13 +562,14 @@ class Network:
 
             # compute condition number
             condition_numbers[epoch] = cond(H)
-            if not is_pos_semidef(H):
+            if not is_pos_def(H):
                 raise Exception("matrix H is not positive semidefinite")
 
             # compute p = - H_k * \nabla f_k using two loop recursion
             p = - self.compute_direction(H, gradient_old, s_list, y_list, rho_list)
             #TODO: try normalize p
             #p /= norm(p)
+            #print - np.dot(gradient_old, p) / (norm(gradient_old) * norm(p)) >= 1 / cond(H)
 
             # line search
             if line_search == 'wolfe':
@@ -651,7 +658,7 @@ class Network:
             raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
 
         while alpha > 1e-16:
-            _, phi_alpha = self.evaluate_phi_alpha(alpha, data, lossObject, p, targets, regularization)
+            _, phi_alpha = self.phi_alpha(alpha, data, lossObject, p, targets, regularization)
             if phi_alpha <= phi_0 + c_1 * alpha * phi_p_0:
                 # Armijo condition satisfied
                 return alpha
@@ -688,17 +695,17 @@ class Network:
 
         for i in range(max_iter):
             # 1. evaluate phi(alpha_i)
-            gradient_alpha_i, phi_alpha_i = self.evaluate_phi_alpha(alpha_i, data, lossObject, p, targets, regularization)
+            gradient_alpha_i, phi_alpha_i = self.phi_alpha(alpha_i, data, lossObject, p, targets, regularization)
 
-            # 2. if phi(alpha_i) > phi(0) + c1 * alpha_i * phi_p(0) or [phi(alpha_i) >= phi(alpha_{i-1}) and i > 1]
+            # 2. if phi(alpha_i) > phi(0) + c1 * alpha_i * phi'(0) or [phi(alpha_i) >= phi(alpha_{i-1}) and i > 0]
             if phi_alpha_i > phi_0 + c_1 * alpha_i * phi_p_0 or (i > 0 and phi_alpha_i >= phi_alpha_old):
                 alpha_star = self.zoom(alpha_old, alpha_i, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization)
                 return alpha_star
 
-            # 3. evaluate phi'(alpha_i) = \nabla f(x_k + alpha * p_k) * p_k
+            # 3. evaluate phi'(alpha_i) = \nabla f(x_k + alpha_i * p_k) * p_k
             phi_p_alpha_i = np.dot(gradient_alpha_i, p)
 
-            # 4. if |phi'(alpha_i)| <= - c_2 * phi'(0) (strong Wolfe satisfied?) or Wolfe
+            # 4. if |phi'(alpha_i)| <= - c_2 * phi'(0) (strong Wolfe satisfied?)
             if abs(phi_p_alpha_i) <= - c_2 * phi_p_0:
                 alpha_star = alpha_i
                 return alpha_star
@@ -714,6 +721,7 @@ class Network:
 
             # 6. choose alpha_{i+1}
             alpha_i = alpha_i / theta
+            #alpha_i = self.interpolate(alpha_i, 1 + alpha_i, data, lossObject, p, targets, regularization)
 
         print "line search/bracketing phase - max iterations"
         return -1
@@ -740,14 +748,14 @@ class Network:
 
         for i in range(max_iter):
             # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
-            #alpha_j = self.interpolate(alpha_high, alpha_low, data, lossObject, p, targets, regularization)
+            #alpha_j = self.interpolate(alpha_low, alpha_high, data, lossObject, p, targets, regularization)
             #alpha_j = self.safeguarded_interpolation(alpha_high, alpha_low, 0.01, data, lossObject, p, targets, regularization)
             alpha_j = select_random_point_between(alpha_low, alpha_high)
             # 2. evaluate phi(alpha_j)
-            gradient_alpha_j, phi_alpha_j = self.evaluate_phi_alpha(alpha_j, data, lossObject, p, targets, regularization)
+            gradient_alpha_j, phi_alpha_j = self.phi_alpha(alpha_j, data, lossObject, p, targets, regularization)
 
             # evaluate phi(alpha_low)
-            _, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets, regularization)
+            _, phi_alpha_low = self.phi_alpha(alpha_low, data, lossObject, p, targets, regularization)
 
             # 3. if phi(alpha_j) > phi(0) + c_1 * alpha_j * phi'(0) or phi(alpha_j) >= phi(alpha_low)
             if phi_alpha_j > phi_0 + c_1 * alpha_j * phi_p_0 or phi_alpha_j >= phi_alpha_low:
@@ -756,7 +764,7 @@ class Network:
                 # 4. evaluate phi'(alpha_j)
                 phi_p_alpha_j = np.dot(gradient_alpha_j, p)
                 # 5. if |phi'(alpha_j)| <= - c_2 * phi'(0) (strong Wolfe satisfied?)
-                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0: #or phi_p_alpha_j >= c_2 * phi_p_0: #TODO: trial (or wolfe satisfied)
+                if abs(phi_p_alpha_j) <= - c_2 * phi_p_0:
                     return alpha_j
                 # 6. if phi'(alpha_j)(alpha_high - alpha_low) >= 0
                 if phi_p_alpha_j * (alpha_high - alpha_low) >= 0:
@@ -770,7 +778,7 @@ class Network:
         print "zoom - max iterations"
         return -1
 
-    def interpolate(self, alpha_high, alpha_low, data, lossObject, p, targets, reg):
+    def interpolate(self, alpha_low, alpha_high, data, lossObject, p, targets, reg):
         """
         find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation.
         :param alpha_high: left edge of the interval containing step sizes satisfying the wolfe conditions
@@ -782,13 +790,16 @@ class Network:
         :return:
         """
         # 1.1 evaluate phi(alpha_low), phi'(alpha_low), and phi(alpha_high)
-        gradient_alpha_low, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets, reg)
+        gradient_alpha_low, phi_alpha_low = self.phi_alpha(alpha_low, data, lossObject, p, targets, reg)
         phi_p_alpha_low = np.dot(gradient_alpha_low, p)
-        _, phi_alpha_high = self.evaluate_phi_alpha(alpha_high, data, lossObject, p, targets, reg)
+        _, phi_alpha_high = self.phi_alpha(alpha_high, data, lossObject, p, targets, reg)
         # 1.2 interpolate
-        alpha_j = - (phi_p_alpha_low * alpha_high ** 2) / \
-                  (2 * (phi_alpha_high - phi_alpha_low - phi_p_alpha_low * alpha_high))
-        return alpha_j
+        #alpha_j = - (phi_p_alpha_low * alpha_high ** 2) / \
+        #          (2 * (phi_alpha_high - phi_alpha_low - phi_p_alpha_low * alpha_high))
+        #return alpha_j
+        alpha_min = alpha_low - 0.5 * (alpha_low - alpha_high) * phi_p_alpha_low / \
+        (phi_p_alpha_low - (phi_alpha_low - phi_alpha_high) / (alpha_low - alpha_high))
+        return alpha_min
 
     def safeguarded_interpolation(self, alpha_high, alpha_low, sfgrd, data, lossObject, p, targets, reg):
         """
@@ -803,8 +814,8 @@ class Network:
         :param targets:
         :return:
         """
-        gradient_alpha_low, phi_alpha_low = self.evaluate_phi_alpha(alpha_low, data, lossObject, p, targets, reg)
-        gradient_alpha_high, phi_alpha_high = self.evaluate_phi_alpha(alpha_high, data, lossObject, p, targets, reg)
+        gradient_alpha_low, phi_alpha_low = self.phi_alpha(alpha_low, data, lossObject, p, targets, reg)
+        gradient_alpha_high, phi_alpha_high = self.phi_alpha(alpha_high, data, lossObject, p, targets, reg)
         phi_p_alpha_low = np.dot(gradient_alpha_low, p)
         phi_p_alpha_high = np.dot(gradient_alpha_high, p)
 
@@ -814,7 +825,7 @@ class Network:
         alpha_j = max(first, second)
         return alpha_j
 
-    def evaluate_phi_alpha(self, alpha_i, data, lossObject, p, targets, regularization):
+    def phi_alpha(self, alpha_i, data, lossObject, p, targets, regularization):
         """
         Computes phi(alpha) = f(x_k + alpha_i * p_k), where
         - x_k are the current weights of the network
@@ -892,7 +903,7 @@ class Network:
         alpha_values = np.linspace(0, 5e-10, 500)
         phi_values = []
         for a in alpha_values:
-            gradient_alpha_j, phi_alpha_try = self.evaluate_phi_alpha(a, data, lossObject, p, targets, regularization)
+            gradient_alpha_j, phi_alpha_try = self.phi_alpha(a, data, lossObject, p, targets, regularization)
             phi_values.append(phi_alpha_try)
 
         plt.figure()
@@ -911,7 +922,7 @@ class Network:
 
         # phi(alpha)
         for a in alpha_values:
-            gradient_alpha_j, phi_alpha_try = self.evaluate_phi_alpha(a, data, lossObject, p, targets, regularization)
+            gradient_alpha_j, phi_alpha_try = self.phi_alpha(a, data, lossObject, p, targets, regularization)
             phi_values.append(phi_alpha_try)
 
         # tangent line at alpha=0

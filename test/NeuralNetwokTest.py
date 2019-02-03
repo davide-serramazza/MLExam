@@ -252,8 +252,8 @@ class TestNeuralNetwork(unittest.TestCase):
         p = - H.dot(gradient_vector)
 
         layers = copy.deepcopy(network.get_weights_as_vector())
-        g_phi_alpha, phi_alpha = network.evaluate_phi_alpha(0.5, x, loss_obj, p, y, regularization=0)
-        _, phi_0 = network.evaluate_phi_alpha(0.0, x, loss_obj, p, y, regularization=0)
+        g_phi_alpha, phi_alpha = network.phi_alpha(0.5, x, loss_obj, p, y, regularization=0)
+        _, phi_0 = network.phi_alpha(0.0, x, loss_obj, p, y, regularization=0)
         loss = loss_obj.value(y, network.predict(x))
 
         np.testing.assert_array_almost_equal(layers, network.get_weights_as_vector())
@@ -261,7 +261,25 @@ class TestNeuralNetwork(unittest.TestCase):
         np.testing.assert_array_equal(g_phi_alpha, np.array([-50,-100,-50,-40,-80,-40]))
         self.assertAlmostEqual(phi_0, loss)
 
+    def update_matrix_BFGS(self):
+        dummy_network = Network([1,1], [InputNeuron, OutputNeuron])
 
+        H_k = np.array([[4,2], [2,3]])
+        s_k = np.array([1,2])
+        y_k = np.array([3,1])
+
+        # test H pos def and simmetric
+        self.assertEqual(np.all(np.linalg.eigvals(H_k) > 0), True)
+        np.testing.array_almost_equal(H_k, H_k.T)
+
+        # update matrix
+        H_new = dummy_network.update_matrix_BFGS(H_k, s_k, y_k)
+
+        # test H_new simmetric, pos def, secant equation
+        np.testing.array_almost_equal(H_new, np.array([[11, -33], [-33, 99]]) / 25)
+        self.assertEqual(np.all(np.linalg.eigvals(H_new) > 0), True)
+        np.testing.array_almost_equal(H_new, H_new.T)
+        np.testing.assert_array_almost_equal(np.dot(H_new, y_k), s_k)
 
 if __name__ == '__main__':
     unittest.main()

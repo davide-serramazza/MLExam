@@ -10,7 +10,7 @@ def plot_condition_number_vs_iterations(cond_bfgs=None, cond_lbfgs=None):
     plt.xscale('log')
     plt.yscale('log')
     plt.xlabel('Iterazioni')
-    plt.ylabel(r'k(H)')
+    plt.ylabel(r'$k(H)$')
     plt.show()
 
 def lbfgs_iterations_vs_m(iter_values, m_values):
@@ -318,7 +318,7 @@ def holdout_cup(patterns, labels, fraction_tr):
     second_partition_labels = labels[len_partion:]
     return first_partition_patterns, first_partition_labels, second_partition_pattens, second_partition_labels
 
-def is_pos_semidef(x):
+def is_pos_def(x):
     """
     checks if matrix 'x' is positive semidefinite. For debugging and exploration reasons
     prints out if at least one eigenvalue is equal to 0.
@@ -327,4 +327,4 @@ def is_pos_semidef(x):
     if np.any(eigenvalues < 1e-16):
         print "eigenvalues - at least one equal to 0"
 
-    return np.all(eigenvalues >= 1e-16)
+    return np.all(eigenvalues > 1e-16)
