@@ -2,9 +2,9 @@ from Layer import *
 from loss_functions import *
 import sys
 from collections import deque
-from numpy.linalg import cond, norm
+from numpy.linalg import cond, norm, eigvals
 import matplotlib.pyplot as plt
-from utils import shuffle_dataset, is_pos_def
+from utils import shuffle_dataset, is_pos_def, check_dimensions
 
 
 class Network:
@@ -86,44 +86,47 @@ class Network:
                  misClassification: misclassification error
         """
         # vector containing the deltas of each layer
-        delta_vectors = deque()
+        delta_vectors = np.empty(len(self.architecture)-1, dtype=object)
 
         # 1. get output vector from forward step
         output_net = np.array(self.getOutput())
 
         # 2. for each network output unit compute its error term delta
         delta_outputLayer = self.compute_delta_output_layer(output_net, target, lossObject)
-        delta_vectors.append(delta_outputLayer)
+        delta_vectors[-1] = delta_outputLayer
 
         # 3. for each hidden unit compute its error term delta
         delta_next_layer = delta_outputLayer
         # compute delta vector for each hidden layer and append it to delta_vectors
         for hidden_layer_index in range(len(self.layers) - 2, 0, -1):
             delta_next_layer = self.compute_delta_hidden_layer(delta_next_layer, hidden_layer_index)
-            delta_vectors.appendleft(delta_next_layer)
+            delta_vectors[hidden_layer_index-1] = delta_next_layer
 
         # 4. compute network weights update
-        gradient_weights = self.compute_gradient_from_deltas(np.asarray(delta_vectors))
+        gradient_weights = self.compute_gradient_from_deltas(delta_vectors)
 
         # add regularization gradient 2 * lambda * w_{ji}
         for grad_layer, layer in zip(gradient_weights, self.layers[1:]):  # exclude input layer
             for grad_neuron, neuron in zip(grad_layer, layer.neurons[:-1]):  # exclude bias neuron
-                reg_component_vector = 2 * regularization * neuron.weights[:-1]  # exclude bias neuron weight
-                grad_neuron[:-1] = grad_neuron[:-1] + reg_component_vector
+                grad_neuron[:-1] = grad_neuron[:-1] + 2 * regularization * neuron.weights[:-1]  # exclude bias neuron weight
 
         # 5 report loss and misclassification count
-        weights = self.get_weights_as_vector()
-        loss_value = lossObject.value(target, output_net, weights, regularization)
+        weights_r = self.get_weights_as_vector(to_regularize=True)
+        loss_value = lossObject.value(target, output_net, weights_r, regularization)
         misClassification = lossObject.misClassification(target, output_net)
 
         return gradient_weights, loss_value, misClassification
 
-    def get_weights_as_vector(self):
+    def get_weights_as_vector(self, to_regularize=False):
         """
         gets neural network weights as a single array.
         :return: array of weights
         """
-        weights = [neuron.weights for layer in self.layers[1:] for neuron in layer.neurons[:-1]]
+        if to_regularize:
+            # do not regularize bias weights
+            weights = [neuron.weights[:-1] for layer in self.layers[1:] for neuron in layer.neurons[:-1]]
+        else:
+            weights = [neuron.weights for layer in self.layers[1:] for neuron in layer.neurons[:-1]]
         weights = np.concatenate(weights).ravel()
         return weights
 
@@ -176,8 +179,8 @@ class Network:
 
     def compute_delta_output_layer(self, output_net, target, loss):
         output_layer = self.layers[-1]
-        af_derivatives = np.array([neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]])
-        error_derivatives = loss.derivative(np.array(target), output_net)
+        af_derivatives = [neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]]
+        error_derivatives = loss.derivative(target, output_net)
         delta_outputLayer = np.multiply(af_derivatives, error_derivatives)
         return delta_outputLayer
 
@@ -190,6 +193,8 @@ class Network:
         :return: validation loss
                  validation misclassification error
         """
+        if patterns is None or targets is None:
+            return None, None
         # predict each validation set pattern
         scores = self.predict(patterns)
 
@@ -222,69 +227,71 @@ class Network:
         :return: losses, vector of the loss computed at each epoch
                  misClassification, vector of misclassification loss for each epoch
         """
+        check_dimensions(self.architecture, x_train, y_train)
 
         # lists for specify missclassification and Squared error (for training and validation)
-        losses, losses_val = np.array([]), np.array([])
-        missclass, missclass_val = np.array([]), np.array([])
-        gradient_norm = []
+        norm_gradient = np.empty((epochs), dtype=object)
+        tr_losses = np.empty((epochs), dtype=object)
+        vl_losses = np.empty((epochs), dtype=object)
+        tr_misses = np.empty((epochs), dtype=object)
+        vl_misses = np.empty((epochs), dtype=object)
 
         # prev_delta is previous weights update (for momentum)
         prev_delta = self.zero_init_gradient()
+        n_batches =  len(range(0, len(x_train), batch_size))
 
         for epoch in range(epochs):
+            #print epoch, "out of", epochs
+
+            gradient_epoch = self.zero_init_gradient()
             # current epoch value of misclassification and Squared error
-            loss_epoch, missclass_epoch, gradient_norm_epoch = 0, 0, 0
+            loss_epoch, missclass_epoch = 0.0, 0.0
 
             # shuffle data set
-            data_shuffled, targets_shuffled = shuffle_dataset(x_train, y_train)
+            x_train, y_train = shuffle_dataset(x_train, y_train)
 
-            for i in range(0, len(data_shuffled), batch_size):
+            for i in range(0, len(x_train), batch_size):
                 # take only batch_size examples
-                batch_pattern = data_shuffled[i:i + batch_size]
-                batch_target = targets_shuffled[i:i + batch_size]
+                x_mb = x_train[i:i + batch_size]
+                y_mb = y_train[i:i + batch_size]
 
-                # gradient_w_batch = sum of gradient_w for the epoch
-                gradient_w_batch = self.zero_init_gradient()
-
-                # train, compute gradient for a batch
-                for pattern, t in zip(batch_pattern, batch_target):
-                    self.forward(pattern)
-                    gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization)
-                    loss_epoch += loss_p
-                    missclass_epoch += miss_p
-                    gradient_w_batch += gradient_w
-
-                gradient_w_batch /= float(len(batch_pattern))  # take mean gradient across batch
-                gradient_norm_epoch += np.linalg.norm(self.get_gradient_as_vector(gradient_w_batch))
+                gradient_mb, loss_mb, miss_mb = self.calculate_gradient(x_mb, y_mb, lossObject, regularization, as_vector=False)
+                loss_epoch += loss_mb
+                missclass_epoch += miss_mb
+                gradient_epoch += gradient_mb
 
                 # update neural network weights after a batch of training example
                 # save previous weight update
-                prev_delta = self.update_weights_SGD(gradient_w=gradient_w_batch,
+                prev_delta = self.update_weights_SGD(gradient_w=gradient_mb,
                                                  learning_rate=learning_rate,
                                                  prev_delta=prev_delta,
                                                  momentum=momentum)
 
-            # append the total loss and misClassification of single epoch
-            losses = np.append(losses, loss_epoch)
-            missclass = np.append(missclass, missclass_epoch)
-            gradient_norm.append(gradient_norm_epoch)
-
             # computing loss and misClassification on validation set then append to list
-            loss_val_epoch, missclass_val_epoch = self.validation_error(x_test, y_test, lossObject)
+            loss_val_epoch, misclass_val_epoch = self.validation_error(x_test, y_test, lossObject)
 
-            losses_val = np.append(losses_val, loss_val_epoch)
-            missclass_val = np.append(missclass_val, missclass_val_epoch)
+            # append the total loss and misClassification of single epoch
+            tr_losses[epoch] = loss_epoch / n_batches
+            tr_misses[epoch] = missclass_epoch / n_batches
+            vl_losses[epoch] = loss_val_epoch
+            vl_misses[epoch] = misclass_val_epoch
+            norm_gradient[epoch] = norm(self.get_gradient_as_vector(gradient_epoch)) / n_batches
 
             # condition stop
-            if gradient_norm_epoch < epsilon:
+            if norm_gradient[epoch] < epsilon:
                 print "stop: norm gradient. Epoch", epoch
                 break
+            #print "loss/grad_norm", tr_losses[epoch], norm_gradient[epoch]
 
-        # end of training - average over training set
-        losses /= float(len(x_train))
-        missclass /= float(len(x_train))
+        # truncate arrays to proper length
+        none = np.array(None)
+        tr_losses = tr_losses[tr_losses != none]
+        tr_misses = tr_misses[tr_misses != none]
+        vl_losses = vl_losses[vl_losses != none]
+        vl_misses = vl_misses[vl_misses != none]
+        norm_gradient = norm_gradient[norm_gradient != none]
 
-        return losses, missclass, losses_val, missclass_val, gradient_norm
+        return tr_losses, tr_misses, vl_losses, vl_misses, norm_gradient
 
     # --------------------- BFGS & L-BFGS ---------------------------------- #
 
@@ -319,7 +326,7 @@ class Network:
 
         return self.get_weights_as_vector()
 
-    def calculate_gradient(self, data, targets, lossObject, regularization):
+    def calculate_gradient(self, data, targets, lossObject, regularization, as_vector=True):
         """
         computes gradient on entire training set
         :param data:
@@ -343,14 +350,15 @@ class Network:
             miss_batch += miss_p
 
         # getting the gradient as vector
-        gradient = self.get_gradient_as_vector(gradient_w_batch)
+        if as_vector:
+            gradient_w_batch = self.get_gradient_as_vector(gradient_w_batch)
 
         # compute mean values
-        gradient /= float(len(data))
+        gradient_w_batch /= float(len(data))
         loss_batch /= float(len(data))
         miss_batch /= float(len(data))
 
-        return gradient, loss_batch, miss_batch
+        return gradient_w_batch, loss_batch, miss_batch
 
     def zero_init_gradient(self):
         """
@@ -394,6 +402,8 @@ class Network:
 
     def train_BFGS(self, x_train, y_train, x_test, y_test, theta, c_1, c_2,
                   lossObject, epochs, regularization, epsilon, line_search='wolfe', debug=False):
+        check_dimensions(self.architecture, x_train, y_train)
+
         # allocate arrays
         alpha_list = np.empty((epochs+1), dtype=object) # list that holds the step lengths alpha_k taken at each epoch
         norm_gradient = np.empty((epochs+1), dtype=object)
@@ -418,14 +428,14 @@ class Network:
         condition_numbers[0] = cond(H)
 
         for epoch in range(epochs):
-            print epoch, "out of", epochs
+            #print epoch, "out of", epochs#, "loss/grad_norm/cond(H)", tr_losses[epoch], norm_gradient[epoch], condition_numbers[epoch]
 
             # stop criterion
             if (norm(gradient_old)) < epsilon:
                 print "stop: gradient norm, epoch", epoch
                 break
 
-            # 1. compute search direction p = -H * gradient
+            # 1. compute search direction p = - H * gradient
             p = - H.dot(gradient_old)
             #TODO: try normalize p
             #p /= norm(p)
@@ -469,9 +479,8 @@ class Network:
             H = self.update_matrix_BFGS(H, s_k, y_k)
             condition_numbers[epoch+1] = cond(H)
             if not is_pos_def(H):
-                raise Exception("matrix H is not positive semidefinite")
-
-            #np.testing.assert_array_almost_equal(np.dot(H,y_k), s_k)
+                #raise Exception("matrix H is not positive definite")
+                print "stop - matrix H not positive definite. Min eigenvalue:", min(eigvals(H))
 
             # update x_old and gradient_old
             x_old = x_new
@@ -518,6 +527,7 @@ class Network:
 
     def train_LBFGS(self, x_train, y_train, x_test, y_test, lossObject, theta, c_1, c_2,
                     epsilon, m, regularization, epochs, line_search='wolfe', debug=False, is_test=False):
+        check_dimensions(self.architecture, x_train, y_train)
         # allocate arrays
         alpha_list = np.empty((epochs+1), dtype=object) # list that holds the step lengths alpha_k taken at each epoch
         norm_gradient = np.empty((epochs+1), dtype=object)
@@ -544,8 +554,7 @@ class Network:
 
         # main loop
         for epoch in range(epochs):
-            print epoch, "out of", epochs
-
+            #print epoch, "out of", epochs#, "loss/grad_norm", tr_losses[epoch], norm_gradient[epoch]
             # stop criterion
             if (norm(gradient_old)) < epsilon:
                 print "stop: norm gradient, epoch", epoch
@@ -563,7 +572,8 @@ class Network:
             # compute condition number
             condition_numbers[epoch] = cond(H)
             if not is_pos_def(H):
-                raise Exception("matrix H is not positive semidefinite")
+                #raise Exception("matrix H is not positive definite")
+                print "stop - matrix H not positive definite. Min eigenvalue:", min(eigvals(H))
 
             # compute p = - H_k * \nabla f_k using two loop recursion
             p = - self.compute_direction(H, gradient_old, s_list, y_list, rho_list)
@@ -771,7 +781,7 @@ class Network:
                     alpha_high = alpha_low
                 alpha_low = alpha_j
 
-            if abs(alpha_high - alpha_low) < 1e-16:
+            if abs(alpha_high - alpha_low) <= 1e-16:
                 print "zoom - interval too small"
                 return -1
 
@@ -843,10 +853,11 @@ class Network:
             - loss_alpha     = phi(alpha_i)
         """
         # compute x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
-        self.update_weights_BFGS(delta=alpha_i * p)
+        delta = alpha_i * p
+        self.update_weights_BFGS(delta=delta)
         gradient_alpha, loss_alpha, _ = self.calculate_gradient(data, targets, lossObject, regularization)
         # restore weights
-        self.update_weights_BFGS(delta=-alpha_i*p)
+        self.update_weights_BFGS(delta=-delta)
 
         return gradient_alpha, loss_alpha
 
@@ -917,7 +928,7 @@ class Network:
         plt.show()
 
     def plot_phi_alpha_and_tangent_line(self, data, lossObject, targets, p, gradient, regularization):
-        alpha_values = np.linspace(0, 1, 500)
+        alpha_values = np.linspace(0, 1, 100)
         phi_values = []
 
         # phi(alpha)
@@ -926,7 +937,7 @@ class Network:
             phi_values.append(phi_alpha_try)
 
         # tangent line at alpha=0
-        x = np.linspace(0, 1, 10)
+        x = np.linspace(0, 0.1, 10)
         phi_0 = phi_values[0]
         phi_p_0 = np.dot(gradient, p)
         y = phi_p_0 * x + phi_0 # y = mx + q

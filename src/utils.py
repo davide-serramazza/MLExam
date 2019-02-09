@@ -3,9 +3,9 @@ import numpy as np
 
 def plot_condition_number_vs_iterations(cond_bfgs=None, cond_lbfgs=None):
     if cond_bfgs is not None:
-        plt.plot(range(len(cond_bfgs)), cond_bfgs, '--', alpha=1, label='bfgs')
+        plt.plot(range(len(cond_bfgs)), cond_bfgs, '--', alpha=0.8, label='bfgs', linewidth=2)
     if cond_lbfgs is not None:
-        plt.plot(range(len(cond_lbfgs)), cond_lbfgs, '-', alpha=1, label='l-bfgs')
+        plt.plot(range(len(cond_lbfgs)), cond_lbfgs, '-', alpha=0.8, label='l-bfgs', linewidth=2)
     plt.legend(loc='best')
     plt.xscale('log')
     plt.yscale('log')
@@ -27,7 +27,7 @@ def shuffle_dataset(data, targets):
     return data_shuffled, targets_shuffled
 
 
-def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclass_train):
+def plot_train_test_learning_curve_loss(loss_test, loss_train):
     """
     plots loss (in log-scale) and accuracy learning curves on training and test set
     :param loss_test:
@@ -39,28 +39,29 @@ def plot_train_test_learning_curve(loss_test, loss_train, misclass_test, misclas
     plt.figure()
     plt.yscale('log')
     plt.xscale('log')
-    plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.8, label='train loss')
-    plt.plot(range(len(loss_test)), loss_test, '-x', alpha=0.8, label='test loss')
+    plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.8, label='train loss', linewidth=2, color='blue')
+    plt.plot(range(len(loss_test)), loss_test, '-x', alpha=0.8, label='test loss', linewidth=2, color='green')
     plt.legend(loc='best')
     plt.xlabel('Iterazioni')
     plt.ylabel('Errore')
+    plt.show()
 
+def plot_train_test_learning_curve_accuracy(misclass_train, misclass_test):
     plt.figure()
-    plt.plot(range(len(misclass_train)), 1 - misclass_train, '-o', alpha=0.8, label='train accuracy')
-    plt.plot(range(len(misclass_test)), 1 - misclass_test, '-x', alpha=0.8, label='test accuracy')
+    plt.plot(range(len(misclass_train)), 1 - misclass_train, '-o', alpha=0.8, label='train accuracy', linewidth=2, color='blue')
+    plt.plot(range(len(misclass_test)), 1 - misclass_test, '-x', alpha=0.8, label='test accuracy', linewidth=2, color='green')
     plt.legend(loc='best')
     plt.xlabel('Iterazioni')
     plt.ylabel('Accuratezza')
     plt.show()
 
-
 def plot_norm_gradient_vs_iterations(g_norm_list_sgd=None, g_norm_list_bfgs=None, g_norm_list_lbfgs=None):
     if g_norm_list_sgd is not None:
-        plt.plot(range(len(g_norm_list_sgd)), g_norm_list_sgd, '-', alpha=1, label='sgd')
+        plt.plot(range(len(g_norm_list_sgd)), g_norm_list_sgd, '-', alpha=0.8, label='sgd', color='red', linewidth=2)
     if g_norm_list_bfgs is not None:
-        plt.plot(range(len(g_norm_list_bfgs)), g_norm_list_bfgs, '--', alpha=1, label='bfgs')
+        plt.plot(range(len(g_norm_list_bfgs)), g_norm_list_bfgs, '--', alpha=0.8, label='bfgs', color='black', linewidth=2)
     if g_norm_list_lbfgs is not None:
-        plt.plot(range(len(g_norm_list_lbfgs)), g_norm_list_lbfgs, ':', alpha=1, label='l-bfgs')
+        plt.plot(range(len(g_norm_list_lbfgs)), g_norm_list_lbfgs, ':', alpha=0.8, label='l-bfgs', color='blue', linewidth=2)
 
     plt.legend(loc='best')
     plt.xscale('log')
@@ -72,9 +73,9 @@ def plot_norm_gradient_vs_iterations(g_norm_list_sgd=None, g_norm_list_bfgs=None
 
 def plot_alpha_vs_iterations(alpha_list_bfgs=None, alpha_list_lbfgs=None):
     if alpha_list_bfgs is not None:
-        plt.step(range(len(alpha_list_bfgs)), alpha_list_bfgs, 'o', alpha=0.7, label='bfgs')
+        plt.step(range(len(alpha_list_bfgs)), alpha_list_bfgs, 'o', alpha=0.8, label='bfgs', color='black')
     if alpha_list_lbfgs is not None:
-        plt.step(range(len(alpha_list_lbfgs)), alpha_list_lbfgs, 's', alpha=0.7, label='l-bfgs')
+        plt.step(range(len(alpha_list_lbfgs)), alpha_list_lbfgs, 's', alpha=0.8, label='l-bfgs', color='blue')
     plt.legend(loc='best')
     plt.xscale('log')
     plt.yscale('log')
@@ -86,14 +87,15 @@ def plot_alpha_vs_iterations(alpha_list_bfgs=None, alpha_list_lbfgs=None):
 def plot_relative_gap_vs_iterations(loss_tr_sgd=None, loss_tr_bfgs=None, loss_tr_lbfgs=None):
     labels = ['sgd', 'bfgs', 'l-bfgs']
     line_style = ['-', '--', ':']
+    color = ['red', 'black', 'blue']
     lists = [loss_tr_sgd, loss_tr_bfgs, loss_tr_lbfgs]
 
-    for l, style, label in zip(lists, line_style, labels):
+    for l, style, label, c in zip(lists, line_style, labels, color):
         if l is not None:
             l_ = np.array(l)
             value_at_x_star = l_[-1]
             relative_gap_list = np.abs(l_ - value_at_x_star)
-            plt.plot(range(len(relative_gap_list)), relative_gap_list, style, alpha=1, label=label)
+            plt.plot(range(len(relative_gap_list)), relative_gap_list, style, alpha=0.8, label=label, color=c, linewidth=2)
 
     plt.legend(loc='best')
     plt.xlabel('Iterazioni')
@@ -328,3 +330,9 @@ def is_pos_def(x):
         print "eigenvalues - at least one equal to 0"
 
     return np.all(eigenvalues > 1e-16)
+
+def check_dimensions(architecture, x_train, y_train):
+    if architecture[0] != len(x_train[0]):
+        raise Exception("network input dimension (%d) and input data dimension (%d) must match!" %(architecture[0], len(x_train[0])))
+    if architecture[-1] != len(y_train[0]):
+        raise Exception("network output dimension (%d) and target data dimension (%d) must match!" %(architecture[0], len(y_train[0])))

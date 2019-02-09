@@ -1,4 +1,6 @@
 import numpy as np
+from numpy.linalg import norm
+from numpy import square, sum, round, sign
 
 
 class SquaredError:
@@ -18,10 +20,9 @@ class SquaredError:
         """
         # data error
         difference = target - output_net
-        data_error = np.sum(np.square(difference))
-        # regularization error
-        regularization_error = regularization * np.sum(np.square(weights))
-        return data_error + regularization_error
+        data_error = sum(square(difference))
+        regu_error = regularization * sum(square(weights))
+        return data_error + regu_error
 
     def misClassification(self, target, output_net):
         """
@@ -34,9 +35,9 @@ class SquaredError:
         :return:
         """
         if self.type == "sigmoid":
-            return np.sum(np.square((target - np.round(output_net))))
+            return sum(square((target - round(output_net))))
         if self.type == "tangentH":
-            return np.sum(np.square(target - np.sign(output_net)[0]))/4
+            return sum(square(target - sign(output_net)[0]))/4
         else:
             return np.Inf
 
@@ -52,10 +53,6 @@ class SquaredError:
 
 
 class EuclideanError:
-
-    def __init__(self, normalizer=None):
-        self.normalizer = normalizer
-
     def value(self, target, output_net, weights=[], regularization=0):
         """
         computes Euclidean error between targets and output
@@ -65,19 +62,10 @@ class EuclideanError:
         :param regularization: regularization strength
         :return:
         """
-
-        if self.normalizer is not None:
-            # de-normalize
-            den_target = self.normalizer.inverse_transform([target])
-            den_output = self.normalizer.inverse_transform([output_net])
-            target = den_target[0]
-            output_net = den_output[0]
-
         # data error
-        data_error = np.linalg.norm(output_net - target)
-        regularization_error = regularization * np.sum(np.square(weights))
-
-        return data_error + regularization_error
+        data_error = norm(output_net - target)
+        regu_error = regularization * sum(square(weights))
+        return data_error + regu_error
 
     def derivative(self, target, output_net):
         """
@@ -86,8 +74,8 @@ class EuclideanError:
         :param output_net:
         :return:
         """
-        # return derivative of MSE
-        return 2 * (output_net - target)
+        difference = output_net - target
+        return difference / norm(difference)
 
     def misClassification(self, target, output_net):
         # ignore
