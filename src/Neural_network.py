@@ -450,7 +450,6 @@ class Network:
             if alpha == -1:
                 print "stop: line search, epoch", epoch
                 if debug:
-                    self.plot_phi_alpha_in_neighborhood(x_train, lossObject, p, y_train, regularization)
                     self.plot_phi_alpha_and_tangent_line(x_train, lossObject, y_train, p, gradient_old, regularization)
                 break
             alpha_list[epoch] = alpha
@@ -481,7 +480,7 @@ class Network:
             if not is_pos_def(H):
                 #raise Exception("matrix H is not positive definite")
                 print "stop - matrix H not positive definite. Min eigenvalue:", min(eigvals(H))
-
+                break
             # update x_old and gradient_old
             x_old = x_new
             gradient_old = gradient_new
@@ -574,7 +573,7 @@ class Network:
             if not is_pos_def(H):
                 #raise Exception("matrix H is not positive definite")
                 print "stop - matrix H not positive definite. Min eigenvalue:", min(eigvals(H))
-
+                break
             # compute p = - H_k * \nabla f_k using two loop recursion
             p = - self.compute_direction(H, gradient_old, s_list, y_list, rho_list)
             #TODO: try normalize p
@@ -590,7 +589,6 @@ class Network:
             if alpha == -1:
                 print "stop: line search, epoch", epoch
                 if debug:
-                    self.plot_phi_alpha_in_neighborhood(x_train, lossObject, p, y_train, regularization)
                     self.plot_phi_alpha_and_tangent_line(x_train, lossObject, y_train, p, gradient_old, regularization)
                 break
             alpha_list[epoch] = alpha
@@ -910,23 +908,6 @@ class Network:
             for neuron in layer.neurons[:-1]:  # skip bias neuron
                 neuron.weights = np.load(file_input)
 
-    def plot_phi_alpha_in_neighborhood(self, data, lossObject, p, targets, regularization):
-        alpha_values = np.linspace(0, 5e-10, 500)
-        phi_values = []
-        for a in alpha_values:
-            gradient_alpha_j, phi_alpha_try = self.phi_alpha(a, data, lossObject, p, targets, regularization)
-            phi_values.append(phi_alpha_try)
-
-        plt.figure()
-        plt.plot(alpha_values, phi_values)
-        plt.xlabel(r'$\alpha$')
-        plt.ylabel(r'$\phi(\alpha)$')
-        plt.legend(loc='best')
-        #plt.yticks([round(min(phi_values),2), round(max(phi_values),2)])
-        plt.yscale('log')
-        #plt.xscale('log')
-        plt.show()
-
     def plot_phi_alpha_and_tangent_line(self, data, lossObject, targets, p, gradient, regularization):
         alpha_values = np.linspace(0, 1, 100)
         phi_values = []
@@ -937,19 +918,22 @@ class Network:
             phi_values.append(phi_alpha_try)
 
         # tangent line at alpha=0
-        x = np.linspace(0, 0.1, 10)
+        x = np.array([0.0, 0.2])
         phi_0 = phi_values[0]
         phi_p_0 = np.dot(gradient, p)
         y = phi_p_0 * x + phi_0 # y = mx + q
 
+        print 'phi\'(0) =', phi_p_0
+
         plt.figure()
-        plt.plot(alpha_values, phi_values, label=r'$\phi(\alpha)$')
-        plt.plot(x, y, label='retta tangente a ' + r'$\phi(0)$', color='red')
+        plt.plot(x, y, '-o', label=r'$\phi\'(0) * \alpha + \phi(0)$', color='red')
+        plt.semilogy(alpha_values, phi_values, label=r'$\phi(\alpha)$')
         plt.xlabel(r'$\alpha$')
         plt.ylabel(r'$\phi(\alpha)$')
         plt.legend(loc='best')
-        plt.yscale('log')
+        #plt.yscale('log')
         #plt.xscale('log')
+        plt.savefig('../image/final/phi_alpha_tangent_line.png')
         plt.show()
 
 

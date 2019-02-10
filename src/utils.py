@@ -72,15 +72,22 @@ def plot_norm_gradient_vs_iterations(g_norm_list_sgd=None, g_norm_list_bfgs=None
 
 
 def plot_alpha_vs_iterations(alpha_list_bfgs=None, alpha_list_lbfgs=None):
+    f, (ax1, ax2) = plt.subplots(2, sharex=True, sharey=True)
     if alpha_list_bfgs is not None:
-        plt.step(range(len(alpha_list_bfgs)), alpha_list_bfgs, 'o', alpha=0.8, label='bfgs', color='black')
+        ax1.step(range(len(alpha_list_bfgs)), alpha_list_bfgs, 'o', alpha=0.8, label='bfgs', color='black')
     if alpha_list_lbfgs is not None:
-        plt.step(range(len(alpha_list_lbfgs)), alpha_list_lbfgs, 's', alpha=0.8, label='l-bfgs', color='blue')
-    plt.legend(loc='best')
-    plt.xscale('log')
-    plt.yscale('log')
+        ax2.step(range(len(alpha_list_lbfgs)), alpha_list_lbfgs, 'o', alpha=0.8, label='l-bfgs', color='blue')
+
+    # Fine-tune figure; make subplots close to each other and hide x ticks for
+    # all but bottom plot.
+    f.subplots_adjust(hspace=0)
+    plt.setp([a.get_xticklabels() for a in f.axes[:-1]], visible=False)
+
+    ax1.legend(loc='best'); ax2.legend(loc='best')
+    #ax1.set_xscale('log'); ax2.set_xscale('log')
+    ax1.set_yscale('log'); ax2.set_yscale('log')
     plt.xlabel('Iterazioni')
-    plt.ylabel('step size ' + r'$\alpha$')
+    ax1.set_ylabel('step ' + r'$\alpha$'); ax2.set_ylabel('step ' + r'$\alpha$');
     plt.show()
 
 
