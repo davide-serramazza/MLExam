@@ -106,13 +106,14 @@ class Network:
         gradient_weights = self.compute_gradient_from_deltas(delta_vectors)
 
         # add regularization gradient 2 * lambda * w_{ji}
-        for grad_layer, layer in zip(gradient_weights, self.layers[1:]):  # exclude input layer
-            for grad_neuron, neuron in zip(grad_layer, layer.neurons[:-1]):  # exclude bias neuron
-                grad_neuron[:-1] = grad_neuron[:-1] + 2 * regularization * neuron.weights[:-1]  # exclude bias neuron weight
+        if regularization != 0:
+            for grad_layer, layer in zip(gradient_weights, self.layers[1:]):  # exclude input layer
+                for grad_neuron, neuron in zip(grad_layer, layer.neurons[:-1]):  # exclude bias neuron
+                    grad_neuron[:-1] = grad_neuron[:-1] + 2 * regularization * neuron.weights[:-1]  # exclude bias neuron weight
 
         # 5 report loss and misclassification count
         weights_r = self.get_weights_as_vector(to_regularize=True)
-        loss_value = lossObject.value(target, output_net, weights_r, regularization)
+        loss_value = lossObject.value(target, output_net, regularization, weights_r)
         misClassification = lossObject.misClassification(target, output_net)
 
         return gradient_weights, loss_value, misClassification
@@ -127,8 +128,7 @@ class Network:
             weights = [neuron.weights[:-1] for layer in self.layers[1:] for neuron in layer.neurons[:-1]]
         else:
             weights = [neuron.weights for layer in self.layers[1:] for neuron in layer.neurons[:-1]]
-        weights = np.concatenate(weights).ravel()
-        return weights
+        return np.concatenate(weights).ravel()
 
     def compute_gradient_from_deltas(self, delta_vectors):
         """
@@ -160,6 +160,7 @@ class Network:
         :return: delta_w, current weight update (i.e prev_delta for next iteration)
         """
         delta_w = - learning_rate * gradient_w + momentum * prev_delta
+
         for i in range(1, len(self.layers)):
             for j in range(len(self.layers[i].neurons) - 1):
                 self.layers[i].neurons[j].weights = self.layers[i].neurons[j].weights + delta_w[i-1][j]
@@ -201,7 +202,8 @@ class Network:
         loss_epoch, missclass_epoch = 0, 0
         # add errors
         for i in range(len(scores)):
-            loss_epoch += loss_obj.value(targets[i], scores[i])
+            # do not add regularization in validation loss
+            loss_epoch += loss_obj.value(targets[i], scores[i], regularization=0, weights=[])
             missclass_epoch += loss_obj.misClassification(targets[i], scores[i])
 
         # average
@@ -238,11 +240,9 @@ class Network:
 
         # prev_delta is previous weights update (for momentum)
         prev_delta = self.zero_init_gradient()
-        n_batches =  len(range(0, len(x_train), batch_size))
+        n_batches =  float(len(range(0, len(x_train), batch_size)))
 
         for epoch in range(epochs):
-            #print epoch, "out of", epochs
-
             gradient_epoch = self.zero_init_gradient()
             # current epoch value of misclassification and Squared error
             loss_epoch, missclass_epoch = 0.0, 0.0
@@ -338,13 +338,12 @@ class Network:
                  misclassification
         """
         # create empty vector, gradient_w_old = sum of gradient_w for the epoch
-        gradient_w_batch = self.zero_init_gradient()
-        loss_batch, miss_batch = 0, 0
+        gradient_w_batch, loss_batch, miss_batch = self.zero_init_gradient(), 0, 0
 
         for pattern, t in zip(data, targets):
-            # calculate derivative for every pattern, then append to gradient_w_batch
             self.forward(pattern)
             gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization)
+            # add results
             gradient_w_batch += gradient_w
             loss_batch += loss_p
             miss_batch += miss_p
@@ -366,7 +365,6 @@ class Network:
         :return:
         """
         a = self.architecture
-        #zero_gradient = np.array([np.zeros((a[i], a[i - 1] + 1)) for i in range(1, len(a))])
         zero_gradient = np.empty(len(a)-1, dtype=object)
         for i in range(1, len(a)):
             zero_gradient[i-1] = np.zeros((a[i], a[i - 1] + 1))
@@ -385,9 +383,6 @@ class Network:
 
         # rho_k = 1/(y_k^t*s_k)
         rho_k = float(1) / np.dot(s_k, y_k)
-
-        if rho_k < 0:
-            raise Exception("rho_K < 0")
 
         # V_k = I - rho_k * s_k * y_k^t
         tmp = rho_k * np.outer(y_k, s_k)
@@ -437,10 +432,7 @@ class Network:
 
             # 1. compute search direction p = - H * gradient
             p = - H.dot(gradient_old)
-            #TODO: try normalize p
-            #p /= norm(p)
-            #print - np.dot(gradient_old, p) / (norm(gradient_old) * norm(p)) >= 1 / cond(H)
-
+            
             # 2. line search
             if line_search == 'wolfe':
                 alpha = self.armijo_wolfe_line_search(c_1, c_2, x_train, gradient_old, loss, lossObject, p, y_train, theta, regularization)
@@ -477,10 +469,12 @@ class Network:
             # 6. update matrix H
             H = self.update_matrix_BFGS(H, s_k, y_k)
             condition_numbers[epoch+1] = cond(H)
-            if not is_pos_def(H):
-                #raise Exception("matrix H is not positive definite")
-                print "stop - matrix H not positive definite. Min eigenvalue:", min(eigvals(H))
+            pos_def, eigens = is_pos_def(H)
+            if not pos_def:
+                print "stop - matrix H not positive definite. Eigenvalues:", eigens
+                print "condition number", cond(H)
                 break
+
             # update x_old and gradient_old
             x_old = x_new
             gradient_old = gradient_new
@@ -570,15 +564,14 @@ class Network:
 
             # compute condition number
             condition_numbers[epoch] = cond(H)
-            if not is_pos_def(H):
-                #raise Exception("matrix H is not positive definite")
-                print "stop - matrix H not positive definite. Min eigenvalue:", min(eigvals(H))
+            pos_def, eigens = is_pos_def(H)
+            if not pos_def:
+                print "stop - matrix H not positive definite. Eigenvalues:", eigens
+                print "condition number", cond(H)
                 break
+
             # compute p = - H_k * \nabla f_k using two loop recursion
             p = - self.compute_direction(H, gradient_old, s_list, y_list, rho_list)
-            #TODO: try normalize p
-            #p /= norm(p)
-            #print - np.dot(gradient_old, p) / (norm(gradient_old) * norm(p)) >= 1 / cond(H)
 
             # line search
             if line_search == 'wolfe':
@@ -615,9 +608,6 @@ class Network:
             s_k = x_new - x_old
             y_k = gradient_new - gradient_old
             rho_k = 1.0 / np.dot(s_k, y_k)
-
-            if rho_k < 0:
-                raise Exception("rho_K < 0")
 
             # append to vector
             s_list.append(s_k)
@@ -663,7 +653,8 @@ class Network:
         alpha = 1.0
 
         if not phi_p_0 < 0:
-            raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
+            print "Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0
+            return -1
 
         while alpha > 1e-16:
             _, phi_alpha = self.phi_alpha(alpha, data, lossObject, p, targets, regularization)
@@ -695,7 +686,8 @@ class Network:
         phi_p_0 = np.dot(gradient, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
 
         if not phi_p_0 < 0:
-            raise Exception("Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0)
+            print "Expected phi'(0) < 0 to be a descent direction. but is phi'(0) =", phi_p_0
+            return -1
 
         max_iter = 200
         alpha_i = 1.0
@@ -752,7 +744,7 @@ class Network:
         :param regularization:
         :return:
         """
-        max_iter = 200
+        max_iter = 1000
 
         for i in range(max_iter):
             # 1. interpolate to find a step trial alpha_low < alpha_j < alpha_high
@@ -924,6 +916,8 @@ class Network:
         y = phi_p_0 * x + phi_0 # y = mx + q
 
         print 'phi\'(0) =', phi_p_0
+        print 'min phi(alpha)', min(phi_values)
+        print 'max phi(alpha)', max(phi_values)
 
         plt.figure()
         plt.plot(x, y, '-o', label=r'$\phi\'(0) * \alpha + \phi(0)$', color='red')

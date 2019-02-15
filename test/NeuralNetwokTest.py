@@ -32,7 +32,6 @@ class TestNeuralNetwork(unittest.TestCase):
         network.forward(data)
         delta_w, loss_value, _ = network.back_propagation(target=target, lossObject=SquaredError("sigmoid"), regularization=0)
         network.update_weights_SGD(delta_w, learning_rate=0.5/2, prev_delta=np.zeros(delta_w.shape), momentum=0)
-
         layers = network.layers
         self.assert_weights(layers)
         self.assertEqual(loss_value.round(9) / 2, 0.298371109)  # divide the obtained loss by two
@@ -234,8 +233,6 @@ class TestNeuralNetwork(unittest.TestCase):
         np.testing.assert_array_almost_equal(delta_out_layer, [-2.0003632])
         np.testing.assert_array_almost_equal(delta_hid_layer, [-0.0007264648])
         np.testing.assert_array_almost_equal(gradient_vector, [-0.00145293, -0.00072646, -0.00072646, -2.00018158, -2.0003632])
-        #gradient_paper = np.reshape([[[-0.00145293, -0.00072646, -0.00072646]], [[-2.00018158, -2.0003632]]], newshape=(2,))
-        #np.testing.assert_array_almost_equal(gradient, gradient_paper)
 
     def test_two_layers_2_patterns(self):
         network = Network([2,2,1], [InputNeuron, LinearNeuron, OutputNeuron])
@@ -247,7 +244,7 @@ class TestNeuralNetwork(unittest.TestCase):
         loss_obj = EuclideanError()
 
         output_net = network.predict(x)
-        loss_value = loss_obj.value(y, output_net)
+        loss_value = loss_obj.value(y, output_net, regularization=0, weights=[])
         gradient_vector, _, _ = network.calculate_gradient(x, y, loss_obj, regularization=0)
 
         np.testing.assert_array_almost_equal(output_net, [[8], [13]])
@@ -268,7 +265,7 @@ class TestNeuralNetwork(unittest.TestCase):
         layers = copy.deepcopy(network.get_weights_as_vector())
         g_phi_alpha, phi_alpha = network.phi_alpha(0.5, x, loss_obj, p, y, regularization=0)
         _, phi_0 = network.phi_alpha(0.0, x, loss_obj, p, y, regularization=0)
-        loss = loss_obj.value(y, network.predict(x))
+        loss = loss_obj.value(y, network.predict(x), regularization=0, weights=[])
 
         np.testing.assert_array_almost_equal(layers, network.get_weights_as_vector())
         self.assertAlmostEqual(phi_alpha, 3.4031242374328494) #32.0156212)
@@ -314,6 +311,23 @@ class TestNeuralNetwork(unittest.TestCase):
         np.testing.assert_array_almost_equal(gradient_mee, np.array([1.56, 2.04, 1]))
         np.testing.assert_array_almost_equal(gradient_mee_no_reg, np.array([1.5, 2, 1]))
 
+    def test_update_weights(self):
+        network = Network([2,1], [InputNeuron, OutputNeuron])
+        network.layers[1].neurons[0].weights = np.array([3, 2, 1], dtype=np.float)
+        network_sgd = copy.deepcopy(network)
+
+        x, y = [[1,2], [2,2]], np.array([[3],[4]])
+        gradient_mse, loss_value_mse, _ = network.calculate_gradient(x, y, SquaredError(), regularization=0.01, as_vector=False)
+        gradient_mse_no_reg, loss_value_mse_no_reg, _ = network.calculate_gradient(x, y, SquaredError(), regularization=0.0)
+
+        w_new = copy.deepcopy(network).update_weights_BFGS(delta=-network.get_gradient_as_vector(gradient_mse))
+
+        prev_delta = network_sgd.zero_init_gradient() + 1
+        delta_w = network_sgd.update_weights_SGD(gradient_mse, learning_rate=0.01, prev_delta=prev_delta, momentum=0.9)
+
+        np.testing.assert_array_almost_equal(w_new, [-16.06, -22.04, -11.  ])
+        np.testing.assert_array_almost_equal(network_sgd.layers[1].neurons[0].weights, [ 3.7094,  2.6596,  1.78  ])
+        np.testing.assert_array_almost_equal(network.get_gradient_as_vector(delta_w), [ 0.7094, 0.6596, 0.78 ])
 
 if __name__ == '__main__':
     unittest.main()

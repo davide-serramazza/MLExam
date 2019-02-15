@@ -71,12 +71,12 @@ def plot_norm_gradient_vs_iterations(g_norm_list_sgd=None, g_norm_list_bfgs=None
     plt.show()
 
 
-def plot_alpha_vs_iterations(alpha_list_bfgs=None, alpha_list_lbfgs=None):
+def plot_alpha_vs_iterations(alpha_list_bfgs=None, alpha_list_lbfgs=None, label_1='bfgs', label_2='l-bfgs'):
     f, (ax1, ax2) = plt.subplots(2, sharex=True, sharey=True)
     if alpha_list_bfgs is not None:
-        ax1.step(range(len(alpha_list_bfgs)), alpha_list_bfgs, 'o', alpha=0.8, label='bfgs', color='black')
+        ax1.step(range(len(alpha_list_bfgs)), alpha_list_bfgs, 'o', alpha=0.8, label=label_1, color='black')
     if alpha_list_lbfgs is not None:
-        ax2.step(range(len(alpha_list_lbfgs)), alpha_list_lbfgs, 'o', alpha=0.8, label='l-bfgs', color='blue')
+        ax2.step(range(len(alpha_list_lbfgs)), alpha_list_lbfgs, 'o', alpha=0.8, label=label_2, color='blue')
 
     # Fine-tune figure; make subplots close to each other and hide x ticks for
     # all but bottom plot.
@@ -329,14 +329,10 @@ def holdout_cup(patterns, labels, fraction_tr):
 
 def is_pos_def(x):
     """
-    checks if matrix 'x' is positive semidefinite. For debugging and exploration reasons
-    prints out if at least one eigenvalue is equal to 0.
+    checks if matrix 'x' is positive definite.
     """
     eigenvalues = np.linalg.eigvals(x)
-    if np.any(eigenvalues < 1e-16):
-        print "eigenvalues - at least one equal to 0"
-
-    return np.all(eigenvalues > 1e-16)
+    return all(e > 1e-16 for e in eigenvalues), eigenvalues
 
 def check_dimensions(architecture, x_train, y_train):
     if architecture[0] != len(x_train[0]):

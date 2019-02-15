@@ -8,7 +8,7 @@ class SquaredError:
     def __init__(self, t=""):
         self.type = t
 
-    def value(self, target, output_net, weights=[], regularization=0):
+    def value(self, target, output_net, regularization, weights):
         """
         Computes value of the squared error (data error + regularization error).
 
@@ -19,10 +19,11 @@ class SquaredError:
         :return:
         """
         # data error
-        difference = target - output_net
-        data_error = sum(square(difference))
-        regu_error = regularization * sum(square(weights))
-        return data_error + regu_error
+        difference = output_net - target
+        error = sum(square(difference))
+        if regularization  != 0:
+            error += regularization * sum(square(weights))
+        return error
 
     def misClassification(self, target, output_net):
         """
@@ -53,7 +54,7 @@ class SquaredError:
 
 
 class EuclideanError:
-    def value(self, target, output_net, weights=[], regularization=0):
+    def value(self, target, output_net, regularization, weights):
         """
         computes Euclidean error between targets and output
         :param target: target vector
@@ -63,9 +64,10 @@ class EuclideanError:
         :return:
         """
         # data error
-        data_error = norm(output_net - target)
-        regu_error = regularization * sum(square(weights))
-        return data_error + regu_error
+        error = norm(output_net - target)
+        if regularization != 0:
+            error += regularization * sum(square(weights))
+        return error
 
     def derivative(self, target, output_net):
         """
