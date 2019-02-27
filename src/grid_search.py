@@ -8,7 +8,7 @@ class GridSearchSGDParams:
     """
     specifies the hyperparameters to tune in SGD grid search
     """
-    def __init__(self, learning_rate, momentum, batch_size, architecture, neurons, regularization, epoch):
+    def __init__(self, learning_rate, momentum, batch_size, architecture, neurons, regularization, epoch, epsilon):
         self.learning_rate = learning_rate
         self.momentum = momentum
         self.batch_size = batch_size
@@ -16,13 +16,14 @@ class GridSearchSGDParams:
         self.neurons = neurons
         self.regularization = regularization
         self.epoch = epoch
+        self.epsilon = epsilon
 
     def experiments_number(self):
         """
         :return: total number of experiments
         """
         return len(self.regularization) * len(self.learning_rate) \
-               * len(self.momentum) * len(self.batch_size) * len(self.architecture)
+               * len(self.momentum) * len(self.batch_size) * len(self.architecture) * len(self.epsilon)
 
 
 class GridSearchBFGSParams:
@@ -101,8 +102,8 @@ def grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, 
                                     # build a new network
                                     network = Network(arc, neur)
                                     # train
-                                    squared_error, misClass_error, \
-                                    squared_error_validation, misClass_error_validation = \
+                                    squared_error, _, misClass_error, \
+                                    squared_error_validation, misClass_error_validation, _, _, _ = \
                                         network.train_LBFGS(x_train=tr_patterns, y_train=tr_labels, x_test=vl_patterns,
                                                             y_test=vl_labels, epsilon=eps,
                                                             lossObject=loss_obj, theta=theta, c_1=c_1, c_2=c_2,
@@ -121,11 +122,11 @@ def grid_search_LBFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, 
                                     misClass_error_validation = np.pad(misClass_error_validation, (0, diff), 'constant',
                                                                        constant_values=(misClass_error_validation[-1]))
 
-                                    # add result of single epoch in list previously created
-                                    squared_error_average += squared_error
-                                    misClass_error_average += misClass_error
-                                    squared_error_validation_average += squared_error_validation
-                                    misClass_error_validation_average += misClass_error_validation
+                                    # append result of single epoch in list previously created
+                                    squared_error_average = squared_error_average + squared_error
+                                    misClass_error_average = misClass_error_average + misClass_error
+                                    squared_error_validation_average = squared_error_validation_average + squared_error_validation
+                                    misClass_error_validation_average = misClass_error_validation_average + misClass_error_validation
 
 
                                 # taking mean error over trials
@@ -180,8 +181,8 @@ def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, v
                                 # buid a new network
                                 network = Network(arc, neur)
                                 # train
-                                squared_error, misClass_error, \
-                                squared_error_validation, misClass_error_validation = \
+                                squared_error, _, misClass_error, \
+                                squared_error_validation, misClass_error_validation, _, _, _ = \
                                     network.train_BFGS(x_train=tr_patterns, y_train=tr_labels, x_test=vl_patterns,
                                                        y_test=vl_labels, lossObject=loss_obj, theta=theta, c_1=c_1,
                                                        c_2=c_2, epochs=parameter.epoch, regularization=reg, epsilon=eps)
@@ -200,10 +201,10 @@ def grid_search_BFGS(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, v
                                                                    constant_values=(misClass_error_validation[-1]))
 
                                 # append result of single epoch in list previously created
-                                squared_error_average += squared_error
-                                misClass_error_average += misClass_error
-                                squared_error_validation_average += squared_error_validation
-                                misClass_error_validation_average += misClass_error_validation
+                                squared_error_average = squared_error_average + squared_error
+                                misClass_error_average = misClass_error_average + misClass_error
+                                squared_error_validation_average = squared_error_validation_average + squared_error_validation
+                                misClass_error_validation_average = misClass_error_validation_average + misClass_error_validation
 
                             # taking mean error over trials
                             squared_error_average /= float(n_trials)
@@ -242,38 +243,53 @@ def grid_search_SGD(parameter, loss_obj, tr_patterns, tr_labels, vl_patterns, vl
     for reg in parameter.regularization:
         for lr in parameter.learning_rate:
             for mo in parameter.momentum:
-                for bat in parameter.batch_size:
-                    for arc, neur in zip(parameter.architecture, parameter.neurons):
-                        print n_figure, "out of", total_experiments, "experiments"
-                        # initialize lists for saving reslut
-                        squared_error_average = np.zeros(parameter.epoch)
-                        misClass_error_average = np.zeros(parameter.epoch)
-                        squared_error_validation_average = np.zeros(parameter.epoch)
-                        misClass_error_validation_average = np.zeros(parameter.epoch)
-                        # n_trials then average
-                        for n in range(n_trials):
-                            # buid a new network
-                            network = Network(arc, neur)
-                            # train
-                            squared_error, misClass_error, \
-                            squared_error_validation, misClass_error_validation = \
-                                network.train_SGD(x_train=tr_patterns, y_train=tr_labels,
-                                                  x_test=vl_patterns, y_test=vl_labels, lossObject=loss_obj,
-                                                  epochs=parameter.epoch, learning_rate=lr, batch_size=bat, momentum=mo, regularization=reg)
+                for eps in parameter.epsilon:
+                    for bat in parameter.batch_size:
+                        for arc, neur in zip(parameter.architecture, parameter.neurons):
+                            print n_figure, "out of", total_experiments, "experiments"
+                            # initialize lists for saving reslut
+                            squared_error_average = np.zeros(parameter.epoch)
+                            misClass_error_average = np.zeros(parameter.epoch)
+                            squared_error_validation_average = np.zeros(parameter.epoch)
+                            misClass_error_validation_average = np.zeros(parameter.epoch)
+                            # n_trials then average
+                            for n in range(n_trials):
+                                # buid a new network
+                                network = Network(arc, neur)
+                                # train
+                                squared_error, data_error, misClass_error, \
+                                squared_error_validation, misClass_error_validation, _ = \
+                                    network.train_SGD(x_train=tr_patterns, y_train=tr_labels,
+                                    x_test=vl_patterns, y_test=vl_labels, lossObject=loss_obj,
+                                    epochs=parameter.epoch, learning_rate=lr, batch_size=bat,
+                                    momentum=mo, regularization=reg, epsilon=eps)
 
-                            # append result of single epoch in list previously created
-                            squared_error_average += squared_error
-                            misClass_error_average += misClass_error
-                            squared_error_validation_average += squared_error_validation
-                            misClass_error_validation_average += misClass_error_validation
+                                # eventually pad vector
+                                diff = squared_error_average.shape[0] - squared_error.shape[0]
+                                squared_error = np.pad(squared_error, (0, diff), 'constant',
+                                                       constant_values=(squared_error[-1]))
+                                misClass_error = np.pad(misClass_error, (0, diff), 'constant',
+                                                        constant_values=(misClass_error[-1]))
 
-                        # taking mean error over trials
-                        squared_error_average /= float(n_trials)
-                        misClass_error_average /= float(n_trials)
-                        squared_error_validation_average /= float(n_trials)
-                        misClass_error_validation_average /= float(n_trials)
+                                diff = squared_error_validation_average.shape[0] - squared_error_validation.shape[0]
+                                squared_error_validation = np.pad(squared_error_validation, (0, diff), 'constant',
+                                                                  constant_values=(squared_error_validation[-1]))
+                                misClass_error_validation = np.pad(misClass_error_validation, (0, diff), 'constant',
+                                                                   constant_values=(misClass_error_validation[-1]))
 
-                        print_result_SGD(misClass_error_average, misClass_error_validation_average,
+                                # append result of single epoch in list previously created
+                                squared_error_average = squared_error_average + squared_error
+                                misClass_error_average = misClass_error_average + misClass_error
+                                squared_error_validation_average = squared_error_validation_average + squared_error_validation
+                                misClass_error_validation_average =  misClass_error_validation_average + misClass_error_validation
+
+                            # taking mean error over trials
+                            squared_error_average /= float(n_trials)
+                            misClass_error_average /= float(n_trials)
+                            squared_error_validation_average /= float(n_trials)
+                            misClass_error_validation_average /= float(n_trials)
+
+                            print_result_SGD(misClass_error_average, misClass_error_validation_average,
                                          squared_error_average, squared_error_validation_average,
                                          arc, bat, lr, mo, reg, n_figure, "validation set", loss_obj, save_in_dir)
-                        n_figure += 1  # increment to create a new figure
+                            n_figure += 1  # increment to create a new figure

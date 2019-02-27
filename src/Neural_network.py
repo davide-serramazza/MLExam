@@ -6,7 +6,6 @@ from numpy.linalg import cond, norm, eigvals
 import matplotlib.pyplot as plt
 from utils import shuffle_dataset, is_pos_def, check_dimensions
 
-
 class Network:
     def __init__(self, architecture, neurons):
         """
@@ -113,10 +112,10 @@ class Network:
 
         # 5 report loss and misclassification count
         weights_r = self.get_weights_as_vector(to_regularize=True)
-        loss_value = lossObject.value(target, output_net, regularization, weights_r)
+        loss_value, error = lossObject.value(target, output_net, regularization, weights_r)
         misClassification = lossObject.misClassification(target, output_net)
 
-        return gradient_weights, loss_value, misClassification
+        return gradient_weights, loss_value, error, misClassification
 
     def get_weights_as_vector(self, to_regularize=False):
         """
@@ -185,7 +184,7 @@ class Network:
         delta_outputLayer = np.multiply(af_derivatives, error_derivatives)
         return delta_outputLayer
 
-    def validation_error(self, patterns, targets, loss_obj):
+    def data_error(self, patterns, targets, loss_obj):
         """
         compute validation loss and misclassification error
         :param patterns: validation set patterns
@@ -199,18 +198,19 @@ class Network:
         # predict each validation set pattern
         scores = self.predict(patterns)
 
-        loss_epoch, missclass_epoch = 0, 0
+        error_epoch, missclass_epoch = 0, 0
         # add errors
         for i in range(len(scores)):
             # do not add regularization in validation loss
-            loss_epoch += loss_obj.value(targets[i], scores[i], regularization=0, weights=[])
+            _, error = loss_obj.value(targets[i], scores[i], regularization=0, weights=[])
+            error_epoch += error
             missclass_epoch += loss_obj.misClassification(targets[i], scores[i])
 
         # average
-        loss_epoch /= float(len(scores))
+        error_epoch /= float(len(scores))
         missclass_epoch /= float(len(scores))
 
-        return loss_epoch, missclass_epoch
+        return error_epoch, missclass_epoch
 
     def train_SGD(self, x_train, y_train, x_test, y_test, lossObject, epochs, learning_rate,
                   batch_size, momentum, regularization, epsilon):
@@ -234,6 +234,7 @@ class Network:
         # lists for specify missclassification and Squared error (for training and validation)
         norm_gradient = np.empty((epochs), dtype=object)
         tr_losses = np.empty((epochs), dtype=object)
+        tr_errors = np.empty((epochs), dtype=object)
         vl_losses = np.empty((epochs), dtype=object)
         tr_misses = np.empty((epochs), dtype=object)
         vl_misses = np.empty((epochs), dtype=object)
@@ -245,7 +246,7 @@ class Network:
         for epoch in range(epochs):
             gradient_epoch = self.zero_init_gradient()
             # current epoch value of misclassification and Squared error
-            loss_epoch, missclass_epoch = 0.0, 0.0
+            loss_epoch, error_epoch, missclass_epoch = 0.0, 0.0, 0.0
 
             # shuffle data set
             x_train, y_train = shuffle_dataset(x_train, y_train)
@@ -255,8 +256,9 @@ class Network:
                 x_mb = x_train[i:i + batch_size]
                 y_mb = y_train[i:i + batch_size]
 
-                gradient_mb, loss_mb, miss_mb = self.calculate_gradient(x_mb, y_mb, lossObject, regularization, as_vector=False)
+                gradient_mb, loss_mb, error_mb, miss_mb = self.calculate_gradient(x_mb, y_mb, lossObject, regularization, as_vector=False)
                 loss_epoch += loss_mb
+                error_epoch += error_mb
                 missclass_epoch += miss_mb
                 gradient_epoch += gradient_mb
 
@@ -267,14 +269,15 @@ class Network:
                                                  prev_delta=prev_delta,
                                                  momentum=momentum)
 
-            # computing loss and misClassification on validation set then append to list
-            loss_val_epoch, misclass_val_epoch = self.validation_error(x_test, y_test, lossObject)
+            # computing data loss (no reg) on train and validation set
+            vl_error, vl_miss = self.data_error(x_test, y_test, lossObject)
 
             # append the total loss and misClassification of single epoch
             tr_losses[epoch] = loss_epoch / n_batches
+            tr_errors[epoch] = error_epoch / n_batches
             tr_misses[epoch] = missclass_epoch / n_batches
-            vl_losses[epoch] = loss_val_epoch
-            vl_misses[epoch] = misclass_val_epoch
+            vl_losses[epoch] = vl_error
+            vl_misses[epoch] = vl_miss
             norm_gradient[epoch] = norm(self.get_gradient_as_vector(gradient_epoch)) / n_batches
 
             # condition stop
@@ -286,12 +289,13 @@ class Network:
         # truncate arrays to proper length
         none = np.array(None)
         tr_losses = tr_losses[tr_losses != none]
+        tr_errors = tr_errors[tr_errors != none]
         tr_misses = tr_misses[tr_misses != none]
         vl_losses = vl_losses[vl_losses != none]
         vl_misses = vl_misses[vl_misses != none]
         norm_gradient = norm_gradient[norm_gradient != none]
 
-        return tr_losses, tr_misses, vl_losses, vl_misses, norm_gradient
+        return tr_losses, tr_errors, tr_misses, vl_losses, vl_misses, norm_gradient
 
     # --------------------- BFGS & L-BFGS ---------------------------------- #
 
@@ -338,14 +342,15 @@ class Network:
                  misclassification
         """
         # create empty vector, gradient_w_old = sum of gradient_w for the epoch
-        gradient_w_batch, loss_batch, miss_batch = self.zero_init_gradient(), 0, 0
+        gradient_w_batch, loss_batch, error_batch, miss_batch = self.zero_init_gradient(), 0, 0, 0
 
         for pattern, t in zip(data, targets):
             self.forward(pattern)
-            gradient_w, loss_p, miss_p = self.back_propagation(t, lossObject, regularization)
+            gradient_w, loss_p, error_p, miss_p = self.back_propagation(t, lossObject, regularization)
             # add results
             gradient_w_batch += gradient_w
             loss_batch += loss_p
+            error_batch += error_p
             miss_batch += miss_p
 
         # getting the gradient as vector
@@ -355,9 +360,10 @@ class Network:
         # compute mean values
         gradient_w_batch /= float(len(data))
         loss_batch /= float(len(data))
+        error_batch /= float(len(data))
         miss_batch /= float(len(data))
 
-        return gradient_w_batch, loss_batch, miss_batch
+        return gradient_w_batch, loss_batch, error_batch, miss_batch
 
     def zero_init_gradient(self):
         """
@@ -404,18 +410,20 @@ class Network:
         norm_gradient = np.empty((epochs+1), dtype=object)
         condition_numbers = np.empty((epochs+1), dtype=object)
         tr_losses = np.empty((epochs+1), dtype=object)
+        tr_errors = np.empty((epochs+1), dtype=object)
         vl_losses = np.empty((epochs+1), dtype=object)
         tr_misses = np.empty((epochs+1), dtype=object)
         vl_misses = np.empty((epochs+1), dtype=object)
 
         # 1. compute initial gradient and initial Hessian approximation H_0
-        gradient_old, loss, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
+        gradient_old, loss, tr_error, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
         H = np.identity(gradient_old.shape[0])
         x_old = self.get_weights_as_vector()
 
         # append train / validation losses
-        loss_val_epoch, misclass_val_epoch = self.validation_error(x_test, y_test, lossObject)
+        loss_val_epoch, misclass_val_epoch = self.data_error(x_test, y_test, lossObject)
         tr_losses[0] = loss
+        tr_errors[0] = tr_error
         tr_misses[0] = miss
         vl_losses[0] = loss_val_epoch
         vl_misses[0] = misclass_val_epoch
@@ -423,8 +431,6 @@ class Network:
         condition_numbers[0] = cond(H)
 
         for epoch in range(epochs):
-            #print epoch, "out of", epochs#, "loss/grad_norm/cond(H)", tr_losses[epoch], norm_gradient[epoch], condition_numbers[epoch]
-
             # stop criterion
             if (norm(gradient_old)) < epsilon:
                 print "stop: gradient norm, epoch", epoch
@@ -432,7 +438,7 @@ class Network:
 
             # 1. compute search direction p = - H * gradient
             p = - H.dot(gradient_old)
-            
+
             # 2. line search
             if line_search == 'wolfe':
                 alpha = self.armijo_wolfe_line_search(c_1, c_2, x_train, gradient_old, loss, lossObject, p, y_train, theta, regularization)
@@ -450,14 +456,15 @@ class Network:
             x_new = self.update_weights_BFGS(delta=alpha * p)
 
             # 4. compute new gradient
-            gradient_new, loss, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
+            gradient_new, loss, error, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
 
             # append training / validation losses
-            loss_val_epoch, misclass_val_epoch = self.validation_error(x_test, y_test, lossObject)
+            vl_error, vl_miss = self.data_error(x_test, y_test, lossObject)
             tr_losses[epoch+1] = loss
+            tr_errors[epoch+1] = error
             tr_misses[epoch+1] = miss
-            vl_losses[epoch+1] = loss_val_epoch
-            vl_misses[epoch+1] = misclass_val_epoch
+            vl_losses[epoch+1] = vl_error
+            vl_misses[epoch+1] = vl_miss
             norm_gradient[epoch+1] = norm(gradient_new)
 
             # 5. compute
@@ -482,6 +489,7 @@ class Network:
         # truncate arrays to proper length
         none = np.array(None)
         tr_losses = tr_losses[tr_losses != none]
+        tr_errors = tr_errors[tr_errors != none]
         tr_misses = tr_misses[tr_misses != none]
         vl_losses = vl_losses[vl_losses != none]
         vl_misses = vl_misses[vl_misses != none]
@@ -489,7 +497,7 @@ class Network:
         norm_gradient = norm_gradient[norm_gradient != none]
         condition_numbers = condition_numbers[condition_numbers != none]
 
-        return tr_losses, tr_misses, vl_losses, vl_misses, alpha_list, norm_gradient, condition_numbers
+        return tr_losses, tr_errors, tr_misses, vl_losses, vl_misses, alpha_list, norm_gradient, condition_numbers
 
     def compute_direction(self, H, gradient, s_list, y_list, rho_list):
         """
@@ -526,20 +534,22 @@ class Network:
         norm_gradient = np.empty((epochs+1), dtype=object)
         condition_numbers = np.empty((epochs+1), dtype=object)
         tr_losses = np.empty((epochs+1), dtype=object)
+        tr_errors = np.empty((epochs+1), dtype=object)
         vl_losses = np.empty((epochs+1), dtype=object)
         tr_misses = np.empty((epochs+1), dtype=object)
         vl_misses = np.empty((epochs+1), dtype=object)
 
         # 1. compute initial gradient
-        gradient_old, loss, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
+        gradient_old, loss, error, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
         x_old = self.get_weights_as_vector()
 
         # append train / validation losses
-        loss_val_epoch, misclass_val_epoch = self.validation_error(x_test, y_test, lossObject)
+        vl_error, vl_miss = self.data_error(x_test, y_test, lossObject)
         tr_losses[0] = loss
+        tr_errors[0] = error
         tr_misses[0] = miss
-        vl_losses[0] = loss_val_epoch
-        vl_misses[0] = misclass_val_epoch
+        vl_losses[0] = vl_error
+        vl_misses[0] = vl_miss
         norm_gradient[0] = norm(gradient_old)
 
         # set of current s, y, rho lists
@@ -588,14 +598,15 @@ class Network:
 
             # updating weights and compute x_k+1 = x_k + a_k*p_k
             x_new = self.update_weights_BFGS(delta=alpha * p)
-            gradient_new, loss, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
+            gradient_new, loss, error, miss = self.calculate_gradient(x_train, y_train, lossObject, regularization)
 
             # append training / validation losses
-            loss_val_epoch, misclass_val_epoch = self.validation_error(x_test, y_test, lossObject)
+            vl_error, vl_miss = self.data_error(x_test, y_test, lossObject)
             tr_losses[epoch+1] = loss
+            tr_errors[epoch+1] = error
             tr_misses[epoch+1] = miss
-            vl_losses[epoch+1] = loss_val_epoch
-            vl_misses[epoch+1] = misclass_val_epoch
+            vl_losses[epoch+1] = vl_error
+            vl_misses[epoch+1] = vl_miss
             norm_gradient[epoch+1] = norm(gradient_new)
 
             if epoch > (m-1):
@@ -621,6 +632,7 @@ class Network:
         # truncate arrays to proper length
         none = np.array(None)
         tr_losses = tr_losses[tr_losses != none]
+        tr_errors = tr_errors[tr_errors != none]
         tr_misses = tr_misses[tr_misses != none]
         vl_losses = vl_losses[vl_losses != none]
         vl_misses = vl_misses[vl_misses != none]
@@ -628,7 +640,7 @@ class Network:
         norm_gradient = norm_gradient[norm_gradient != none]
         condition_numbers = condition_numbers[condition_numbers != none]
 
-        return tr_losses, tr_misses, vl_losses, vl_misses, alpha_list, norm_gradient, condition_numbers
+        return tr_losses, tr_errors, tr_misses, vl_losses, vl_misses, alpha_list, norm_gradient, condition_numbers
 
     def backtracking_line_search(self, c_1, data, gradient, loss,
                                  lossObject, p, targets, theta, regularization):
@@ -845,7 +857,7 @@ class Network:
         # compute x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
         delta = alpha_i * p
         self.update_weights_BFGS(delta=delta)
-        gradient_alpha, loss_alpha, _ = self.calculate_gradient(data, targets, lossObject, regularization)
+        gradient_alpha, loss_alpha, _, _ = self.calculate_gradient(data, targets, lossObject, regularization)
         # restore weights
         self.update_weights_BFGS(delta=-delta)
 

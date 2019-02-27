@@ -39,8 +39,9 @@ def plot_train_test_learning_curve_loss(loss_test, loss_train):
     plt.figure()
     plt.yscale('log')
     plt.xscale('log')
-    plt.plot(range(len(loss_train)), loss_train, '-o', alpha=0.8, label='train loss', linewidth=2, color='blue')
-    plt.plot(range(len(loss_test)), loss_test, '-x', alpha=0.8, label='test loss', linewidth=2, color='green')
+    plt.plot(range(len(loss_train)), loss_train, '-', alpha=0.8, label='train loss', linewidth=2)
+    plt.plot(range(len(loss_test)), loss_test, '--', alpha=0.8, label='test loss', linewidth=2)
+    plt.grid(linestyle='-', linewidth=0.5)
     plt.legend(loc='best')
     plt.xlabel('Iterazioni')
     plt.ylabel('Errore')
@@ -48,8 +49,11 @@ def plot_train_test_learning_curve_loss(loss_test, loss_train):
 
 def plot_train_test_learning_curve_accuracy(misclass_train, misclass_test):
     plt.figure()
-    plt.plot(range(len(misclass_train)), 1 - misclass_train, '-o', alpha=0.8, label='train accuracy', linewidth=2, color='blue')
-    plt.plot(range(len(misclass_test)), 1 - misclass_test, '-x', alpha=0.8, label='test accuracy', linewidth=2, color='green')
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.plot(range(len(misclass_train)), 1 - misclass_train, '-', alpha=0.8, label='train accuracy', linewidth=2)
+    plt.plot(range(len(misclass_test)), 1 - misclass_test, '--', alpha=0.8, label='test accuracy', linewidth=2)
+    plt.grid(linestyle='-', linewidth=0.5)
     plt.legend(loc='best')
     plt.xlabel('Iterazioni')
     plt.ylabel('Accuratezza')
@@ -115,12 +119,14 @@ def plot_relative_gap_vs_iterations(loss_tr_sgd=None, loss_tr_bfgs=None, loss_tr
 def plot_all_loss(sgd_tr, sgd_ts, bfgs_tr, bfgs_ts, lbfgs_tr, lbfgs_ts, \
                     xscale='linear', yscale='log'):
     labels = ['sgd_tr', 'sgd_ts', 'bfgs_tr', 'bfgs_ts', 'lbfgs_tr', 'lbfgs_ts']
-    line_style = ['-o', '--o', '-x', '--x', '-*', '--*']
+    line_style = ['-', '--', '-', '--', '-', '--']
+    colors = ['red', 'black', 'orange', 'blue', 'green', 'magenta']
     lists = [sgd_tr, sgd_ts, bfgs_tr, bfgs_ts, lbfgs_tr, lbfgs_ts]
 
-    plt.figure()
-    for l, style, label in zip(lists, line_style, labels):
-        plt.plot(range(len(l)), l, style, alpha=0.8, label=label)
+    plt.figure(figsize=(10,3))
+    for l, style, label, c in zip(lists, line_style, labels, colors):
+        plt.plot(range(len(l)), l, style, alpha=0.8, label=label, linewidth=2, color=c)
+    plt.grid(linestyle='-', linewidth=0.5)
     plt.legend(loc='best')
     plt.xlabel('Iterazioni')
     plt.ylabel(r'$E(w)$')
@@ -131,12 +137,14 @@ def plot_all_loss(sgd_tr, sgd_ts, bfgs_tr, bfgs_ts, lbfgs_tr, lbfgs_ts, \
 def plot_all_accuracy(sgd_tr, sgd_ts, bfgs_tr, bfgs_ts, lbfgs_tr, lbfgs_ts, \
                     xscale='linear', yscale='linear'):
     labels = ['sgd_tr', 'sgd_ts', 'bfgs_tr', 'bfgs_ts', 'lbfgs_tr', 'lbfgs_ts']
-    line_style = ['-o', '--o', '-x', '--x', '-*', '--*']
+    line_style = ['-', '--', '-', '--', '-', '--']
+    colors = ['red', 'black', 'orange', 'blue', 'green', 'magenta']
     lists = [sgd_tr, sgd_ts, bfgs_tr, bfgs_ts, lbfgs_tr, lbfgs_ts]
 
-    plt.figure()
-    for l, style, label in zip(lists, line_style, labels):
-        plt.plot(range(len(l)), 1 - l, style, alpha=0.8, label=label)
+    plt.figure(figsize=(10,3))
+    for l, style, label, c in zip(lists, line_style, labels, colors):
+        plt.plot(range(len(l)), 1 - l, style, alpha=0.8, label=label, linewidth=2, color=c)
+    plt.grid(linestyle='-', linewidth=0.5)
     plt.legend(loc='best')
     plt.xlabel('Iterazioni')
     plt.ylabel('Accuratezza')

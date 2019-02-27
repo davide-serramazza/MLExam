@@ -18,12 +18,10 @@ class SquaredError:
         :param regularization: regularization strength
         :return:
         """
-        # data error
-        difference = output_net - target
-        error = sum(square(difference))
-        if regularization  != 0:
-            error += regularization * sum(square(weights))
-        return error
+        data_error = sum(square(output_net - target))
+        reg_error = regularization * sum(square(weights))
+        loss = data_error + reg_error
+        return loss, data_error
 
     def misClassification(self, target, output_net):
         """
@@ -64,10 +62,10 @@ class EuclideanError:
         :return:
         """
         # data error
-        error = norm(output_net - target)
-        if regularization != 0:
-            error += regularization * sum(square(weights))
-        return error
+        data_error = norm(output_net - target)
+        reg_error = regularization * sum(square(weights))
+        loss = data_error + reg_error
+        return loss, data_error
 
     def derivative(self, target, output_net):
         """
