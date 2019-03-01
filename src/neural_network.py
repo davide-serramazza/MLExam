@@ -955,8 +955,8 @@ def check_topology(architecture, neurons):
         raise Exception("Architecture miss match")
     if not neurons[0].__name__ is InputNeuron.__name__:
         raise Exception("Input neurons have incorrect type")
-    for i in range(1, len(neurons) - 1):
-        if neurons[i].__name__ is InputNeuron.__name__ or neurons[i].__name__ is OutputNeuron.__name__:
+    for i in range(1, len(neurons)):
+        if neurons[i].__name__ is InputNeuron.__name__:
             raise Exception("Hidden neurons have incorrect type")
 
 
