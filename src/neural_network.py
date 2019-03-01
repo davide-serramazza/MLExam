@@ -1,4 +1,4 @@
-from Layer import *
+from layer import *
 from loss_functions import *
 import sys
 from collections import deque

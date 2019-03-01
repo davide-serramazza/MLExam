@@ -1,5 +1,5 @@
 import copy
-from Neuron import *
+from neuron import *
 
 
 class Layer:

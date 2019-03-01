@@ -1,4 +1,4 @@
-from Neural_network import *
+from neural_network import *
 from utils import *
 
 #### GRID SEARCH PARAMETERS ####
