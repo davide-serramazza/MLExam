@@ -4,6 +4,7 @@ A simple framework to define and train Artificial Neural Networks using:
 - L-BFGS
 
 ------------------------------------------------------------------------
+
 The project hierarchy is as follows:
 - Data/
   - MLCup/    contains the ML-Cup datasets
@@ -46,6 +47,7 @@ neuron.py | 84%
 utils.py  | 14%
 NeuralNetwokTest.py  |  96%
 
+-------------------------------------------------------------------------------
 
 Here is the minimal amount of code to create a network and a dataset, and fit
 the network on the dataset:
