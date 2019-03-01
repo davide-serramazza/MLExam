@@ -35,9 +35,17 @@ The experiments are performed in the following Python notebooks under `src/`:
 - grid_search_example.ipynb
 - save_load_network_parameters.ipynb
 
-Unit tests, for a coverage of xxx%, are performed in `test/NeuralNetworkTest.py`.
+Unit tests, for a total coverage of 71%, are performed in `test/NeuralNetworkTest.py`:
 
-------------------------------------------------------------------------
+File | Coverage
+-----| --------
+layer.py | 100%
+loss_functions.py | 97%
+neural_network.py | 80%
+neuron.py | 84%
+utils.py  | 14%
+NeuralNetwokTest.py  |  96%
+
 
 Here is the minimal amount of code to create a network and a dataset, and fit
 the network on the dataset:

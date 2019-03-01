@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import sys, os
 sys.path.append(os.path.abspath(os.path.join('..', 'src')))
 
-from Neural_network import *
+from neural_network import *
 
 class TestNeuralNetwork(unittest.TestCase):
     def test_forward(self):
