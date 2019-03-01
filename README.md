@@ -6,35 +6,35 @@ A simple framework to define and train Artificial Neural Networks using:
 ------------------------------------------------------------------------
 
 The project hierarchy is as follows:
-- Data/
-  - MLCup/    contains the ML-Cup datasets
-  - monk_datasets/    contains the MONK datasets
-- src/
-  - neural_network.py
+- ```Data/```
+  - ```MLCup/```    contains the ML-Cup datasets
+  - ```monk_datasets/```    contains the MONK datasets
+- ```src/```
+  - `neural_network.py`
     - defines the neural network and the methods `train_SGD()`, `train_BFGS` and `train_LBFGS()`.
-  - layer.py
+  - `layer.py`
     - defines a layer of a neural network.
-  - neuron.py
+  - `neuron.py`
     - defines an abstract neuron of a neural network, and concrete neurons such as `InputNeuron`,
       `LinearNeuron`, `SigmoidNeuron`, `TanHNeuron` and `ReLuNeuron`, each implementing the corresponding
       `activation_function()` and `activation_function_derivative()`.
-  - loss_functions.py
+  - `loss_functions.py`
     - defines loss functions, and their derivatives, such as `SquaredError()` and `EuclideanError()`
-  - grid_search.py
+  - `grid_search.py`
     - defines methods to perform hyperparameters' grid search
-  - validation.py
+  - `validation.py`
     - defines methods for validation purposes
-  - utils.py
+  - `utils.py`
     - defines utility methods for plotting curves ecc.
 
-The experiments are performed in the following Python notebooks under `src/`:
-- experiments_monk.ipynb
-- experiments_cup.ipynb
-- convexity_study.ipynb
-- bfgs_vs_lbfgs_line_search.ipynb
-- bfgs_vs_lbfgs_m.ipynb
-- grid_search_example.ipynb
-- save_load_network_parameters.ipynb
+The experiments are performed in the following Python notebooks under ```src/```:
+- `experiments_monk.ipynb`
+- `experiments_cup.ipynb`
+- `convexity_study.ipynb`
+- `bfgs_vs_lbfgs_line_search.ipynb`
+- `bfgs_vs_lbfgs_m.ipynb`
+- `grid_search_example.ipynb`
+- `save_load_network_parameters.ipynb`
 
 Unit tests, for a total coverage of 71%, are performed in `test/NeuralNetworkTest.py`:
 

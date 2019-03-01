@@ -1,10 +1,8 @@
 .idea/workspace.xml
 .idea/*
 image/*
-src/*.pyc
-*.csv
+*.pyc
 weights/*
-weights_CM/*
 *.zip
 report/*
 grid_search_results/*
