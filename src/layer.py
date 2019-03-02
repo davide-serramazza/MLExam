@@ -3,14 +3,29 @@ from neuron import *
 
 
 class Layer:
+    """ A Layer is a list of Neuron
+
+    Parameters
+    ----------
+    size : int
+        number of neurons in the layer
+    prevSize : int
+        number of neurons in the previous layer
+    neuron : Neuron
+        type of Neuron to be used in this layer
+    Attributes
+    ----------
+    neurons : Neuron
+        type of neurons to be used in this layer
+    """
 
     def __init__(self, size, prevSize, neuron):
         """
         Creates a layer of 'size' neurons and adds a bias neuron at the end.
 
-        :param size: number of neurons
-        :param prevSize: number of neurons of previous layer
-        :param neuron: type of neurons of the layer
+        size: number of neurons
+        prevSize: number of neurons of previous layer
+        neuron: type of neurons of the layer
         """
         # neurons' list
         self.neurons = []
@@ -24,16 +39,16 @@ class Layer:
 
     def getOutput(self):
         """
-        returns neurons output
-        :return:
+        return: float
+            neurons output
         """
         return [neuron.getOutput() for neuron in self.neurons]
 
     def dump_weights(self, file_output):
         """
         Prints weights to a file, call dump_weights on each neuron
-        :param file_output: file to print the weights to
-        :return:
+
+        file_output: file to print the weights to
         """
         for neuron in self.neurons[:-1]:  # exclude bias
             neuron.dump_weights(file_output)

@@ -4,14 +4,27 @@ import sys
 
 # superclass abstract Neuron
 class Neuron(object):
-    """
-    Abstract Neuron class. Its subclasses implements the activation function and its derivative.
+    """ Abstract Neuron class.
+    Its subclasses implements the activation function and its derivative.
+
+    Parameters
+    ----------
+    len_weights : float
+        number of parameters attached to the neuron
+
+    Attributes
+    ----------
+    output : float
+        neuron's output after computing the activation_function
+    weights : vector
+        neuron's parameters
+
     """
     def __init__(self, len_weights):
         """
-        Creates and initializes a neuron.
+        Create and initialize the neuron.
 
-        :param len_weights: length of the weights
+        len_weights: number of weights
         """
         self.output = 0.0
         self.weights = np.random.uniform(low=-0.5, high=0.5, size=len_weights)
@@ -20,9 +33,22 @@ class Neuron(object):
         self.weights = np.random.uniform(low=-0.5, high=0.5, size=len_weights)
 
     def activation_function(self, x):
+        """ activation function of the neuron.
+
+        Parameters
+        ----------
+        x : float
+            dot product between the neuron's weights and its input
+        Returns
+        -------
+        g(x): float
+        """
         pass
 
     def activation_function_derivative(self):
+        """
+        derivative of the activation function
+        """
         pass
 
     def getOutput(self):
@@ -30,10 +56,9 @@ class Neuron(object):
 
     def dump_weights(self, file_output):
         """
-        Saves the weights of the neuron to a 'file_output'
+        Save the weights of the neuron to a 'file_output'
 
-        :param file_output: file to print the weights to
-        :return:
+        file_output: file to print the weights to
         """
         if file_output == sys.stdout:
             print self.weights
@@ -41,9 +66,10 @@ class Neuron(object):
             np.save(file_output, self.weights)
 
 
-# subclasses
+# concrete subclasses
 class InputNeuron(Neuron):
-
+    """ placeholder used to map the input into the network.
+    """
     def activation_function(self, x):
         self.output = x
         return self.output
@@ -53,7 +79,8 @@ class InputNeuron(Neuron):
 
 
 class SigmoidNeuron(Neuron):
-
+    """ Implements the logistic activation function and its derivative
+    """
     def activation_function(self, x):
         self.output = 1 / (1 + np.exp(-x))
         return self.output
@@ -63,7 +90,8 @@ class SigmoidNeuron(Neuron):
 
 
 class ReLuNeuron(Neuron):
-
+    """ Implements the Rectifier Linear Unit activation function and its derivative
+    """
     def activation_function(self, x):
         self.output = max(0, x)
         return self.output
@@ -73,7 +101,8 @@ class ReLuNeuron(Neuron):
 
 
 class TanHNeuron(Neuron):
-
+    """ Implements the Iperbolic tangent activation function and its derivative
+    """
     def activation_function(self, x):
         self.output = np.tanh(x)
         return self.output
@@ -82,6 +111,8 @@ class TanHNeuron(Neuron):
         return 1.0 - self.output**2
 
 class BiasNeuron(Neuron):
+    """ Implements the bias neuron.
+    """
     def __init__(self):
         self.output = 1.0
 
@@ -92,7 +123,8 @@ class BiasNeuron(Neuron):
         return 0.0
 
 class LinearNeuron(Neuron):
-
+    """ Implements the linear/identity activation function and its derivative
+    """
     def activation_function(self, x):
         self.output = x
         return self.output

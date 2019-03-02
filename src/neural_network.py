@@ -7,10 +7,28 @@ import matplotlib.pyplot as plt
 from utils import shuffle_dataset, is_pos_def, check_dimensions
 
 class Network:
+    """ Neural network class
+
+    Parameters
+    ----------
+    architecture : integer array
+        encodes the topology of the network. The i-th entry is the number of
+        neurons to be used in the i-th layer of the neural network.
+    neurons : Neuron array
+        The i-th entry is the type of neurons (activation function) to be used in the i-th layer.
+
+    Attributes
+    ----------
+    layers : Neuron array
+        List of Neuron
+    architecture
+
+    """
     def __init__(self, architecture, neurons):
-        """
-        Initialize neural network.
-        :argument
+        """ Initialize neural network.
+
+        Parameters
+        ----------
         architecture - list encoding the architecture. The i-th entry is the number of neurons at the i-th layer.
         neurons -  list of neurons type. The i-th entry is the type of neurons of the i-th layer.
         """
@@ -41,7 +59,7 @@ class Network:
 
     def forward(self, pattern):
         """
-        Computes output of the neural network as a function of the data pattern.
+        Computes output of the neural network as a function of the data 'pattern'
         :param pattern: a single training example
         :return: output of the neural network
         """
@@ -52,9 +70,7 @@ class Network:
     def propagate_input(self):
         """
         propagate input through the network
-        :return:
         """
-        # propagate result
         for i in range(1, len(self.layers)):
             layer = self.layers[i]
             for neuron in layer.neurons[:-1]:  # exclude bias
@@ -65,24 +81,29 @@ class Network:
 
     def feed_input_neurons(self, pattern):
         """
-        Set the output of the input neurons to the current pattern.
-        Activation function for input neurons is the identity.
-        :param pattern: single training example
-        :return:
+        Set the output of the InputNeurons to the current pattern.
+        pattern: single training example
         """
         input_layer = self.layers[0]
         for input_neuron, x in zip(input_layer.neurons[:-1], pattern):  # exclude bias
             input_neuron.activation_function(x)
 
     def back_propagation(self, target, lossObject, regularization):
-        """
-        Performs backpropagation.
-        :param target: target vector for a single training example
-        :param lossObject: function to optimize
-        :param regularization: regularization strength
-        :return: gradient_weights: gradient w.r.t network weights
-                 loss_value: loss value computed by lossObject
-                 misClassification: misclassification error
+        """ Compute the gradient via backpropagation
+
+        Parameters
+        ----------
+        target : target vector for a single training example
+        lossObject : objective function
+        regularization : regularization strenght
+            Description of parameter `regularization`.
+
+        Returns
+        -------
+        gradient_weights: gradient with respect to weights
+        loss_value: loss (data error + regularization error)
+        error: data error
+        misClassification: misclassification error
         """
         # vector containing the deltas of each layer
         delta_vectors = np.empty(len(self.architecture)-1, dtype=object)
@@ -119,8 +140,8 @@ class Network:
 
     def get_weights_as_vector(self, to_regularize=False):
         """
-        gets neural network weights as a single array.
-        :return: array of weights
+        gets neural network weights as a single arrayself.
+        Discard bias weights if 'to_regularize=False', get all weights otherwise.
         """
         if to_regularize:
             # do not regularize bias weights
@@ -156,6 +177,7 @@ class Network:
         :param learning_rate: learning rate
         :param prev_delta: previous weight update, for momentum
         :param momentum: percentage of prev_delta
+
         :return: delta_w, current weight update (i.e prev_delta for next iteration)
         """
         delta_w = - learning_rate * gradient_w + momentum * prev_delta
@@ -166,6 +188,10 @@ class Network:
         return delta_w
 
     def compute_delta_hidden_layer(self, delta_next_layer, currentLayerIndex):
+        """
+        Compute delta factor for the i-th hidden layer from the delta factor of the
+        (i+1)-th layer
+        """
         # delta_layer vector
         delta_layer = np.empty(shape=(len(self.layers[currentLayerIndex].neurons)-1))
         for h in range(len(self.layers[currentLayerIndex].neurons)-1):
@@ -178,6 +204,9 @@ class Network:
         return delta_layer
 
     def compute_delta_output_layer(self, output_net, target, loss):
+        """
+        Compute delta factor of output layer
+        """
         output_layer = self.layers[-1]
         af_derivatives = [neuron.activation_function_derivative() for neuron in output_layer.neurons[:-1]]
         error_derivatives = loss.derivative(target, output_net)
@@ -186,12 +215,13 @@ class Network:
 
     def data_error(self, patterns, targets, loss_obj):
         """
-        compute validation loss and misclassification error
+        compute validation error and misclassification
         :param patterns: validation set patterns
         :param targets: validation set targets
         :param loss_obj: loss for computing error
-        :return: validation loss
-                 validation misclassification error
+        :return:
+        validation error
+        validation misclassification error
         """
         if patterns is None or targets is None:
             return None, None
@@ -214,21 +244,47 @@ class Network:
 
     def train_SGD(self, x_train, y_train, x_test, y_test, lossObject, epochs, learning_rate,
                   batch_size, momentum, regularization, epsilon):
+        """ Performs Stochastic Gradient Descent to optimize 'lossObject' on (x_train, y_train)
+        Parameters
+        ----------
+        x_train : training set patterns
+            list of patterns, each pattern is a list of values
+        y_train : training set labels
+            list of labels, each label is a list of values
+        x_test : test set patterns
+            list of patterns, each pattern is a list of values.
+            'None' if you don't care about test performance
+        y_test : test set labels
+            list of labels, each label is a list of valuesself.
+            'None' if you don't care about test performance
+        lossObject : object
+            objective function
+        epochs : int
+            number of iteration of fitting
+        learning_rate : float
+            step size
+        batch_size : int
+            size of the sample of the dataset used to compute the gradient at each weight update
+        momentum : float
+            momentum coefficient
+        regularization : float
+            regulatization coefficient
+        epsilon : float
+            threshold for the norm of the gradient stopping criterion
+
+        Returns
+        summary of training. A tuple containing the following lists,
+        which length is equal to the number of iterations performed
+        -------
+        tr_losses: training losses (data error + regulatization error) at each epoch
+        tr_errors: training data error at each epoch
+        tr_misses: training missclassification at each epoch
+        vl_losses: validation data error at each epoch
+        vl_misses: validation misclassification at each epoch
+        norm_gradient: gradient norm at each iteration
+
         """
-        Performs the training of the neural network.
-        :param x_train: traning patterns
-        :param y_train: traning targets
-        :param x_test : test patterns
-        :param y_test:  test targets
-        :param lossObject: loss
-        :param epochs: iterations to train
-        :param learning_rate: step size
-        :param batch_size: size of the batch to forward before updating the weights
-        :param momentum: percentage of previous weight update to add
-        :param regularization: regularization strength
-        :return: losses, vector of the loss computed at each epoch
-                 misClassification, vector of misclassification loss for each epoch
-        """
+
         check_dimensions(self.architecture, x_train, y_train)
 
         # lists for specify missclassification and Squared error (for training and validation)
@@ -301,9 +357,7 @@ class Network:
 
     def get_gradient_as_vector(self, list_of_lists):
         """
-        flattens a list of lists into a one-dimensional array
-        :param list_of_lists:
-        :return:
+        get gradient as a vector by flattening a list of matrices into a single vector.
         """
         gradient_vector = [n for l in list_of_lists for n in l]
         gradient_vector = np.concatenate(gradient_vector).ravel()
@@ -311,9 +365,9 @@ class Network:
 
     def update_weights_BFGS(self, delta):
         """
-        update network weights (used by BFGS and L-BFGS)
+        Update network weights (used by BFGS and L-BFGS) and return actual parameters.
         :param delta: weight update (alpha_k * p_k)
-        :return: x_k+1
+        :return: x_{k+1}
         """
         start = 0
 
@@ -331,16 +385,29 @@ class Network:
         return self.get_weights_as_vector()
 
     def calculate_gradient(self, data, targets, lossObject, regularization, as_vector=True):
+        """ Compute average gradient of 'lossObject' on 'data' using backpropagation.
+
+        Parameters
+        ----------
+        data :
+            training set patterns
+        targets :
+            training set labels
+        lossObject :
+            objective function
+        regularization :
+            regulatization strength
+        as_vector : boolean
+            if True then return gradient as a vector,
+            otherwise return it as a list of matrices which shapes suit the network topology
+        Returns
+        -------
+        gradient_w_batch: average gradient
+        loss_batch: average objective loss value
+        error_batch: average data error value
+        miss_batch: average missclassification value
         """
-        computes gradient on entire training set
-        :param data:
-        :param targets:
-        :param lossObject:
-        :param regularization:
-        :return: gradient,
-                 loss,
-                 misclassification
-        """
+
         # create empty vector, gradient_w_old = sum of gradient_w for the epoch
         gradient_w_batch, loss_batch, error_batch, miss_batch = self.zero_init_gradient(), 0, 0, 0
 
@@ -367,8 +434,7 @@ class Network:
 
     def zero_init_gradient(self):
         """
-        initialize a gradient-placeholder to zero
-        :return:
+        Initialize a gradient-placeholder to zero.
         """
         a = self.architecture
         zero_gradient = np.empty(len(a)-1, dtype=object)
@@ -380,9 +446,9 @@ class Network:
         """
         BFGS matrix update.
         :param H_k: current inverse of the approximation of the true Hessian
-        :param s_k:
-        :param y_k:
-        :return: new inverse of the approximation of the Hessian
+        :param s_k: list of difference of iterates
+        :param y_k: list of difference of gradients
+        :return: H_{k+1}, new inverse of the approximation of the Hessian
         """
         # get dimension
         shape = H_k.shape[0]
@@ -403,6 +469,54 @@ class Network:
 
     def train_BFGS(self, x_train, y_train, x_test, y_test, theta, c_1, c_2,
                   lossObject, epochs, regularization, epsilon, line_search='wolfe', debug=False):
+        """ Performs BFGS to optimize 'lossObject' on (x_train, y_train)
+
+        Parameters
+        ----------
+        x_train : type
+            Description of parameter `x_train`.
+        y_train : type
+            Description of parameter `y_train`.
+        x_test : type
+            Description of parameter `x_test`.
+            'None' if you don't care about test performance
+        y_test : type
+            Description of parameter `y_test`.
+            'None' if you don't care about test performance
+        theta : float
+            step size divisor
+        c_1 : float
+            Armijo condition parameter
+        c_2 : float
+            Wolfe condition parameter
+        lossObject : type
+            objective funtion
+        epochs : int
+            training iterations
+        regularization : float
+            regulatization strength
+        epsilon : float
+            threshold value for the gradient norm stopping criterion
+        line_search : string
+            type of line search {'wolfe', 'backtracking'}
+        debug : boolean
+            if True it prints phi(alpha) if the line search fails for some reason or
+            it finishes the maximum number of iterations
+
+        Returns
+        summary of training. A tuple containing the following lists,
+        which length is equal to the number of iterations performed
+        -------
+        tr_losses: training loss (data error  + regularization error) at each epoch
+        tr_errors: training data error at each epoch
+        tr_misses: trainining misclassification error at each epoch
+        vl_losses: validation data error at each epoch
+        vl_misses: validation missclassification error at each epoch
+        alpha_list: step size chosen by line search at each epoch
+        norm_gradient: gradient norm at each epoch
+        condition_numbers: condition number of matrix H at each epoch
+        """
+
         check_dimensions(self.architecture, x_train, y_train)
 
         # allocate arrays
@@ -501,11 +615,11 @@ class Network:
 
     def compute_direction(self, H, gradient, s_list, y_list, rho_list):
         """
-        computes direction with two-loops recursion (used by L-BFGS)
-        :param H: current inverse of Hessian approximation
-        :param gradient: gradient
-        :param s_list:
-        :param y_list:
+        computes ascent search direction H_k * \nabla f(x_k) with two-loops recursion (used by L-BFGS)
+        :param H: current inverse of Hessian approximation H_k^0
+        :param gradient: gradient \nabla f(x_k)
+        :param s_list: differences of iterates
+        :param y_list: differences of gradients
         :param rho_list:
         :return: returns ascent direction
         """
@@ -528,6 +642,56 @@ class Network:
 
     def train_LBFGS(self, x_train, y_train, x_test, y_test, lossObject, theta, c_1, c_2,
                     epsilon, m, regularization, epochs, line_search='wolfe', debug=False, is_test=False):
+        """ Performs L-BFGS to optimize 'lossObject' on (x_train, y_train)
+
+        Parameters
+        ----------
+        x_train : type
+            Description of parameter `x_train`.
+        y_train : type
+            Description of parameter `y_train`.
+        x_test : type
+            Description of parameter `x_test`.
+            'None' if you don't care about test performance
+        y_test : type
+            Description of parameter `y_test`.
+            'None' if you don't care about test performance
+        theta : float
+            divisor of step size
+        c_1 : float
+            Armijo condition parameter
+        c_2 : float
+            Wolfe condition parameter
+        epsilon : float
+            threshold value used for the stopping criterion of the norm of the gradient
+        m : int
+            number of vector pairs used to approximate the Hessian matrix
+        regularization : float
+            regularization strength
+        epochs : int
+            maximum number of iterations to train
+        line_search : string
+            type of line search to be used {'wolfe', 'backtracking'}
+        debug : boolean
+            if true it prints phi(alpha) if the line search fails for some reason or
+            it reached the maximum number of iterations
+        is_test : boolean
+            only used during testing to check that if BFGS and L-BFGS choose the same Initial
+            matrix H^0, then during the first m-1 iterations they are equal
+
+        Returns
+        summary of training. A tuple containing the following lists,
+        which length is equal to the number of iterations performed
+        -------
+        tr_losses: training loss (data error  + regularization error) at each epoch
+        tr_errors: training data error at each epoch
+        tr_misses: trainining misclassification error at each epoch
+        vl_losses: validation data error at each epoch
+        vl_misses: validation missclassification error at each epoch
+        alpha_list: step size chosen by line search at each epoch
+        norm_gradient: gradient norm at each epoch
+        condition_numbers: condition number of matrix H at each epoch
+        """
         check_dimensions(self.architecture, x_train, y_train)
         # allocate arrays
         alpha_list = np.empty((epochs+1), dtype=object) # list that holds the step lengths alpha_k taken at each epoch
@@ -644,21 +808,39 @@ class Network:
 
     def backtracking_line_search(self, c_1, data, gradient, loss,
                                  lossObject, p, targets, theta, regularization):
+        """ Performs a backtracking line search, along the search direction p, that satisfies the Armijo
+        condition with parameter c_1, starting from the initial step alpha=1 to sufficiently
+        decrease phi(alpha).
+
+        Parameters
+        ----------
+        c_1 : float
+            Armijo condition parameter
+        data :
+            training set patterns
+        gradient : vector
+            \nabla f(x_k)
+        loss : type
+            current loss value,  f(x_k)
+        lossObject : type
+            objective function
+        p : vector
+            descent search direction
+        targets : type
+            training set targets
+        theta : float
+            step size multiplier, assert < 1
+        regularization : float
+            regularization strength
+
+        Returns
+        -------
+        float
+            step size satifying the Armijo condition, or
+            -1 if alpha becomes too small or phi'(0) is not a descent direction
+
         """
-        Performs a backtracking line search, along the search direction p, that satisfies the Armijo
-        condition, starting from the initial step alpha
-        :param alpha: initial step
-        :param c_1: sufficient decrease condition parameter
-        :param data:
-        :param gradient:
-        :param loss:
-        :param lossObject:
-        :param p: descent direction
-        :param targets:
-        :param theta: alpha multiplier
-        :param regularization:
-        :return: returns a step length satisfying the Armijo condition or -1
-        """
+
         assert theta < 1
         phi_0 = loss  # phi(0) = f(x_k + 0 * p) = f(x_k)
         phi_p_0 = np.dot(gradient, p)  # phi'(0) = \nabla f(x_k + 0 * p_k) * p_k = \nabla f(x_k) * p_k
@@ -674,24 +856,46 @@ class Network:
                 # Armijo condition satisfied
                 return alpha
             alpha = alpha * theta  # theta < 1, decrease alpha
+
         print "backtracking line search - alpha too small"
         return -1
 
     def armijo_wolfe_line_search(self, c_1, c_2, data, gradient, loss, lossObject, p, targets, theta, regularization):
-        """
-        Performs a line search along the descent direction p, that satisfies the strong Wolfe conditions.
-        :param c_1:
-        :param c_2:
-        :param data:
-        :param gradient:
-        :param loss:
-        :param lossObject:
-        :param p:
-        :param targets:
-        :param theta:
-        :param regularization:
-        :return: step length satisfying the strong Wolfe conditions or -1 if the maximum number of
-                 iterations is reached.
+        """ Performs an Armijo-Wolfe line search, along the search direction p, that satisfies the strong Wolfe
+        conditions with parameters c_1 and c_2, starting from the initial step alpha=1 to sufficiently
+        decrease phi(alpha). This performs the bracketing phase and calls the zoom() procedure for the
+        selection phase.
+
+        Parameters
+        ----------
+        c_1 : float
+            Armijo condition parameter
+        c_2 : float
+            Strong Wolfe condition parameter
+        data :
+            training set patterns
+        gradient : vector
+            \nabla f(x_k)
+        loss : type
+            current loss value,  f(x_k)
+        lossObject : type
+            objective function
+        p : vector
+            descent search direction
+        targets : type
+            training set targets
+        theta : float
+            step size divisor
+        regularization : float
+            regularization strength
+
+        Returns
+        -------
+        float
+            step size satifying the strong Wolfe conditions, or
+            -1 if the search interval becomes too small or phi'(0) is not a descent direction,
+            or if the maximum number of iterations is reached
+
         """
         # phi(alpha) = f(x_k + alpha * p_k)
         phi_0 = loss  # phi(0) = f(x_k + 0 * p) = f(x_k)
@@ -739,22 +943,38 @@ class Network:
         return -1
 
     def zoom(self, alpha_low, alpha_high, p, phi_0, phi_p_0, c_1, c_2, data, targets, lossObject, regularization):
-        """
-        Interpolation/bisection phase of A-W line search. Returns a point between alpha_low and alpha_high
-        that satisfies the strong wolfe conditions. If the maximum number of iterations is reached it returns -1.
+        """ Selection phase of the armijo_wolfe_line_search(). Chooses a point between alpha_low and phi_alpha_high
+        that satisfies the Strong Wolfe conditions.
 
-        :param alpha_low: lower bound of interval step size
-        :param alpha_high: upper bound of interval step size
-        :param p: search (descent) direction
-        :param phi_0: phi(0)
-        :param phi_p_0: phi'(0)
-        :param c_1: sufficient decrease condition parameter
-        :param c_2: curvature condition parameter
-        :param data:
-        :param targets:
-        :param lossObject:
-        :param regularization:
-        :return:
+        Parameters
+        ----------
+        alpha_low : float
+            extreme of the interval, corresponding to phi(alpha_low)
+        alpha_high : float
+            extreme of the interval, corresponding to phi(alpha_high)
+        p : vector
+            descent search direction
+        phi_0 : float
+            current loss value, phi(0) = f(x_k)
+        phi_p_0 : float
+            derivative phi'(0) = p * \nabla f(x_k)
+        c_1 : float
+            Armijo condition parameter
+        c_2 : float
+            Strong Wolfe condition parameter
+        data :
+            training set patterns
+        targets :
+            training set labels
+        lossObject :
+            objective function
+        regularization : float
+            regularization strength
+
+        Returns
+        -------
+        step size satisfying the strong Wolfe Conditions, or
+        -1 if the interval becomes too small or if the maximum number of iterations is reached
         """
         max_iter = 1000
 
@@ -791,40 +1011,64 @@ class Network:
         return -1
 
     def interpolate(self, alpha_low, alpha_high, data, lossObject, p, targets, reg):
-        """
-        find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation.
-        :param alpha_high: left edge of the interval containing step sizes satisfying the wolfe conditions
-        :param alpha_low: right edge of the interval containing step sizes satisfying the wolfe conditions
-        :param data: dataset
-        :param lossObject: object used to compute the loss and its derivative
-        :param p: descent direction
-        :param targets: target variables of the patterns in the dataset
-        :return:
+        """ Find a trial step alpha_j between alpha_low and alpha_high by quadratic interpolation.
+
+        Parameters
+        ----------
+        alpha_low : float
+            interval extreme corresponding to phi(alpha_low)
+        alpha_high : float
+            interval extreme  corresponding to phi(alpha_high)
+        data :
+            training set patterns
+        lossObject :
+            objective function
+        p : vector
+            descent search direction
+        targets :
+            training set targets
+        reg : float
+            regularization strength
+
+        Returns
+        -------
+        trial step length between alpha_low and alpha_high
         """
         # 1.1 evaluate phi(alpha_low), phi'(alpha_low), and phi(alpha_high)
         gradient_alpha_low, phi_alpha_low = self.phi_alpha(alpha_low, data, lossObject, p, targets, reg)
         phi_p_alpha_low = np.dot(gradient_alpha_low, p)
         _, phi_alpha_high = self.phi_alpha(alpha_high, data, lossObject, p, targets, reg)
-        # 1.2 interpolate
-        #alpha_j = - (phi_p_alpha_low * alpha_high ** 2) / \
-        #          (2 * (phi_alpha_high - phi_alpha_low - phi_p_alpha_low * alpha_high))
-        #return alpha_j
+
         alpha_min = alpha_low - 0.5 * (alpha_low - alpha_high) * phi_p_alpha_low / \
         (phi_p_alpha_low - (phi_alpha_low - phi_alpha_high) / (alpha_low - alpha_high))
         return alpha_min
 
     def safeguarded_interpolation(self, alpha_high, alpha_low, sfgrd, data, lossObject, p, targets, reg):
-        """
-        find a trial step size alpha_j between alpha_low and alpha_high by safeguarded quadratic interpolation
+        """ Find a trial step size alpha_j between alpha_low and alpha_high by safeguarded quadratic interpolation
         between function values phi(alpha_low) and phi(alpha_high).
-        :param alpha_high:
-        :param alpha_low:
-        :param sfgrd:
-        :param data:
-        :param lossObject:
-        :param p:
-        :param targets:
-        :return:
+
+        Parameters
+        ----------
+        alpha_high : float
+            interval extreme corresponding to phi(alpha_high)
+        alpha_low : float
+            interval extreme corresponding to phi(alpha_low)
+        sfgrd : float
+            safeguard coefficient
+        data :
+            training set patterns
+        lossObject :
+            objective function
+        p : vector
+            descente search direction
+        targets :
+            training set labels
+        reg : float
+            regularization strength
+
+        Returns
+        -------
+        trial step length between alpha_low and alpha_high
         """
         gradient_alpha_low, phi_alpha_low = self.phi_alpha(alpha_low, data, lossObject, p, targets, reg)
         gradient_alpha_high, phi_alpha_high = self.phi_alpha(alpha_high, data, lossObject, p, targets, reg)
@@ -838,21 +1082,31 @@ class Network:
         return alpha_j
 
     def phi_alpha(self, alpha_i, data, lossObject, p, targets, regularization):
-        """
-        Computes phi(alpha) = f(x_k + alpha_i * p_k), where
-        - x_k are the current weights of the network
-        - alpha_i is the trial step_size
-        - p_k is the descent direction
-        - f is the function to minimize (i.e the loss)
-        :param alpha_i: trial step size
-        :param data: dataset
-        :param lossObject: object to compute the loss and its derivative
-        :param p: descent direction
-        :param targets: target variables of the patterns in the dataset
-        :param regularization
-        :return:
-            - gradient_alpha = nabla f(x_k + alpha_i * p_k)
-            - loss_alpha     = phi(alpha_i)
+        """ Computes phi(alpha_i) = f(x_k + alpha_i * p_k), where
+                - x_k are the current weights of the network
+                - alpha_i is the trial step_size
+                - p_k is the descent direction
+                - f is the function to minimize (i.e the loss)
+        Parameters
+        ----------
+        alpha_i : float
+            trial step size.
+        data :
+            training set patterns
+        lossObject :
+            objective function
+        p : vector
+            descent search direction
+        targets :
+            training set labels
+        regularization : float
+            regularization strength
+
+        Returns
+        -------
+        type
+            gradient_alpha = \nabla f(x_k + alpha_i * p_k)
+            loss_alpha     = phi(alpha_i)
         """
         # compute x_{k+1} = x_k + alpha * p_k, and evaluates phi(alpha_i) = loss
         delta = alpha_i * p
@@ -867,9 +1121,11 @@ class Network:
 
     def predict(self, data):
         """
-        predict target variables, returns and array, where each element is an array of scores.
-        :param data: dataset which targets have to be predicted
-        :return: scores
+        Predict target variables.
+        data: array
+            data patterns which targets have to be predicted
+        :return: array
+            scores array, each entry is an array of scores.
         """
         scores = []
         for pattern in data:
@@ -880,8 +1136,8 @@ class Network:
     def dump_weights(self, file_output=None):
         """
         Dump neural network weights to file, calls dump_weights() on each layer
-        :param file_output: file to dump the weights to
-        :return:
+
+        file_output: file to dump the weights to. If 'None', then print on stdout.
         """
         file_output = sys.stdout if file_output is None else file_output
         # the first line is the architecture
@@ -896,8 +1152,8 @@ class Network:
     def load_weights(self, file_input):
         """
         Load weights of a neural network from a file. Raises an exception if the architecture does not match.
-        :param file_input: file to read the weights from
-        :return:
+
+        file_input: file to read the weights from
         """
         architecture = np.load(file_input)
 
@@ -913,6 +1169,24 @@ class Network:
                 neuron.weights = np.load(file_input)
 
     def plot_phi_alpha_and_tangent_line(self, data, lossObject, targets, p, gradient, regularization):
+        """ plots phi(alpha) in a neighborhood and the tangent line at phi(0).
+        Used when the line search returns -1 for debugging reasons.
+
+        Parameters
+        ----------
+        data :
+            training set patterns
+        lossObject :
+            objective function
+        targets :
+            training set labels
+        p : vector
+            descent search direction
+        gradient : vector
+            gradient \nabla f(x_k)
+        regularization : float
+            regularization strength
+        """
         alpha_values = np.linspace(0, 1, 100)
         phi_values = []
 
@@ -937,8 +1211,6 @@ class Network:
         plt.xlabel(r'$\alpha$')
         plt.ylabel(r'$\phi(\alpha)$')
         plt.legend(loc='best')
-        #plt.yscale('log')
-        #plt.xscale('log')
         plt.savefig('../image/final/phi_alpha_tangent_line.png')
         plt.show()
 
@@ -947,9 +1219,9 @@ def check_topology(architecture, neurons):
     """
     Checks that the newly created neural network has a proper architecture
     (i.e. the neurons of the first layer are InputNeurons ecc..)
-    :param architecture: network architecture
-    :param neurons: list of layers' neurons' type
-    :return:
+
+    architecture: network architecture
+    neurons: list of types of Neuron
     """
     if len(architecture) != len(neurons):
         raise Exception("Architecture miss match")
@@ -962,10 +1234,13 @@ def check_topology(architecture, neurons):
 
 def select_random_point_between(alpha_low, alpha_high):
     """
-    select a trial step size alpha_j between alpha_low and alpha_high randomly.
-    :param alpha_low:
-    :param alpha_high:
-    :return:
+    select a trial step size alpha_j between alpha_low and alpha_high.
+
+    alpha_low: interval extreme
+    alpha_high: interval extreme
+
+    Returns:
+    (alpha_high + alpha_low) / 2
     """
     convex = 0.5  # bisection
     alpha_j = convex * alpha_low + (1 - convex) * alpha_high

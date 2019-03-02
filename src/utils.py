@@ -1,6 +1,34 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+def is_pos_def(x):
+    """
+    checks if matrix 'x' is positive definite.
+    """
+    eigenvalues = np.linalg.eigvals(x)
+    return all(e > 1e-16 for e in eigenvalues), eigenvalues
+
+def check_dimensions(architecture, x_train, y_train):
+    """ Checks whether the training pattern's shape matches the number of input neurons of the network,
+        and if the training label's shape matches the number of output neurons of the network.
+        Raises an Exception otherwise.
+    Parameters
+    ----------
+    architecture : vector
+        vector encoding the network topology
+    x_train :
+        training set patterns
+    y_train :
+        training set labels
+    """
+    if architecture[0] != len(x_train[0]):
+        raise Exception("network input dimension (%d) and input data dimension (%d) must match!" %(architecture[0], len(x_train[0])))
+    if architecture[-1] != len(y_train[0]):
+        raise Exception("network output dimension (%d) and target data dimension (%d) must match!" %(architecture[0], len(y_train[0])))
+
+##### plots #####
+
 def plot_condition_number_vs_iterations(cond_bfgs=None, cond_lbfgs=None):
     if cond_bfgs is not None:
         plt.plot(range(len(cond_bfgs)), cond_bfgs, '--', alpha=0.8, label='bfgs', linewidth=2)
@@ -314,36 +342,3 @@ def decode_patterns(encoding, features, training_set, validation_set):
     training_patterns = [decode(pattern, encoding) for pattern in training_set[features].values]
     validation_patterns = [decode(pattern, encoding) for pattern in validation_set[features].values]
     return training_patterns, validation_patterns
-
-
-#### PREPROCESSING ML CUP DATASET #####
-
-def divide_patterns_labels(partition, feature_col, target_col):
-    patterns = partition[feature_col].values
-    labels = partition[target_col].values
-    return patterns, labels
-
-
-def holdout_cup(patterns, labels, fraction_tr):
-    # calculate size
-    len_partion = int(fraction_tr * len(patterns))
-
-    # divide train/set
-    first_partition_patterns = patterns[:len_partion]
-    first_partition_labels = labels[:len_partion]
-    second_partition_pattens = patterns[len_partion:]
-    second_partition_labels = labels[len_partion:]
-    return first_partition_patterns, first_partition_labels, second_partition_pattens, second_partition_labels
-
-def is_pos_def(x):
-    """
-    checks if matrix 'x' is positive definite.
-    """
-    eigenvalues = np.linalg.eigvals(x)
-    return all(e > 1e-16 for e in eigenvalues), eigenvalues
-
-def check_dimensions(architecture, x_train, y_train):
-    if architecture[0] != len(x_train[0]):
-        raise Exception("network input dimension (%d) and input data dimension (%d) must match!" %(architecture[0], len(x_train[0])))
-    if architecture[-1] != len(y_train[0]):
-        raise Exception("network output dimension (%d) and target data dimension (%d) must match!" %(architecture[0], len(y_train[0])))

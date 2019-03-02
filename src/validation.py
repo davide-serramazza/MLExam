@@ -38,3 +38,22 @@ def holdout(frac, train_data):
     training_set = training_set.reindex(np.random.permutation(training_set.index))
     validation_set = validation_set.reindex(np.random.permutation(validation_set.index))
     return training_set, validation_set
+
+#### PREPROCESSING ML CUP DATASET #####
+
+def divide_patterns_labels(partition, feature_col, target_col):
+    patterns = partition[feature_col].values
+    labels = partition[target_col].values
+    return patterns, labels
+
+
+def holdout_cup(patterns, labels, fraction_tr):
+    # calculate size
+    len_partion = int(fraction_tr * len(patterns))
+
+    # divide train/set
+    first_partition_patterns = patterns[:len_partion]
+    first_partition_labels = labels[:len_partion]
+    second_partition_pattens = patterns[len_partion:]
+    second_partition_labels = labels[len_partion:]
+    return first_partition_patterns, first_partition_labels, second_partition_pattens, second_partition_labels
